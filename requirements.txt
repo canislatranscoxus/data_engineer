@@ -1,0 +1,19 @@
+# references
+# https://spark.apache.org/docs/latest/api/python/getting_started/install.html
+
+# spark dependencies
+py4j
+pandas
+pyarrow
+numpy
+#grpc
+grpcio-status
+googleapis-common-protos
+
+pyspark
+pyspark[sql]
+pyspark[pandas_on_spark] plotly
+pyspark[connect]
+
+apache-beam
+apache-beam[gcp,test.docs]

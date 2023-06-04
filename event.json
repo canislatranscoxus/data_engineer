@@ -1,0 +1,15 @@
+[
+  {
+    "event_name": "e01",
+    "properties" : [ "A", "B", "C"   ],
+    "colors"     : [ "A_red", "B_blue", "C_green" ],
+    "time_stamp" : "2023-01-15 05:00:00"
+  },
+
+  {
+    "event_name": "e02",
+    "properties" : [ "D", "K", "Z"   ],
+    "colors"     : [ "D_yellow", "K_white", "Z_pink" ],
+    "time_stamp" : "2023-01-19 06:00:00"
+  }
+]

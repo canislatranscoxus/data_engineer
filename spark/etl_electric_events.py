@@ -26,18 +26,12 @@ class ChargePointsETLJob:
         df.createOrReplaceTempView( 'df' )
 
         query = ''' select CPID as chargepoint_id, 
-        MAX( PluginDuration ) as max_duration, 
-        AVG( PluginDuration ) as avg_duration
+        round( MAX( PluginDuration ), 2 )  as max_duration,  
+        round( AVG( PluginDuration ), 2) as avg_duration 
         FROM df
-        group by CPID
-        '''
+        group by 1'''
 
         df2 = self.spark_session.sql( query )
-
-        df2 = df2.select( 'chargepoint_id' ) \
-        .withColumn( 'max_duration', func.round(df[ 'max_duration'], 2) ) \
-        .withColumn( 'avg_duration', func.round(df[ 'avg_duration'], 2) ) \
-
         return df2
 
     def load(self, df):

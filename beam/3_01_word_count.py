@@ -1,5 +1,8 @@
 '''
-This example read a list of strings and write it to a txt file.
+This example read a list of strings,
+count the number of times per each word,
+
+and write it to a txt file.
 
 links:
     https://beam.apache.org/get-started/wordcount-example
@@ -10,9 +13,7 @@ import re
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 
-input_file = '/home/art/data/songs/eye_of_the_tiger.txt'
-output_file = '/home/art/data/songs/out_say_so.txt'
-
+output_file = '/home/art/data/songs/count_each_words_pardo.txt'
 
 options = PipelineOptions(
     runner          = 'DirectRunner',
@@ -32,11 +33,18 @@ a = [
     "You got to keep me focused, you want it, say so",
 ]
 
+pattern = r'[A-Za-z\']+'
+
+
 
 with beam.Pipeline( ) as pipeline:
     lines = ( pipeline
-    | beam.Create( a )
-    | beam.io.WriteToText( output_file )
+    | 'create PColection' >> beam.Create( a )
+    | 'extract words'     >> beam.ParDo(  )
+              beam.FlatMap( lambda line: re.findall( pattern, line ) )
+
+    | 'count each word'   >> beam.combiners.Count.PerElement()
+    | 'save as txt'       >> beam.io.WriteToText( output_file )
     )
 
 print( '\n End.' )

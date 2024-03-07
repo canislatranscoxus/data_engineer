@@ -20,7 +20,7 @@ from apache_beam.dataframe.io             import read_csv
 
 # set some vars
 in_path  = '/home/art/data/hpay/in/pay.csv'
-out_path = '/home/art/data/hpay/out/pay.csv'
+out_path = '/home/art/data/hpay/out/pay_01.csv'
 
 options = PipelineOptions(
     runner        = 'DirectRunner',
@@ -46,6 +46,10 @@ with beam.Pipeline( options = options ) as pipeline:
 
     # remove bad rows
     df = df[ df['pay_id'].isnull() == False ]  # good rows
+
+    # make transformations
+    df[ 'status'        ] = df[ 'status' ].str.upper()
+    df[ 'payment_method'] = df['payment_method'].apply( lambda s: s.upper() )
 
     # Load clean data to Data Lake.
     df.to_csv( out_path, index = False )

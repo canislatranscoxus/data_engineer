@@ -2,7 +2,7 @@
 Description: In this pipeline we extract data from pay.csv,
              make some transformations and load to Data Lake.
 
-             We use Apache PCollection.
+             We use Apache PCollection and SQL.
 
              We select these columns
             * pay_id
@@ -17,6 +17,7 @@ Description: In this pipeline we extract data from pay.csv,
 import re
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.transforms.sql           import SqlTransform
 
 import typing
 
@@ -45,24 +46,10 @@ class Payment(typing.NamedTuple):
     m12               : int
 
 
-class CastFields( beam.DoFn ):
-    def process(self, element ):
-        #print( 'element: ', type( element ), element )
-        #row = element
-
-        row = beam.Row(
-              pay_id            = int( element.pay_id )
-            , order_id          = element.order_id
-            , amount            = element.amount
-            , status            = element.status.upper()
-            , payment_method    = element.payment_method.upper()
-            , payment_timestamp = element.payment_timestamp )
-        return [ row ]
-
 
 # set some vars
 in_path  = '/home/art/data/hpay/in/pay.csv'
-out_path = '/home/art/data/hpay/out/pay_00.csv'
+out_path = '/home/art/data/hpay/out/pay_03.csv'
 
 options = PipelineOptions(
     runner        = 'DirectRunner',
@@ -83,14 +70,27 @@ def is_good_row( payment ):
     result = payment.pay_id != None
     return result
 
+query = '''
+SELECT 
+  CAST( pay_id as integer ) as pay_id  
+, order_id
+, amount
+, UPPER( status         ) as status
+, UPPER( payment_method ) as payment_method
+, payment_timestamp
+
+FROM    PCOLLECTION
+WHERE pay_id is not null
+'''
 
 # Do our pipeline
 with beam.Pipeline( options = options ) as pipeline:
     rows = ( pipeline
         | 'create PCollection'  >> beam.io.ReadFromCsv( in_path ).with_output_types(Payment)
-        | 'select columns'      >> beam.Select( *fields )
-        | 'get good rows'       >> beam.Filter( is_good_row )
-        | 'cast pay_id to int'  >> beam.ParDo( CastFields() )
+        #| 'select columns'      >> beam.Select( *fields )
+        #| 'get good rows'       >> beam.Filter( is_good_row )
+        #| 'cast pay_id to int'  >> beam.ParDo( CastFields() )
+        | 'run query'           >> SqlTransform( query )
         | 'save output as csv'  >> beam.io.WriteToCsv( out_path )
     )
 

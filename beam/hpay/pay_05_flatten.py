@@ -169,16 +169,6 @@ def item_to_Row( item ):
         row = clean_row
     return row
 
-def row_to_dic( row ):
-    d = {
-        'pay_id'            : row.pay_id            ,
-        'order_id'          : row.order_id          ,
-        'amount'            : row.amount            ,
-        'status'            : row.status            ,
-        'payment_method'    : row.payment_method    ,
-        'payment_timestamp' : row.payment_timestamp
-    }
-    return d
 
 def row_to_str( row ):
     s ='{},{},{},{},{},{}'.format(

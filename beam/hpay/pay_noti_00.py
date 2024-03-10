@@ -12,58 +12,26 @@ Description: In this pipeline we extract data from pay.csv,
             * payment_method
             * payment_timestamp
 links:
-https://beam.apache.org/documentation/transforms/python/other/flatten/
+https://beam.apache.org/documentation/sdks/python-streaming/
+https://github.com/apache/beam/blob/master/sdks/python/apache_beam/examples/streaming_wordcount.py
 '''
 # import libraries
 import re
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 
+from Payment_noti       import Payment_noti
+from CastFields_noti    import CastFields_noti
+
 import typing
 
 
-class Payment(typing.NamedTuple):
-    pay_id            : int
-    order_id          : int
-    amount            : float
-    status            : str
-    payment_method    : str
-    payment_timestamp : str
-    house_id          : str
-    created           : str
-    year              : int
-    m01               : int
-    m02               : int
-    m03               : int
-    m04               : int
-    m05               : int
-    m06               : int
-    m07               : int
-    m08               : int
-    m09               : int
-    m10               : int
-    m11               : int
-    m12               : int
-
-
-class CastFields( beam.DoFn ):
-    def process(self, element ):
-        #print( 'element: ', type( element ), element )
-        #row = element
-
-        row = beam.Row(
-              pay_id            = int( element.pay_id )
-            , order_id          = element.order_id
-            , amount            = element.amount
-            , status            = element.status.upper()
-            , payment_method    = element.payment_method.upper()
-            , payment_timestamp = element.payment_timestamp )
-        return [ row ]
 
 
 # set some vars
-in_path  = '/home/art/data/hpay/in/pay.csv'
-out_path = '/home/art/data/hpay/out/pay_00.csv'
+input_topic = 'hpay_noti_msg'
+in_path  = '/home/art/data/hpay/in/pay_noti.csv'
+out_path = '/home/art/data/hpay/out/pay_noti.csv'
 
 options = PipelineOptions(
     runner        = 'DirectRunner',
@@ -75,23 +43,36 @@ options = PipelineOptions(
 fields = [    'pay_id'
             , 'order_id'
             , 'amount'
-            , 'status'
-            , 'payment_method'
-            , 'payment_timestamp']
+            , 'status' ]
 
 def is_good_row( payment ):
     #print('payment: ', type( payment ), payment.pay_id)
-    result = payment.pay_id != None
+
+    result = False
+    try:
+        pay_id = int( payment.pay_id )
+        if type( pay_id ) != None:
+            return True
+    except Exception as e:
+        result = False
+
     return result
+
+# read from CSV
+#         | 'create PCollection'  >> beam.io.ReadFromCsv( in_path ).with_output_types( Payment_noti )
+
+# read from PubSub
+#         | 'create PCollection'  >> beam.io.ReadFromPubSub( topic = input_topic )
 
 
 # Do our pipeline
 with beam.Pipeline( options = options ) as pipeline:
     rows = ( pipeline
-        | 'create PCollection'  >> beam.io.ReadFromCsv( in_path ).with_output_types(Payment)
+        | 'create PCollection'  >> beam.io.ReadFromCsv( in_path ).with_output_types( Payment_noti )
         | 'select columns'      >> beam.Select( *fields )
         | 'get good rows'       >> beam.Filter( is_good_row )
-        | 'cast pay_id to int'  >> beam.ParDo( CastFields() )
+        #| 'print' >> beam.LogElements()
+        | 'cast pay_id to int'  >> beam.ParDo( CastFields_noti() )
         | 'save output as csv'  >> beam.io.WriteToCsv( out_path )
     )
 

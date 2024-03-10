@@ -93,10 +93,8 @@ default_args = {
 
 with DAG(
     dag_id      = 'd03_etl_catalog',
-
     schedule    = None,
     #schedule_interval="@daily",
-
     default_args= default_args,
     start_date  = pendulum.datetime(2023, 1, 1, tz="UTC"),
     catchup     = False,
@@ -115,7 +113,6 @@ with DAG(
     def fun_transform(*args, **kwargs):
         print('\n\n fun_extract(), extract data from csv ! \n\n ')
         print('kwargs: {}'.format(kwargs))
-
         print( '\n\n ' )
         print( 'data_path       : {}'.format(  data_path        ))
         print('transformed_path : {}'.format( transformed_path  ))
@@ -126,11 +123,9 @@ with DAG(
                           converters = {'sku': str, 'pic': str} )
 
         df.sku.replace( to_replace=dict( NULL=None ), inplace=True)
-
         df.to_csv(path_or_buf=transformed_path)
         print( df )
         print('\n\n ')
-
         return 'fun_transform() finished OK'
 
     transform = fun_transform( turttles ='ninjas', oboe ='squidword'  )

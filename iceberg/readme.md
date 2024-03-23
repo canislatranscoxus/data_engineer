@@ -1,18 +1,25 @@
 This folder contains a yaml file to start with Apache Iceberg and Spark in a local environment.
 
+
 How to start our environment
 
+this will create a Nessie catalog server
 ```
-# this will create a Nessie catalog server
 docker-compose up catalog 
+```
 
-# this will create a minio server accessible on localhost:9000
-docker-compose up storage 
+this will create a minio server accessible on localhost:9000
+```
+docker-compose up storage
+``` 
 
-# this will start the minio client which will create our initial buckets
+this will start the minio client which will create our initial buckets
+```
 docker-compose up mc 
+```
 
-# open container with pyspark notebook at localhost:8080.
+open container with pyspark notebook at localhost:8080.
+```
 docker-compose up spark-iceberg
 ```
 

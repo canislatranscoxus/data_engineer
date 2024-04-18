@@ -11,7 +11,7 @@ usage:
    spark-submit demo-02-word_count.py <host> <port>
 
 usage example:
-   spark-submit demo-02-word_count.py locahost 9999
+   spark-submit demo-02-word_count.py localhost 9999
 
 
 

@@ -20,7 +20,7 @@ usage example:
 
 import sys
 
-from pyspark.sql import SparkSession
+from pyspark.sql 		   import SparkSession
 from pyspark.sql.functions import explode
 from pyspark.sql.functions import split
 

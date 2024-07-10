@@ -1,0 +1,4 @@
+v1
+{"path":"file:///home/art/data/stock_data/NFLX_2017.csv","timestamp":1596547165000,"batchId":1}
+{"path":"file:///home/art/data/stock_data/MSFT_2017.csv","timestamp":1596547365000,"batchId":1}
+{"path":"file:///home/art/data/stock_data/GOOGL_2017.csv","timestamp":1596547574000,"batchId":1}

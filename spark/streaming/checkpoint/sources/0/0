@@ -1,0 +1,4 @@
+v1
+{"path":"file:///home/art/data/stock_data/FB_2017.csv","timestamp":1596547715000,"batchId":0}
+{"path":"file:///home/art/data/stock_data/AMZN_2017.csv","timestamp":1596547847000,"batchId":0}
+{"path":"file:///home/art/data/stock_data/AAPL_2017.csv","timestamp":1596547976000,"batchId":0}

@@ -5,10 +5,16 @@ links:
     https://beam.apache.org/get-started/wordcount-example
 '''
 
+import logging
 import re
-
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+
+
+# Suppress apache_beam internal subprocess / runner verbose logs
+logging.getLogger('apache_beam.utils.subprocess_server').setLevel(logging.ERROR)
+logging.getLogger('PrismRunner').setLevel(logging.ERROR)
+
 
 input_file = '/home/art/data/songs/eye_of_the_tiger.txt'
 output_file = '/home/art/data/songs/out_say_so.txt'
@@ -33,7 +39,7 @@ a = [
 ]
 
 
-with beam.Pipeline( ) as pipeline:
+with beam.Pipeline( options = options ) as pipeline:
     lines = ( pipeline
     | beam.Create( a )
     | beam.io.WriteToText( output_file )

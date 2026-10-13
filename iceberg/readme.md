@@ -65,7 +65,20 @@ To see used ports
 sudo lsof -i -P -n | grep LISTEN
 ```
 
+--------------------------------------------------------------------------------
 
+# How to install pyspark and iceberg locally
+
+If you want to install pyspark and iceberg locally in your latop for learning purposes,
+then run pip like this
+
+```shell
+pip install "pyspark[connect]" "pyiceberg[pyarrow]"
+```
+
+
+
+--------------------------------------------------------------------------------
 links:
 https://github.com/developer-advocacy-dremio/definitive-guide-to-apache-iceberg/blob/main/Resources/Chapter_6/developer_env.md
 

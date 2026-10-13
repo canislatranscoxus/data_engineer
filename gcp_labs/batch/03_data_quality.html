@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en" class="mdl-js"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style type="text/css">.turbo-progress-bar {
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: #0076ff;
+  z-index: 2147483647;
+  transition:
+    width 300ms ease-out,
+    opacity 150ms 150ms ease-in;
+  transform: translate3d(0, 0, 0);
+}
+</style><style type="text/css" data-tag-name="trix-editor">trix-editor {
+    display: block;
+}
+
+trix-editor:empty:not(:focus)::before {
+    content: attr(placeholder);
+    color: graytext;
+    cursor: text;
+    pointer-events: none;
+    white-space: pre-line;
+}
+
+trix-editor a[contenteditable=false] {
+    cursor: text;
+}
+
+trix-editor img {
+    max-width: 100%;
+    height: auto;
+}
+
+trix-editor [data-trix-attachment] figcaption textarea {
+    resize: none;
+}
+
+trix-editor [data-trix-attachment] figcaption textarea.trix-autoresize-clone {
+    position: absolute;
+    left: -9999px;
+    max-height: 0px;
+}
+
+trix-editor [data-trix-attachment] figcaption[data-trix-placeholder]:empty::before {
+    content: attr(data-trix-placeholder);
+    color: graytext;
+}
+
+trix-editor [data-trix-cursor-target] {
+    display: inline-block !important;
+    width: 1px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+trix-editor [data-trix-cursor-target=left] {
+    vertical-align: top !important;
+    margin-left: -1px !important;
+}
+
+trix-editor [data-trix-cursor-target=right] {
+    vertical-align: bottom !important;
+    margin-right: -1px !important;
+}</style><style type="text/css" data-tag-name="trix-toolbar">trix-toolbar {
+  display: block;
+}
+
+trix-toolbar {
+  white-space: nowrap;
+}
+
+trix-toolbar [data-trix-dialog] {
+  display: none;
+}
+
+trix-toolbar [data-trix-dialog][data-trix-active] {
+  display: block;
+}
+
+trix-toolbar [data-trix-dialog] [data-trix-validate]:invalid {
+  background-color: #ffdddd;
+}</style>
+<title>Control data quality in batch data pipelines - Validate Data 
+Quality for a Batch Data Pipeline using Serverless for Apache Spark | 
+Google Skills</title>
+<link crossorigin="" href="https://cdn.qwiklabs.com/" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect">
+<link crossorigin="" href="https://fonts.googleapis.com/" rel="preconnect">
+<link as="font" crossorigin="anonymous" href="https://cdn.qwiklabs.com/fonts/google-symbols.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.qwiklabs.com/fonts/material-icons.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.qwiklabs.com/fonts/google-material-icons.woff2" rel="preload" type="font/woff2">
+<style>
+  @mixin font_face_props {
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Google Material Icons';
+    src: url('https://cdn.qwiklabs.com/fonts/google-material-icons.woff2') format('woff2');
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Material Icons';
+    src: url('https://cdn.qwiklabs.com/fonts/material-icons.woff2') format('woff2');
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Google Symbols';
+    src: url('https://cdn.qwiklabs.com/fonts/google-symbols.woff2') format('woff2');
+  }
+  
+  .material-icons {
+    font-family: 'Material Icons';
+  }
+  
+  .google-symbols {
+    font-family: 'Google Symbols';
+  }
+  
+  .google-material-icons {
+    font-family: 'Google Material Icons';
+  }
+  
+  .material-icons,
+  .google-symbols,
+  .google-material-icons {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+</style>
+
+<meta name="action-cable-url" content="/cable">
+<script type="text/javascript" async="" src="03_data_quality_files/js_YeSC"></script><script async="" src="03_data_quality_files/gtm_YeSC.js"></script><script type="text/javascript" async="" charset="utf-8" src="03_data_quality_files/recaptcha__en_YeSC.js" crossorigin="anonymous" integrity="sha384-zKvX1tZtoUZjakAq6NG+v14XLO6jHaCtSniDaDnvzrORQB0ysw4QsbpTR9k0YMmj"></script><script type="text/javascript" async="" charset="utf-8" src="03_data_quality_files/recaptcha__en_YeSC.js" crossorigin="anonymous" integrity="sha384-zKvX1tZtoUZjakAq6NG+v14XLO6jHaCtSniDaDnvzrORQB0ysw4QsbpTR9k0YMmj"></script><script>
+//<![CDATA[
+window.gon={};gon.deployment="google-run";
+//]]>
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  const properties = JSON.parse(atob('eyJsb2NhbGUiOiJlbiIsInVzZXJfcm9sZXMiOiJzdHVkZW50IiwiZmVhdHVyZV9nYW1pZmljYXRpb25fc3RyZWFrcyI6dHJ1ZSwiZmVhdHVyZV9yZWNlcnRfcXVlcnlfYWxsX3VzZWRfY2VydF9hY3Rpdml0aWVzIjp0cnVlLCJmZWF0dXJlX3BhdGhmaW5kZXJfb25ib2FyZGluZyI6ZmFsc2UsImZlYXR1cmVfZGlzY292ZXJ5X2xhYl9kdXJhdGlvbl9lc3RpbWF0ZSI6dHJ1ZSwiZmVhdHVyZV9vbmVfc3RvcF9odWIiOnRydWUsImZlYXR1cmVfZXhwZXJpbWVudGF0aW9uIjp0cnVlLCJmZWF0dXJlX2FsZXhhbmRyaWFfc2hvd19idW5kbGVfZXJyb3JzIjpmYWxzZSwiZmVhdHVyZV9jaGFsbGVuZ2VfbGFiX2Zhc3RfdHJhY2siOnRydWUsImZlYXR1cmVfcmVwb3J0X3BhcmVudHMiOmZhbHNlLCJmZWF0dXJlX2NvdXJzZV9leGFtcyI6dHJ1ZSwiZmVhdHVyZV91c2VfZG9jZWJvX2ZlYXR1cmVzIjp0cnVlLCJmZWF0dXJlX2RvY2Vib19zeW5jIjp0cnVlLCJmZWF0dXJlX3NlYXJjaF9hc3luYyI6dHJ1ZSwiZmVhdHVyZV9pbnRlcnZpZXdfd2FybXVwX3R1cm5kb3duIjp0cnVlLCJmZWF0dXJlX2xhYl9wYWdlX3JlZGVzaWduIjp0cnVlLCJmZWF0dXJlX3plbmRlc2tfdG9fY2FzZXMiOnRydWUsImZlYXR1cmVfZnJvbnRfZG9vcl9sYW5kaW5nX3BhZ2UiOnRydWUsImZlYXR1cmVfbmV4dF8yMDI2X2NvbGxlY3Rpb25zIjp0cnVlLCJmZWF0dXJlX2xlYXJuX3dpdGhfYWkiOnRydWUsImZlYXR1cmVfYWJuX3N1cnZleV9mZWVkYmFjayI6ZmFsc2UsImZlYXR1cmVfZGFzaGJvYXJkX2pvYnMiOnRydWUsImZlYXR1cmVfcmVsYXVuY2hfZm9yX3NzbyI6dHJ1ZSwiZmVhdHVyZV9wYXRoZmluZGVyX29yZ19vbmJvYXJkaW5nIjpmYWxzZSwiZmVhdHVyZV9uZXdfb3JnX2Rhc2hib2FyZF9hbm5vdW5jZW1lbnQiOnRydWUsImZlYXR1cmVfbGFuZGluZ19wYWdlIjp0cnVlLCJmZWF0dXJlX3Nob3dfbmV3X2NvdXJzZV9leGFtcyI6dHJ1ZSwiZmVhdHVyZV9nYW1pZmljYXRpb25feHAiOnRydWUsImZlYXR1cmVfZ2FtaWZpY2F0aW9uX2xlYWRlcmJvYXJkcyI6dHJ1ZSwiZmVhdHVyZV9kb2NlYm9fc3luY19vcmdfc3VwcG9ydCI6dHJ1ZSwiZmVhdHVyZV9nb29nbGVfZGV2X3BheW1lbnQiOnRydWUsImZlYXR1cmVfY2hpbWVfdXNlX2FidXNlX2RldGFpbHMiOnRydWUsImZlYXR1cmVfdHVyYm8iOmZhbHNlLCJmZWF0dXJlX2NyZWRseV9tYW5hZ2VtZW50IjpmYWxzZSwiZmVhdHVyZV9vbnJhbXAiOnRydWUsImZlYXR1cmVfbGVhcm5lcl9ncmFjZV9wZXJpb2RfdXBncmFkZSI6dHJ1ZSwiZmVhdHVyZV9lbnRpdHlfYXBpX2tleXMiOnRydWUsImZlYXR1cmVfcmVjYWxjdWxhdGVfYWN0aXZpdGllcyI6dHJ1ZSwiZmVhdHVyZV91cGRhdGVkX3JlY2FsY3VsYXRpb25fdXgiOnRydWUsImZlYXR1cmVfbGFiX2FpX2hpbnRzIjpmYWxzZSwiZmVhdHVyZV9jcmVkbHkiOnRydWUsImZlYXR1cmVfaGlkZV91bnBvcHVsYXJfZmlsdGVycyI6dHJ1ZSwiZmVhdHVyZV9yZWxhdW5jaF9jb2xsZWN0aW9uX2FpIjp0cnVlLCJmZWF0dXJlX3Nzb19yZWRpcmVjdCI6dHJ1ZSwiZmVhdHVyZV9kb2NlYm9fdXgiOnRydWUsImZlYXR1cmVfc2VhcmNoX3N1Z2dlc3Rpb25zIjp0cnVlLCJmZWF0dXJlX3Nob3dfb3JnX2NhdGFsb2dfYnV0dG9uIjp0cnVlLCJmZWF0dXJlX3N1YnNjcmlwdGlvbl91eCI6dHJ1ZSwiZmVhdHVyZV9pbHRfY29udGVudF9wcm9ncmFtIjpmYWxzZSwiZmVhdHVyZV9yZWxhdW5jaF9ncmlkX2xpc3QiOnRydWUsImZlYXR1cmVfY2F0YWxvZ19maWx0ZXJzX2J1dHRvbiI6dHJ1ZSwiZmVhdHVyZV9uZXdfc2lkZW5hdiI6dHJ1ZSwiZmVhdHVyZV9nY3Nib19kb21haW5fcmVkaXJlY3QiOmZhbHNlLCJmZWF0dXJlX29mZmJvYXJkX2d3Z19hdWciOnRydWUsImZlYXR1cmVfY29uY3VycmVudF9ob3RsYWJfYWxsb2NhdGlvbiI6ZmFsc2UsImZlYXR1cmVfY2F0YWxvZ19maWx0ZXJfY2hpcHMiOnRydWUsImZlYXR1cmVfb2F1dGhfcmlzY19zaHV0b2ZmIjp0cnVlLCJmZWF0dXJlX2dvbGRlbl9sYWJfYXV0b19sb2NhdGlvbnNfcGlsb3QiOmZhbHNlLCJmZWF0dXJlX2dhbWlmaWNhdGlvbl91aV9kYXRhIjp0cnVlLCJmZWF0dXJlX3JlbW92ZV9nZHBfc3Vic2NyaXB0aW9uIjp0cnVlLCJmZWF0dXJlX2FnZV9nYXRlX3Jlc2V0IjpmYWxzZSwiZmVhdHVyZV9uZXh0XzIwMjZfZW5hYmxlZCI6ZmFsc2UsImZlYXR1cmVfbGVhcm5pbmdfcGxhbl9zZWFyY2giOnRydWUsImZlYXR1cmVfdXNlX21vc2FpYyI6dHJ1ZSwiZmVhdHVyZV9zc29faW50ZWdyYXRpb25fYWNjZXNzX2FsbG93bGlzdCI6ZmFsc2UsImZlYXR1cmVfb3JnX2ludml0ZV9saW5rIjp0cnVlLCJmZWF0dXJlX2d1ZXN0X3VzZXIiOmZhbHNlLCJmZWF0dXJlX2F1dG9fY291cnNlX3VwZ3JhZGUiOmZhbHNlLCJmZWF0dXJlX3N3aXRjaF9wYXRoX2FuZF9leHBsb3JlX2hlYWRlcnMiOnRydWUsImZlYXR1cmVfcmVyb3V0ZV9uZXdfaW50ZXJ2aWV3X3dhcm11cCI6dHJ1ZSwiZmVhdHVyZV9uZXdfcHJvZ3JhbV9kYXNoYm9hcmQiOnRydWUsImZlYXR1cmVfbW9zYWljX3NraWxsc19sYWJfcmVjb21tZW5kYXRpb24iOnRydWUsImZlYXR1cmVfc2VhcmNoX3NvcnRfYnkiOnRydWUsImZlYXR1cmVfYXV0b191cGdyYWRlX2dhbWVfbGFicyI6dHJ1ZSwiZmVhdHVyZV9yZWxhdW5jaF9zdWJzY3JpcHRpb25zIjp0cnVlLCJmZWF0dXJlX2d3Z19jYXRhbG9nIjp0cnVlLCJmZWF0dXJlX2ZlZWRiYWNrIjp0cnVlLCJmZWF0dXJlX3NpdGVtYXBfcG9jIjp0cnVlLCJmZWF0dXJlX2Jhbm5lcl9icmVhZGNydW1icyI6dHJ1ZSwiZmVhdHVyZV9yZWxhdW5jaF9lbWVyZ2VuY3lfYnV0dG9uIjpmYWxzZSwiZmVhdHVyZV9ua19yb2xsYmFja192ZXJzaW9uIjpmYWxzZSwiZmVhdHVyZV9yZWNlcnQiOnRydWUsImZlYXR1cmVfbmV3X29yZ19kYXNoYm9hcmQiOnRydWUsImZlYXR1cmVfaW5ub3ZhdG9yX3NpZ25faW4iOnRydWUsImZlYXR1cmVfaW5fY29udGV4dF9hbGxfbGFicyI6dHJ1ZSwiZmVhdHVyZV91c2VfcmVjb21tZW5kZXJfYWdlbnQiOnRydWUsImZlYXR1cmVfbGFiX2V4cGFuZGVkX2hpbnQiOmZhbHNlLCJmZWF0dXJlX2lubm92YXRvcl9nZWFyX3NpZ25faW4iOnRydWUsImZlYXR1cmVfYW5hbHl0aWNzX3YyIjp0cnVlLCJmZWF0dXJlX2RpYWxvZ19xdWV1ZSI6dHJ1ZSwiZmVhdHVyZV9nYW1pZmljYXRpb25fYWNoaWV2ZW1lbnRzIjp0cnVlLCJmZWF0dXJlX2dhbWlmaWNhdGlvbl9sZWFndWVzIjp0cnVlLCJmZWF0dXJlX25vX2x0aV9zZXNzaW9uX3JlZGlyZWN0IjpmYWxzZSwiZmVhdHVyZV9zZWFyY2hfYXV0b2NvbXBsZXRlIjp0cnVlLCJmZWF0dXJlX29uZV90YXAiOnRydWUsImZlYXR1cmVfY291cnNlX2J1aWxkZXIiOmZhbHNlLCJmZWF0dXJlX2FpX3NlYXJjaF9zdW1tYXJ5IjpmYWxzZSwiZmVhdHVyZV93aXBlb3V0X2hhcmRfZGVsZXRlIjp0cnVlLCJmZWF0dXJlX2NyZWRseV9pbnRlZ3JhdGlvbl9hbm5vdW5jZW1lbnRfbW9kYWwiOnRydWUsImZlYXR1cmVfbGVhcm5pbmdfcGxhbl9zbHVnIjp0cnVlLCJmZWF0dXJlX2dhbWlmaWNhdGlvbl91aSI6dHJ1ZSwiZmVhdHVyZV9jYW5vbmljYWxfZG9tYWluX3JlZGlyZWN0Ijp0cnVlLCJmZWF0dXJlX3JlbGF1bmNoX2V4dHJhIjp0cnVlLCJmZWF0dXJlX2FsZXhhbmRyaWFfc3Vic2NyaXB0aW9uc19wYWdpbmF0aW9uIjp0cnVlLCJmZWF0dXJlX3BhdGhmaW5kZXJfam91cm5leV92aWV3IjpmYWxzZSwiZmVhdHVyZV9yZWxhdW5jaF9jcmVkZW50aWFscyI6dHJ1ZSwiZmVhdHVyZV9jYWNoZV9leHBsb3JlX3BhZ2VfcmVzdWx0Ijp0cnVlLCJmZWF0dXJlX2luX2NvbnRleHRfdmlldyI6dHJ1ZSwiZmVhdHVyZV9nYW1pZmljYXRpb24iOnRydWUsImZlYXR1cmVfZ3dnX3BhaWRfY2hpcCI6dHJ1ZSwiZmVhdHVyZV9jZG5fZm9udHMiOnRydWUsImZlYXR1cmVfb2ZmYm9hcmRfZ3dnX2p1bmUiOnRydWUsImZlYXR1cmVfcmVsYXVuY2giOnRydWUsImZlYXR1cmVfcXVvdGFfc2VydmljZV91c2VfbHVhIjp0cnVlLCJncm91cF9zdWFkbWlucyI6ZmFsc2UsImdyb3VwX25vbl9zdWFkbWlucyI6dHJ1ZSwiZ3JvdXBfYWRtaW5zIjpmYWxzZSwiZ3JvdXBfdHJhaW5lcnMiOmZhbHNlLCJncm91cF9jb29yZGluYXRvcnMiOmZhbHNlLCJncm91cF9jcmVhdG9ycyI6ZmFsc2UsImdyb3VwX3N0dWRlbnRzIjp0cnVlLCJncm91cF9ub25fb3JnYW5pemF0aW9uIjp0cnVlLCJncm91cF9vcmdhbml6YXRpb25fbWVtYmVycyI6ZmFsc2UsImdyb3VwX25vbl9wcm9ncmFtIjp0cnVlLCJncm91cF9nb29nbGVycyI6ZmFsc2UsImdyb3VwX0NMUyI6ZmFsc2UsImdyb3VwX2VuZ19wcm9kdWN0IjpmYWxzZSwiZ3JvdXBfZ2FtaWZpY2F0aW9uX2JldGFfdGVzdGVycyI6ZmFsc2V9'));
+  properties.event = 'user_properties';
+  dataLayer.push(properties);
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    if (arguments[0] === 'event') {
+      dataLayer.push({ event: arguments[1], eventParams: arguments[2] }, { eventParams: undefined });
+    } else {
+      dataLayer.push(arguments);
+    }
+  }
+  let gtmLoaded = false;
+  function glueCookieNotificationBarLoaded() {
+    if (!gtmLoaded) {
+      dataLayerInit(
+        true,
+        false,
+        false,
+        false,
+        'google-run'
+      );
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer',"GTM-MBRHNDG7");
+      pushPageEvent();
+      if (typeof sessEvent !== 'undefined') {
+        pushSessionEvent(sessEvent, sessLoginStatus, sessPreviousPath);
+      }
+      gtmLoaded = true;
+    }
+  }
+</script>
+<script src="03_data_quality_files/webcomponents-loader-2e147cb1679d97581f981243bfc2d1c03dc_YeSC.js"></script>
+<script src="03_data_quality_files/head_scripts-78121e337319c81329ed63eb61196ea57f74a57d_YeSC.js"></script>
+<script src="03_data_quality_files/vendor-1c75122c864db561eb016ef97dbd4eb4a740856f_YeSC.js"></script>
+<script src="03_data_quality_files/application-c5a15ca47015aa0fa0b6ec5262c9252da7676440_YeSC.js"></script><script src="03_data_quality_files/loader_YeSC.js"></script><style>:root {
+  --game-color: #E52592;
+  --classroom-color: #01877E;
+  --external-course-color: #D56E0C;
+  --certification-color: #C5221F;
+}
+
+abbr[title],
+abbr[data-original-title] {
+  border-bottom: none !important;
+}
+
+label abbr[title] {
+  color: var(--primary-text-on-surface-color);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--hairline-color);
+  display: block;
+  height: 1px;
+  margin: 24px 0;
+  padding: 0;
+}
+
+mark {
+  background-color: #F9AB00;
+  border-radius: 2px;
+  color: inherit;
+  padding: 2px 0px;
+}
+
+p, li {
+  font: var(--md-sys-typescale-body-large);
+}
+
+._small-label_1ygxc_37,
+._label--small_1ygxc_38 {
+  font: var(--md-sys-typescale-body-medium);
+  text-decoration: none;
+}
+
+strong {
+  font-weight: 700;
+}
+
+._mdl-typography--small-title_1ygxc_47 {
+  color: #202124;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+._text--blue_1ygxc_53 {
+  color: var(--primary-text-on-surface-color);
+}
+
+._text--center_1ygxc_57 {
+  text-align: center;
+}
+
+._text--capitalize_1ygxc_61 {
+  text-transform: capitalize;
+}
+
+._text--code_1ygxc_65 {
+  font-family: "Roboto Mono", monospace;
+}
+
+._text--copy_1ygxc_69 {
+  font-family: var(--md-ref-typeface-plain);
+}
+
+._text--error_1ygxc_73 {
+  color: var(--warn-color);
+}
+
+._text--free_1ygxc_77 {
+  color: var(--success-color);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+._text--gray_1ygxc_83 {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+._text--light_1ygxc_87 {
+  color: var(--light-text-on-surface-color) !important;
+}
+
+._text--right_1ygxc_91 {
+  text-align: right;
+}
+
+._text--sign_1ygxc_95 {
+  font-family: "Oswald", sans-serif;
+}
+
+._text--small_1ygxc_99 {
+  font-size: 14px !important;
+}
+
+._text--large_1ygxc_103 {
+  font-size: 20px !important;
+}
+
+._text--success_1ygxc_107 {
+  color: var(--success-color) !important;
+}
+
+._text--yellow_1ygxc_111 {
+  color: #F9AB00;
+}
+
+._text--red_1ygxc_115 {
+  color: #D93025;
+}
+
+._text--green_1ygxc_119 {
+  color: #34A853;
+}
+
+u {
+  text-decoration: none;
+}
+
+._material-icons_1ygxc_127 {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}
+
+._ellipsis_1ygxc_149 {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+._text--rtl_1ygxc_155 {
+  direction: rtl;
+}
+
+._body-wrapper_1ygxc_159 {
+  max-width: 800px;
+}
+
+._text--button_1ygxc_163 {
+  font: var(--md-sys-typescale-label-large);
+}
+
+._video-button-outline_1ygxc_167 {
+  --md-focus-ring-color: transparent;
+  position: relative;
+}
+._video-button-outline_1ygxc_167:focus-within::after {
+  border: 3px solid var(--md-sys-color-secondary);
+  border-radius: calc(var(--icon-size) * 0.18);
+  content: "";
+  height: calc(var(--icon-size) * 0.59);
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, calc(-50% - 11px));
+  width: calc(var(--icon-size) * 0.86);
+}</style>
+<script src="03_data_quality_files/hallofmirrors-2ae2e0f37efd678fb7dd01e3f99da82a2b8eb380_YeSC.js"></script>
+<custom-style>
+  <style is="custom-style">[hidden] {
+  display: none !important;
+}
+
+</style>
+</custom-style>
+<custom-style>
+  <style is="custom-style">html {
+  --layout_-_display:  flex;;
+
+      --layout-inline_-_display:  inline-flex;;
+
+      --layout-horizontal_-_display:  var(--layout_-_display); --layout-horizontal_-_-ms-flex-direction:  row; --layout-horizontal_-_-webkit-flex-direction:  row; --layout-horizontal_-_flex-direction:  row;;
+
+      --layout-horizontal-reverse_-_display:  var(--layout_-_display); --layout-horizontal-reverse_-_-ms-flex-direction:  row-reverse; --layout-horizontal-reverse_-_-webkit-flex-direction:  row-reverse; --layout-horizontal-reverse_-_flex-direction:  row-reverse;;
+
+      --layout-vertical_-_display:  var(--layout_-_display); --layout-vertical_-_-ms-flex-direction:  column; --layout-vertical_-_-webkit-flex-direction:  column; --layout-vertical_-_flex-direction:  column;;
+
+      --layout-vertical-reverse_-_display:  var(--layout_-_display); --layout-vertical-reverse_-_-ms-flex-direction:  column-reverse; --layout-vertical-reverse_-_-webkit-flex-direction:  column-reverse; --layout-vertical-reverse_-_flex-direction:  column-reverse;;
+
+      --layout-wrap_-_-ms-flex-wrap:  wrap; --layout-wrap_-_-webkit-flex-wrap:  wrap; --layout-wrap_-_flex-wrap:  wrap;;
+
+      --layout-wrap-reverse_-_-ms-flex-wrap:  wrap-reverse; --layout-wrap-reverse_-_-webkit-flex-wrap:  wrap-reverse; --layout-wrap-reverse_-_flex-wrap:  wrap-reverse;;
+
+      --layout-flex-auto_-_-ms-flex:  1 1 auto; --layout-flex-auto_-_-webkit-flex:  1 1 auto; --layout-flex-auto_-_flex:  1 1 auto;;
+
+      --layout-flex-none_-_-ms-flex:  none; --layout-flex-none_-_-webkit-flex:  none; --layout-flex-none_-_flex:  none;;
+
+      --layout-flex_-_-ms-flex:  1 1 0.000000001px; --layout-flex_-_-webkit-flex:  1; --layout-flex_-_flex:  1; --layout-flex_-_-webkit-flex-basis:  0.000000001px; --layout-flex_-_flex-basis:  0.000000001px;;
+
+      --layout-flex-2_-_-ms-flex:  2; --layout-flex-2_-_-webkit-flex:  2; --layout-flex-2_-_flex:  2;;
+
+      --layout-flex-3_-_-ms-flex:  3; --layout-flex-3_-_-webkit-flex:  3; --layout-flex-3_-_flex:  3;;
+
+      --layout-flex-4_-_-ms-flex:  4; --layout-flex-4_-_-webkit-flex:  4; --layout-flex-4_-_flex:  4;;
+
+      --layout-flex-5_-_-ms-flex:  5; --layout-flex-5_-_-webkit-flex:  5; --layout-flex-5_-_flex:  5;;
+
+      --layout-flex-6_-_-ms-flex:  6; --layout-flex-6_-_-webkit-flex:  6; --layout-flex-6_-_flex:  6;;
+
+      --layout-flex-7_-_-ms-flex:  7; --layout-flex-7_-_-webkit-flex:  7; --layout-flex-7_-_flex:  7;;
+
+      --layout-flex-8_-_-ms-flex:  8; --layout-flex-8_-_-webkit-flex:  8; --layout-flex-8_-_flex:  8;;
+
+      --layout-flex-9_-_-ms-flex:  9; --layout-flex-9_-_-webkit-flex:  9; --layout-flex-9_-_flex:  9;;
+
+      --layout-flex-10_-_-ms-flex:  10; --layout-flex-10_-_-webkit-flex:  10; --layout-flex-10_-_flex:  10;;
+
+      --layout-flex-11_-_-ms-flex:  11; --layout-flex-11_-_-webkit-flex:  11; --layout-flex-11_-_flex:  11;;
+
+      --layout-flex-12_-_-ms-flex:  12; --layout-flex-12_-_-webkit-flex:  12; --layout-flex-12_-_flex:  12;;
+
+      
+
+      --layout-start_-_-ms-flex-align:  start; --layout-start_-_-webkit-align-items:  flex-start; --layout-start_-_align-items:  flex-start;;
+
+      --layout-center_-_-ms-flex-align:  center; --layout-center_-_-webkit-align-items:  center; --layout-center_-_align-items:  center;;
+
+      --layout-end_-_-ms-flex-align:  end; --layout-end_-_-webkit-align-items:  flex-end; --layout-end_-_align-items:  flex-end;;
+
+      --layout-baseline_-_-ms-flex-align:  baseline; --layout-baseline_-_-webkit-align-items:  baseline; --layout-baseline_-_align-items:  baseline;;
+
+      
+
+      --layout-start-justified_-_-ms-flex-pack:  start; --layout-start-justified_-_-webkit-justify-content:  flex-start; --layout-start-justified_-_justify-content:  flex-start;;
+
+      --layout-center-justified_-_-ms-flex-pack:  center; --layout-center-justified_-_-webkit-justify-content:  center; --layout-center-justified_-_justify-content:  center;;
+
+      --layout-end-justified_-_-ms-flex-pack:  end; --layout-end-justified_-_-webkit-justify-content:  flex-end; --layout-end-justified_-_justify-content:  flex-end;;
+
+      --layout-around-justified_-_-ms-flex-pack:  distribute; --layout-around-justified_-_-webkit-justify-content:  space-around; --layout-around-justified_-_justify-content:  space-around;;
+
+      --layout-justified_-_-ms-flex-pack:  justify; --layout-justified_-_-webkit-justify-content:  space-between; --layout-justified_-_justify-content:  space-between;;
+
+      --layout-center-center_-_-ms-flex-align:  var(--layout-center_-_-ms-flex-align); --layout-center-center_-_-webkit-align-items:  var(--layout-center_-_-webkit-align-items); --layout-center-center_-_align-items:  var(--layout-center_-_align-items); --layout-center-center_-_-ms-flex-pack:  var(--layout-center-justified_-_-ms-flex-pack); --layout-center-center_-_-webkit-justify-content:  var(--layout-center-justified_-_-webkit-justify-content); --layout-center-center_-_justify-content:  var(--layout-center-justified_-_justify-content);;
+
+      
+
+      --layout-self-start_-_-ms-align-self:  flex-start; --layout-self-start_-_-webkit-align-self:  flex-start; --layout-self-start_-_align-self:  flex-start;;
+
+      --layout-self-center_-_-ms-align-self:  center; --layout-self-center_-_-webkit-align-self:  center; --layout-self-center_-_align-self:  center;;
+
+      --layout-self-end_-_-ms-align-self:  flex-end; --layout-self-end_-_-webkit-align-self:  flex-end; --layout-self-end_-_align-self:  flex-end;;
+
+      --layout-self-stretch_-_-ms-align-self:  stretch; --layout-self-stretch_-_-webkit-align-self:  stretch; --layout-self-stretch_-_align-self:  stretch;;
+
+      --layout-self-baseline_-_-ms-align-self:  baseline; --layout-self-baseline_-_-webkit-align-self:  baseline; --layout-self-baseline_-_align-self:  baseline;;
+
+      
+
+      --layout-start-aligned_-_-ms-flex-line-pack:  start; --layout-start-aligned_-_-ms-align-content:  flex-start; --layout-start-aligned_-_-webkit-align-content:  flex-start; --layout-start-aligned_-_align-content:  flex-start;;
+
+      --layout-end-aligned_-_-ms-flex-line-pack:  end; --layout-end-aligned_-_-ms-align-content:  flex-end; --layout-end-aligned_-_-webkit-align-content:  flex-end; --layout-end-aligned_-_align-content:  flex-end;;
+
+      --layout-center-aligned_-_-ms-flex-line-pack:  center; --layout-center-aligned_-_-ms-align-content:  center; --layout-center-aligned_-_-webkit-align-content:  center; --layout-center-aligned_-_align-content:  center;;
+
+      --layout-between-aligned_-_-ms-flex-line-pack:  justify; --layout-between-aligned_-_-ms-align-content:  space-between; --layout-between-aligned_-_-webkit-align-content:  space-between; --layout-between-aligned_-_align-content:  space-between;;
+
+      --layout-around-aligned_-_-ms-flex-line-pack:  distribute; --layout-around-aligned_-_-ms-align-content:  space-around; --layout-around-aligned_-_-webkit-align-content:  space-around; --layout-around-aligned_-_align-content:  space-around;;
+
+      
+
+      --layout-block_-_display:  block;;
+
+      --layout-invisible_-_visibility:  hidden !important;;
+
+      --layout-relative_-_position:  relative;;
+
+      --layout-fit_-_position:  absolute; --layout-fit_-_top:  0; --layout-fit_-_right:  0; --layout-fit_-_bottom:  0; --layout-fit_-_left:  0;;
+
+      --layout-scroll_-_-webkit-overflow-scrolling:  touch; --layout-scroll_-_overflow:  auto;;
+
+      --layout-fullbleed_-_margin:  0; --layout-fullbleed_-_height:  100vh;;
+
+      
+
+      --layout-fixed-top_-_position:  fixed; --layout-fixed-top_-_top:  0; --layout-fixed-top_-_left:  0; --layout-fixed-top_-_right:  0;;
+
+      --layout-fixed-right_-_position:  fixed; --layout-fixed-right_-_top:  0; --layout-fixed-right_-_right:  0; --layout-fixed-right_-_bottom:  0;;
+
+      --layout-fixed-bottom_-_position:  fixed; --layout-fixed-bottom_-_right:  0; --layout-fixed-bottom_-_bottom:  0; --layout-fixed-bottom_-_left:  0;;
+
+      --layout-fixed-left_-_position:  fixed; --layout-fixed-left_-_top:  0; --layout-fixed-left_-_bottom:  0; --layout-fixed-left_-_left:  0;;
+}
+
+</style>
+</custom-style><style>[hidden] { display: none !important; }</style><custom-style>
+  <style is="custom-style">html {
+  --google-red-100: #f4c7c3;
+      --google-red-300: #e67c73;
+      --google-red-500: #db4437;
+      --google-red-700: #c53929;
+
+      --google-blue-100: #c6dafc;
+      --google-blue-300: #7baaf7;
+      --google-blue-500: #4285f4;
+      --google-blue-700: #3367d6;
+
+      --google-green-100: #b7e1cd;
+      --google-green-300: #57bb8a;
+      --google-green-500: #0f9d58;
+      --google-green-700: #0b8043;
+
+      --google-yellow-100: #fce8b2;
+      --google-yellow-300: #f7cb4d;
+      --google-yellow-500: #f4b400;
+      --google-yellow-700: #f09300;
+
+      --google-grey-100: #f5f5f5;
+      --google-grey-300: #e0e0e0;
+      --google-grey-500: #9e9e9e;
+      --google-grey-700: #616161;
+
+      
+
+      --paper-red-50: #ffebee;
+      --paper-red-100: #ffcdd2;
+      --paper-red-200: #ef9a9a;
+      --paper-red-300: #e57373;
+      --paper-red-400: #ef5350;
+      --paper-red-500: #f44336;
+      --paper-red-600: #e53935;
+      --paper-red-700: #d32f2f;
+      --paper-red-800: #c62828;
+      --paper-red-900: #b71c1c;
+      --paper-red-a100: #ff8a80;
+      --paper-red-a200: #ff5252;
+      --paper-red-a400: #ff1744;
+      --paper-red-a700: #d50000;
+
+      --paper-pink-50: #fce4ec;
+      --paper-pink-100: #f8bbd0;
+      --paper-pink-200: #f48fb1;
+      --paper-pink-300: #f06292;
+      --paper-pink-400: #ec407a;
+      --paper-pink-500: #e91e63;
+      --paper-pink-600: #d81b60;
+      --paper-pink-700: #c2185b;
+      --paper-pink-800: #ad1457;
+      --paper-pink-900: #880e4f;
+      --paper-pink-a100: #ff80ab;
+      --paper-pink-a200: #ff4081;
+      --paper-pink-a400: #f50057;
+      --paper-pink-a700: #c51162;
+
+      --paper-purple-50: #f3e5f5;
+      --paper-purple-100: #e1bee7;
+      --paper-purple-200: #ce93d8;
+      --paper-purple-300: #ba68c8;
+      --paper-purple-400: #ab47bc;
+      --paper-purple-500: #9c27b0;
+      --paper-purple-600: #8e24aa;
+      --paper-purple-700: #7b1fa2;
+      --paper-purple-800: #6a1b9a;
+      --paper-purple-900: #4a148c;
+      --paper-purple-a100: #ea80fc;
+      --paper-purple-a200: #e040fb;
+      --paper-purple-a400: #d500f9;
+      --paper-purple-a700: #aa00ff;
+
+      --paper-deep-purple-50: #ede7f6;
+      --paper-deep-purple-100: #d1c4e9;
+      --paper-deep-purple-200: #b39ddb;
+      --paper-deep-purple-300: #9575cd;
+      --paper-deep-purple-400: #7e57c2;
+      --paper-deep-purple-500: #673ab7;
+      --paper-deep-purple-600: #5e35b1;
+      --paper-deep-purple-700: #512da8;
+      --paper-deep-purple-800: #4527a0;
+      --paper-deep-purple-900: #311b92;
+      --paper-deep-purple-a100: #b388ff;
+      --paper-deep-purple-a200: #7c4dff;
+      --paper-deep-purple-a400: #651fff;
+      --paper-deep-purple-a700: #6200ea;
+
+      --paper-indigo-50: #e8eaf6;
+      --paper-indigo-100: #c5cae9;
+      --paper-indigo-200: #9fa8da;
+      --paper-indigo-300: #7986cb;
+      --paper-indigo-400: #5c6bc0;
+      --paper-indigo-500: #3f51b5;
+      --paper-indigo-600: #3949ab;
+      --paper-indigo-700: #303f9f;
+      --paper-indigo-800: #283593;
+      --paper-indigo-900: #1a237e;
+      --paper-indigo-a100: #8c9eff;
+      --paper-indigo-a200: #536dfe;
+      --paper-indigo-a400: #3d5afe;
+      --paper-indigo-a700: #304ffe;
+
+      --paper-blue-50: #e3f2fd;
+      --paper-blue-100: #bbdefb;
+      --paper-blue-200: #90caf9;
+      --paper-blue-300: #64b5f6;
+      --paper-blue-400: #42a5f5;
+      --paper-blue-500: #2196f3;
+      --paper-blue-600: #1e88e5;
+      --paper-blue-700: #1976d2;
+      --paper-blue-800: #1565c0;
+      --paper-blue-900: #0d47a1;
+      --paper-blue-a100: #82b1ff;
+      --paper-blue-a200: #448aff;
+      --paper-blue-a400: #2979ff;
+      --paper-blue-a700: #2962ff;
+
+      --paper-light-blue-50: #e1f5fe;
+      --paper-light-blue-100: #b3e5fc;
+      --paper-light-blue-200: #81d4fa;
+      --paper-light-blue-300: #4fc3f7;
+      --paper-light-blue-400: #29b6f6;
+      --paper-light-blue-500: #03a9f4;
+      --paper-light-blue-600: #039be5;
+      --paper-light-blue-700: #0288d1;
+      --paper-light-blue-800: #0277bd;
+      --paper-light-blue-900: #01579b;
+      --paper-light-blue-a100: #80d8ff;
+      --paper-light-blue-a200: #40c4ff;
+      --paper-light-blue-a400: #00b0ff;
+      --paper-light-blue-a700: #0091ea;
+
+      --paper-cyan-50: #e0f7fa;
+      --paper-cyan-100: #b2ebf2;
+      --paper-cyan-200: #80deea;
+      --paper-cyan-300: #4dd0e1;
+      --paper-cyan-400: #26c6da;
+      --paper-cyan-500: #00bcd4;
+      --paper-cyan-600: #00acc1;
+      --paper-cyan-700: #0097a7;
+      --paper-cyan-800: #00838f;
+      --paper-cyan-900: #006064;
+      --paper-cyan-a100: #84ffff;
+      --paper-cyan-a200: #18ffff;
+      --paper-cyan-a400: #00e5ff;
+      --paper-cyan-a700: #00b8d4;
+
+      --paper-teal-50: #e0f2f1;
+      --paper-teal-100: #b2dfdb;
+      --paper-teal-200: #80cbc4;
+      --paper-teal-300: #4db6ac;
+      --paper-teal-400: #26a69a;
+      --paper-teal-500: #009688;
+      --paper-teal-600: #00897b;
+      --paper-teal-700: #00796b;
+      --paper-teal-800: #00695c;
+      --paper-teal-900: #004d40;
+      --paper-teal-a100: #a7ffeb;
+      --paper-teal-a200: #64ffda;
+      --paper-teal-a400: #1de9b6;
+      --paper-teal-a700: #00bfa5;
+
+      --paper-green-50: #e8f5e9;
+      --paper-green-100: #c8e6c9;
+      --paper-green-200: #a5d6a7;
+      --paper-green-300: #81c784;
+      --paper-green-400: #66bb6a;
+      --paper-green-500: #4caf50;
+      --paper-green-600: #43a047;
+      --paper-green-700: #388e3c;
+      --paper-green-800: #2e7d32;
+      --paper-green-900: #1b5e20;
+      --paper-green-a100: #b9f6ca;
+      --paper-green-a200: #69f0ae;
+      --paper-green-a400: #00e676;
+      --paper-green-a700: #00c853;
+
+      --paper-light-green-50: #f1f8e9;
+      --paper-light-green-100: #dcedc8;
+      --paper-light-green-200: #c5e1a5;
+      --paper-light-green-300: #aed581;
+      --paper-light-green-400: #9ccc65;
+      --paper-light-green-500: #8bc34a;
+      --paper-light-green-600: #7cb342;
+      --paper-light-green-700: #689f38;
+      --paper-light-green-800: #558b2f;
+      --paper-light-green-900: #33691e;
+      --paper-light-green-a100: #ccff90;
+      --paper-light-green-a200: #b2ff59;
+      --paper-light-green-a400: #76ff03;
+      --paper-light-green-a700: #64dd17;
+
+      --paper-lime-50: #f9fbe7;
+      --paper-lime-100: #f0f4c3;
+      --paper-lime-200: #e6ee9c;
+      --paper-lime-300: #dce775;
+      --paper-lime-400: #d4e157;
+      --paper-lime-500: #cddc39;
+      --paper-lime-600: #c0ca33;
+      --paper-lime-700: #afb42b;
+      --paper-lime-800: #9e9d24;
+      --paper-lime-900: #827717;
+      --paper-lime-a100: #f4ff81;
+      --paper-lime-a200: #eeff41;
+      --paper-lime-a400: #c6ff00;
+      --paper-lime-a700: #aeea00;
+
+      --paper-yellow-50: #fffde7;
+      --paper-yellow-100: #fff9c4;
+      --paper-yellow-200: #fff59d;
+      --paper-yellow-300: #fff176;
+      --paper-yellow-400: #ffee58;
+      --paper-yellow-500: #ffeb3b;
+      --paper-yellow-600: #fdd835;
+      --paper-yellow-700: #fbc02d;
+      --paper-yellow-800: #f9a825;
+      --paper-yellow-900: #f57f17;
+      --paper-yellow-a100: #ffff8d;
+      --paper-yellow-a200: #ffff00;
+      --paper-yellow-a400: #ffea00;
+      --paper-yellow-a700: #ffd600;
+
+      --paper-amber-50: #fff8e1;
+      --paper-amber-100: #ffecb3;
+      --paper-amber-200: #ffe082;
+      --paper-amber-300: #ffd54f;
+      --paper-amber-400: #ffca28;
+      --paper-amber-500: #ffc107;
+      --paper-amber-600: #ffb300;
+      --paper-amber-700: #ffa000;
+      --paper-amber-800: #ff8f00;
+      --paper-amber-900: #ff6f00;
+      --paper-amber-a100: #ffe57f;
+      --paper-amber-a200: #ffd740;
+      --paper-amber-a400: #ffc400;
+      --paper-amber-a700: #ffab00;
+
+      --paper-orange-50: #fff3e0;
+      --paper-orange-100: #ffe0b2;
+      --paper-orange-200: #ffcc80;
+      --paper-orange-300: #ffb74d;
+      --paper-orange-400: #ffa726;
+      --paper-orange-500: #ff9800;
+      --paper-orange-600: #fb8c00;
+      --paper-orange-700: #f57c00;
+      --paper-orange-800: #ef6c00;
+      --paper-orange-900: #e65100;
+      --paper-orange-a100: #ffd180;
+      --paper-orange-a200: #ffab40;
+      --paper-orange-a400: #ff9100;
+      --paper-orange-a700: #ff6500;
+
+      --paper-deep-orange-50: #fbe9e7;
+      --paper-deep-orange-100: #ffccbc;
+      --paper-deep-orange-200: #ffab91;
+      --paper-deep-orange-300: #ff8a65;
+      --paper-deep-orange-400: #ff7043;
+      --paper-deep-orange-500: #ff5722;
+      --paper-deep-orange-600: #f4511e;
+      --paper-deep-orange-700: #e64a19;
+      --paper-deep-orange-800: #d84315;
+      --paper-deep-orange-900: #bf360c;
+      --paper-deep-orange-a100: #ff9e80;
+      --paper-deep-orange-a200: #ff6e40;
+      --paper-deep-orange-a400: #ff3d00;
+      --paper-deep-orange-a700: #dd2c00;
+
+      --paper-brown-50: #efebe9;
+      --paper-brown-100: #d7ccc8;
+      --paper-brown-200: #bcaaa4;
+      --paper-brown-300: #a1887f;
+      --paper-brown-400: #8d6e63;
+      --paper-brown-500: #795548;
+      --paper-brown-600: #6d4c41;
+      --paper-brown-700: #5d4037;
+      --paper-brown-800: #4e342e;
+      --paper-brown-900: #3e2723;
+
+      --paper-grey-50: #fafafa;
+      --paper-grey-100: #f5f5f5;
+      --paper-grey-200: #eeeeee;
+      --paper-grey-300: #e0e0e0;
+      --paper-grey-400: #bdbdbd;
+      --paper-grey-500: #9e9e9e;
+      --paper-grey-600: #757575;
+      --paper-grey-700: #616161;
+      --paper-grey-800: #424242;
+      --paper-grey-900: #212121;
+
+      --paper-blue-grey-50: #eceff1;
+      --paper-blue-grey-100: #cfd8dc;
+      --paper-blue-grey-200: #b0bec5;
+      --paper-blue-grey-300: #90a4ae;
+      --paper-blue-grey-400: #78909c;
+      --paper-blue-grey-500: #607d8b;
+      --paper-blue-grey-600: #546e7a;
+      --paper-blue-grey-700: #455a64;
+      --paper-blue-grey-800: #37474f;
+      --paper-blue-grey-900: #263238;
+
+      
+      --dark-divider-opacity: 0.12;
+      --dark-disabled-opacity: 0.38; 
+      --dark-secondary-opacity: 0.54;
+      --dark-primary-opacity: 0.87;
+
+      
+      --light-divider-opacity: 0.12;
+      --light-disabled-opacity: 0.3; 
+      --light-secondary-opacity: 0.7;
+      --light-primary-opacity: 1.0;
+}
+
+</style>
+</custom-style><custom-style>
+  <style is="custom-style">html {
+  --primary-text-color: var(--light-theme-text-color);
+      --primary-background-color: var(--light-theme-background-color);
+      --secondary-text-color: var(--light-theme-secondary-color);
+      --disabled-text-color: var(--light-theme-disabled-color);
+      --divider-color: var(--light-theme-divider-color);
+      --error-color: var(--paper-deep-orange-a700);
+
+      
+      --primary-color: var(--paper-indigo-500);
+      --light-primary-color: var(--paper-indigo-100);
+      --dark-primary-color: var(--paper-indigo-700);
+
+      --accent-color: var(--paper-pink-a200);
+      --light-accent-color: var(--paper-pink-a100);
+      --dark-accent-color: var(--paper-pink-a400);
+
+
+      
+      --light-theme-background-color: #ffffff;
+      --light-theme-base-color: #000000;
+      --light-theme-text-color: var(--paper-grey-900);
+      --light-theme-secondary-color: #737373;  
+      --light-theme-disabled-color: #9b9b9b;  
+      --light-theme-divider-color: #dbdbdb;
+
+      
+      --dark-theme-background-color: var(--paper-grey-900);
+      --dark-theme-base-color: #ffffff;
+      --dark-theme-text-color: #ffffff;
+      --dark-theme-secondary-color: #bcbcbc;  
+      --dark-theme-disabled-color: #646464;  
+      --dark-theme-divider-color: #3c3c3c;
+
+      
+      --text-primary-color: var(--dark-theme-text-color);
+      --default-primary-color: var(--primary-color);
+}
+
+</style>
+</custom-style><script async="" src="03_data_quality_files/lazy.min_YeSC.js"></script>
+<script src="03_data_quality_files/index_YeSC.js"></script>
+<script src="03_data_quality_files/api_003_YeSC.js"></script>
+
+
+<meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="mhk9T7Pmp7gxxycMYheh3C3RrAj8Dxy51RrJJp-5jK0_j_lyBUniCI72jzpwyoZg5r2nK0qpNpk0kQJUUM4GpA">
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport">
+<meta content="1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0" name="google-site-verification">
+<meta content="max-snippet:-1, max-image-preview:large" name="robots">
+<meta content="#3681E4" property="msapplication-TileColor">
+<meta content="/super_G_optimized.png" property="msapplication-TileImage">
+<meta content="{&quot;userId&quot;:14510693,&quot;experimentIds&quot;:[&quot;gamification_streaks&quot;,&quot;recert_query_all_used_cert_activities&quot;,&quot;discovery_lab_duration_estimate&quot;,&quot;one_stop_hub&quot;,&quot;experimentation&quot;,&quot;challenge_lab_fast_track&quot;,&quot;course_exams&quot;,&quot;use_docebo_features&quot;,&quot;docebo_sync&quot;,&quot;search_async&quot;,&quot;interview_warmup_turndown&quot;,&quot;lab_page_redesign&quot;,&quot;zendesk_to_cases&quot;,&quot;front_door_landing_page&quot;,&quot;next_2026_collections&quot;,&quot;learn_with_ai&quot;,&quot;dashboard_jobs&quot;,&quot;relaunch_for_sso&quot;,&quot;new_org_dashboard_announcement&quot;,&quot;landing_page&quot;,&quot;show_new_course_exams&quot;,&quot;gamification_xp&quot;,&quot;gamification_leaderboards&quot;,&quot;docebo_sync_org_support&quot;,&quot;google_dev_payment&quot;,&quot;chime_use_abuse_details&quot;,&quot;onramp&quot;,&quot;learner_grace_period_upgrade&quot;,&quot;entity_api_keys&quot;,&quot;recalculate_activities&quot;,&quot;updated_recalculation_ux&quot;,&quot;credly&quot;,&quot;hide_unpopular_filters&quot;,&quot;relaunch_collection_ai&quot;,&quot;sso_redirect&quot;,&quot;docebo_ux&quot;,&quot;search_suggestions&quot;,&quot;show_org_catalog_button&quot;,&quot;subscription_ux&quot;,&quot;relaunch_grid_list&quot;,&quot;catalog_filters_button&quot;,&quot;new_sidenav&quot;,&quot;offboard_gwg_aug&quot;,&quot;catalog_filter_chips&quot;,&quot;oauth_risc_shutoff&quot;,&quot;gamification_ui_data&quot;,&quot;remove_gdp_subscription&quot;,&quot;learning_plan_search&quot;,&quot;use_mosaic&quot;,&quot;org_invite_link&quot;,&quot;switch_path_and_explore_headers&quot;,&quot;reroute_new_interview_warmup&quot;,&quot;new_program_dashboard&quot;,&quot;mosaic_skills_lab_recommendation&quot;,&quot;search_sort_by&quot;,&quot;auto_upgrade_game_labs&quot;,&quot;relaunch_subscriptions&quot;,&quot;gwg_catalog&quot;,&quot;feedback&quot;,&quot;sitemap_poc&quot;,&quot;banner_breadcrumbs&quot;,&quot;recert&quot;,&quot;new_org_dashboard&quot;,&quot;innovator_sign_in&quot;,&quot;in_context_all_labs&quot;,&quot;use_recommender_agent&quot;,&quot;innovator_gear_sign_in&quot;,&quot;analytics_v2&quot;,&quot;dialog_queue&quot;,&quot;gamification_achievements&quot;,&quot;gamification_leagues&quot;,&quot;search_autocomplete&quot;,&quot;one_tap&quot;,&quot;wipeout_hard_delete&quot;,&quot;credly_integration_announcement_modal&quot;,&quot;learning_plan_slug&quot;,&quot;gamification_ui&quot;,&quot;canonical_domain_redirect&quot;,&quot;relaunch_extra&quot;,&quot;alexandria_subscriptions_pagination&quot;,&quot;relaunch_credentials&quot;,&quot;cache_explore_page_result&quot;,&quot;in_context_view&quot;,&quot;gamification&quot;,&quot;gwg_paid_chip&quot;,&quot;cdn_fonts&quot;,&quot;offboard_gwg_june&quot;,&quot;relaunch&quot;,&quot;quota_service_use_lua&quot;]}" name="help-api-product-data">
+<meta content="{&quot;groupIds&quot;:[&quot;non_suadmins&quot;,&quot;students&quot;,&quot;non_organization&quot;,&quot;non_program&quot;]}" name="help-api-custom-data">
+<meta content="In this hands-on lab, you will use assess and validate data quality in a batch data pipeline, using Serverless for Apache Spark." name="description">
+<meta content="Google Skills" name="author">
+<meta content="https://www.skills.google/paths/16/course_templates/53/labs/592810" property="og:url">
+<meta content="Control data quality in batch data pipelines - Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark | Google Skills" property="og:title">
+<meta content="website" property="og:type">
+<meta content="/super_G_optimized.png" property="og:image">
+<meta content="1200" property="og:image:width">
+<meta content="630" property="og:image:height">
+<meta content="image/png" property="og:image:type">
+<meta content="Google Skills" property="og:site_name">
+<meta content="In this hands-on lab, you will use assess and validate data quality in a batch data pipeline, using Serverless for Apache Spark." property="og:description">
+
+
+<link href="https://cdn.qwiklabs.com/X46FrQX4iLxHW5MxL8jICvgZM0evMEKscCeQO%2BazGdo%3D" rel="icon" type="image/x-icon">
+<link href="https://www.skills.google/paths/16/course_templates/53/labs/592810" rel="canonical">
+
+
+<link rel="stylesheet" href="03_data_quality_files/css_YeSC.css">
+
+<link rel="stylesheet" href="03_data_quality_files/application-0f83bb8ea15d6b71458d6405bbd648818f06c103_YeSC.css" media="all">
+<link rel="stylesheet" href="03_data_quality_files/cookienotificationbar.min_YeSC.css">
+
+
+<style>
+  :root {
+    --primary-text-on-surface-color: #355d9c;
+    --primary-text-on-surface-color-dark: #2f538b;
+    --primary-text-on-surface-color-darker: #29497a;
+    --primary-text-on-surface-color-darkest: #243e69;
+    --primary-surface-color: #586d8d;
+    --primary-surface-color-rgb: 88,109,141;
+    --primary-surface-color-light: #e0e4eb;
+    --primary-surface-color-lightest: #eff2f5;
+    --text-on-primary-color: #ffffff;
+    --accent-text-on-surface-color: #f000e8;
+    --accent-surface-color: #f9ab00;
+    --accent-surface-color-rgb: 249,171,0;
+    --accent-surface-color-light: #ffefcc;
+    --text-on-accent-color: #000000;
+  }
+</style>
+
+
+
+</head>
+<body class="lab-show l-full relaunch lab-page-redesign course-layout-body l-full relaunch  learner-layout-body relaunch ">
+<div class="body-container" relaunch="">
+<div class="body-header">
+<ql-toolbar class="app-toolbar" jumpenabled="" role="banner">
+<div class="toolbar-navigation" slot="navigation">
+<ql-toggle-button animatedtoggle="" class="always-show" data-tooltip-text="Menu" for="app-nav" icon="menu" id="menu-toggle" label="Menu" officon="menu" onicon="menu_open" translate="no" type="button" data-original-title="Menu"></ql-toggle-button>
+
+</div>
+<div class="toolbar-title gs-logo" slot="title">
+<a class="custom-logo" aria-label="Google Skills" href="https://www.skills.google/"><div class="custom-logo"><img alt="Google Skills" height="24" aria-label="Google Skills" src="03_data_quality_files/lqJbxogu4tSLez1OvjDcIO8rwow6cPLwvrfIdmQLf6U=_YeSC.png"></div></a>
+
+</div>
+<div class="search-bar tablet-hide" slot="search"><div class="search-bar-container visible-search-header">
+<form class="header-search-form" action="/catalog" accept-charset="UTF-8" method="get">
+<input aria-autocomplete="list" aria-controls="searchbar-autocomplete-menu-center" aria-expanded="false" autocomplete="off" class="header-search-input" id="searchbar-autocomplete-center" name="keywords" placeholder="What do you want to learn today?" role="combobox" style="transition: none; border-radius: 28px;">
+<div class="elevation-3" id="searchbar-autocomplete-loading-icon-center">
+<ql-spinner></ql-spinner>
+<div class="ql-body-small">Loading...</div>
+</div>
+<div class="elevation-3" id="searchbar-autocomplete-no-results-center">
+<div class="ql-body-small">No results found.</div>
+</div>
+<ul aria-hidden="true" aria-live="polite" class="hide" id="searchbar-autocomplete-menu-center" role="listbox"></ul>
+<ql-icon-button class="search-bar-button search-button" icon="search" label="Search" type="submit" translate="no"></ql-icon-button>
+</form>
+
+<ql-icon-button class="exit-search-button show-tablet" icon="close" inert="" label="Exit search" translate="no" type="button"></ql-icon-button>
+</div>
+</div>
+<div class="toolbar-actions" slot="action">
+<ql-icon-button class="mobile-hide" data-tooltip-text="Share" icon="share" id="share_32581" label="Share on social media" translate="no" type="button" data-original-title="Share" aria-controls="" aria-haspopup="true"></ql-icon-button>
+<ql-menu class="social-share-menu" for="share_32581" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="share_32581">
+<ql-menu-item data-analytics-action="Shared to LinkedIn Feed." data-analytics-category="Lab" data-analytics-label="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32581%3Futm_medium%3Dsocial%26utm_source%3Dlinkedin%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_linkedin-a277effb6f261f5d3b8ad0fc692fb0025ff82eaf.png" label="Share on LinkedIn Feed" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Share on LinkedIn Feed</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to X." data-analytics-category="Lab" data-analytics-label="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark" href="https://x.com/intent/tweet?text=Learn%20cloud%20tech%20through%20hands-on%20training%20on%20%23GoogleSkills%21&amp;url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32581%3Futm_medium%3Dsocial%26utm_source%3Dx%26utm_campaign%3Dql-social-share&amp;hashtags=" iconsrc="https://cdn.qwiklabs.com/assets/logo_x-2abcf45e0673a8f244a6b686ea7f0189457d4fe3.png" label="X" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">X</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to Facebook." data-analytics-category="Lab" data-analytics-label="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark" href="https://facebook.com/sharer.php?display=popup&amp;u=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32581%3Futm_medium%3Dsocial%26utm_source%3Dfacebook%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_facebook-5ccdec05e255be16449f837fff607b6d33ae9b87.png" label="Facebook" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Facebook</span>
+</ql-menu-item>
+
+<ql-copyable-input label="Share Link" value="https://www.skills.google/catalog_lab/32581"></ql-copyable-input>
+
+</ql-menu>
+
+<ql-icon-button id="control-panel-target" style="display: none;" translate="no" type="button" aria-controls="control-panel-menu" aria-haspopup="true">
+dashboard
+</ql-icon-button>
+<ql-menu for="control-panel-target" id="control-panel-menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="control-panel-target"></ql-menu>
+
+<ql-icon-button class="header-search-button show-tablet" data-toggle="tooltip" icon="search" label="Search for Google Skills content" title="Search" translate="no" type="button"></ql-icon-button>
+
+<div class="toolbar-actions__points">
+<ql-user-points data-tooltip-text="Experience points" points="5405" data-original-title="Experience points"></ql-user-points>
+</div>
+<div class="toolbar-actions__streak-count mobile-hide" data-tooltip-text="Current streak count" data-original-title="Current streak count">
+<img alt="Current streak count" src="03_data_quality_files/streak_icon-21476b37c13f49828a5aaa2d86c4d3378cca4117_YeSC.svg">
+<div class="ql-body-large count-label">3</div>
+</div>
+<ql-icon-button class="mobile-hide" data-tooltip-text="Help" icon="help_outline" id="help-menu-button" label="Help options" translate="no" type="button" data-original-title="Help" aria-controls="help-menu" aria-haspopup="true"></ql-icon-button>
+<ql-menu for="help-menu-button" id="help-menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="help-menu-button">
+<ql-menu-item data-analytics-action="opened_help" data-analytics-label="lab" label="Help Center" onclick='hallofmirrors.helpService.startHelp({"productData":{"userId":14510693},"context":"lab"})' type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item href="https://support.google.com/qwiklabs/contact/Google_Skills" label="Contact Us" target="_blank" type="button"></ql-menu-item>
+<ql-menu-item label="Send feedback" onclick="userfeedback.api.startFeedback(
+{
+'productId': '5080217',
+'enableAnonymousFeedback': true,
+'authuser': 'undefined',
+'locale': 'en'
+},
+{
+'user_id': '14510693',
+'current_organization': ''
+})" type="button"></ql-menu-item>
+<ql-menu-item href="https://reportingwidget.google.com/widget/54?cid=1&amp;url=https://www.skills.google/paths/16/course_templates/53/labs/592810?" label="Report Illegal Content" type="button"></ql-menu-item>
+</ql-menu>
+
+<ql-icon-button class="mobile-hide" data-tooltip-text="Language" icon="language" id="language" label="Language options" translate="no" type="button" data-original-title="Language" aria-controls="" aria-haspopup="true"></ql-icon-button>
+<ql-menu for="language" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="language">
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ar" href="/paths/16/course_templates/53/labs/592810?locale=ar" label="العربية‬‎" lang="ar" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="de" href="/paths/16/course_templates/53/labs/592810?locale=de" label="Deutsch" lang="de" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="en" href="/paths/16/course_templates/53/labs/592810?locale=en" label="English" lang="en" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="es" href="/paths/16/course_templates/53/labs/592810?locale=es" label="español (Latinoamérica)" lang="es" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr" href="/paths/16/course_templates/53/labs/592810?locale=fr" label="français" lang="fr" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr_CA" href="/paths/16/course_templates/53/labs/592810?locale=fr_CA" label="français (Canada)" lang="fr-CA" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="he" href="/paths/16/course_templates/53/labs/592810?locale=he" label="עברית" lang="he" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="id" href="/paths/16/course_templates/53/labs/592810?locale=id" label="bahasa Indonesia" lang="id" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="it" href="/paths/16/course_templates/53/labs/592810?locale=it" label="italiano" lang="it" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ja" href="/paths/16/course_templates/53/labs/592810?locale=ja" label="日本語" lang="ja" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ko" href="/paths/16/course_templates/53/labs/592810?locale=ko" label="한국어" lang="ko" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pl" href="/paths/16/course_templates/53/labs/592810?locale=pl" label="polski" lang="pl" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/paths/16/course_templates/53/labs/592810?locale=pt_BR" label="português (Brasil)" lang="pt-BR" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/paths/16/course_templates/53/labs/592810?locale=pt_PT" label="português (Portugal)" lang="pt-PT" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ru" href="/paths/16/course_templates/53/labs/592810?locale=ru" label="русский" lang="ru" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="tr" href="/paths/16/course_templates/53/labs/592810?locale=tr" label="Türkçe" lang="tr" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="uk" href="/paths/16/course_templates/53/labs/592810?locale=uk" label="українська" lang="uk" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh" href="/paths/16/course_templates/53/labs/592810?locale=zh" label="简体中文" lang="zh" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/paths/16/course_templates/53/labs/592810?locale=zh_TW" label="繁體中文" lang="zh-TW" type="button" data-analytics-init="true"></ql-menu-item>
+</ql-menu>
+
+<ql-icon-button aria-expanded="false" aria-haspopup="true" aria-label="More options" class="mobile-show" data-toggle="tooltip" icon="more_vert" id="mobile-more-menu-button" title="More options" translate="no" type="button" aria-controls="mobile-more-menu"></ql-icon-button>
+<ql-menu for="mobile-more-menu-button" id="mobile-more-menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="mobile-more-menu-button">
+<ql-menu-item aria-controls="share-submenu" aria-expanded="false" aria-haspopup="true" id="share_mobile_32581" label="Share" role="button" tabindex="0" type="button"></ql-menu-item>
+
+
+<ql-menu-item aria-controls="help-submenu" aria-expanded="false" aria-haspopup="true" id="help-submenu-button" label="Help" role="button" tabindex="0" type="button"></ql-menu-item>
+<ql-menu-item aria-controls="language-submenu" aria-expanded="false" aria-haspopup="true" id="language-submenu-button" label="Language" role="button" tabindex="0" type="button"></ql-menu-item>
+</ql-menu>
+<ql-menu class="submenu" for="share_mobile_32581" id="share-submenu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="share_mobile_32581">
+<ql-menu-item data-analytics-action="Shared to LinkedIn Feed." data-analytics-category="Lab" data-analytics-label="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32581%3Futm_medium%3Dsocial%26utm_source%3Dlinkedin%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_linkedin-a277effb6f261f5d3b8ad0fc692fb0025ff82eaf.png" label="Share on LinkedIn Feed" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Share on LinkedIn Feed</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to X." data-analytics-category="Lab" data-analytics-label="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark" href="https://x.com/intent/tweet?text=Learn%20cloud%20tech%20through%20hands-on%20training%20on%20%23GoogleSkills%21&amp;url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32581%3Futm_medium%3Dsocial%26utm_source%3Dx%26utm_campaign%3Dql-social-share&amp;hashtags=" iconsrc="https://cdn.qwiklabs.com/assets/logo_x-2abcf45e0673a8f244a6b686ea7f0189457d4fe3.png" label="X" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">X</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to Facebook." data-analytics-category="Lab" data-analytics-label="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark" href="https://facebook.com/sharer.php?display=popup&amp;u=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32581%3Futm_medium%3Dsocial%26utm_source%3Dfacebook%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_facebook-5ccdec05e255be16449f837fff607b6d33ae9b87.png" label="Facebook" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Facebook</span>
+</ql-menu-item>
+
+<ql-copyable-input label="Share Link" value="https://www.skills.google/catalog_lab/32581"></ql-copyable-input>
+
+</ql-menu>
+
+<ql-menu class="submenu" for="help-submenu-button" id="help-submenu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="help-submenu-button">
+<ql-menu-item data-analytics-action="opened_help" data-analytics-label="lab" label="Help Center" onclick='hallofmirrors.helpService.startHelp({"productData":{"userId":14510693},"context":"lab"})' type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item href="https://support.google.com/qwiklabs/contact/Google_Skills" label="Contact Us" target="_blank" type="button"></ql-menu-item>
+<ql-menu-item label="Send feedback" onclick="userfeedback.api.startFeedback(
+{
+'productId': '5080217',
+'enableAnonymousFeedback': true,
+'authuser': 'undefined',
+'locale': 'en'
+},
+{
+'user_id': '14510693',
+'current_organization': ''
+})" type="button"></ql-menu-item>
+<ql-menu-item href="https://reportingwidget.google.com/widget/54?cid=1&amp;url=https%3A%2F%2Fwww.skills.google%2Fpaths%2F16%2Fcourse_templates%2F53%2Flabs%2F592810%3F" label="Report Illegal Content" type="button"></ql-menu-item>
+</ql-menu>
+<ql-menu class="submenu" for="language-submenu-button" id="language-submenu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="language-submenu-button">
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ar" href="/paths/16/course_templates/53/labs/592810?locale=ar" label="العربية‬‎" lang="ar" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="de" href="/paths/16/course_templates/53/labs/592810?locale=de" label="Deutsch" lang="de" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="en" href="/paths/16/course_templates/53/labs/592810?locale=en" label="English" lang="en" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="es" href="/paths/16/course_templates/53/labs/592810?locale=es" label="español (Latinoamérica)" lang="es" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr" href="/paths/16/course_templates/53/labs/592810?locale=fr" label="français" lang="fr" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr_CA" href="/paths/16/course_templates/53/labs/592810?locale=fr_CA" label="français (Canada)" lang="fr-CA" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="he" href="/paths/16/course_templates/53/labs/592810?locale=he" label="עברית" lang="he" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="id" href="/paths/16/course_templates/53/labs/592810?locale=id" label="bahasa Indonesia" lang="id" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="it" href="/paths/16/course_templates/53/labs/592810?locale=it" label="italiano" lang="it" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ja" href="/paths/16/course_templates/53/labs/592810?locale=ja" label="日本語" lang="ja" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ko" href="/paths/16/course_templates/53/labs/592810?locale=ko" label="한국어" lang="ko" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pl" href="/paths/16/course_templates/53/labs/592810?locale=pl" label="polski" lang="pl" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/paths/16/course_templates/53/labs/592810?locale=pt_BR" label="português (Brasil)" lang="pt-BR" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/paths/16/course_templates/53/labs/592810?locale=pt_PT" label="português (Portugal)" lang="pt-PT" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ru" href="/paths/16/course_templates/53/labs/592810?locale=ru" label="русский" lang="ru" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="tr" href="/paths/16/course_templates/53/labs/592810?locale=tr" label="Türkçe" lang="tr" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="uk" href="/paths/16/course_templates/53/labs/592810?locale=uk" label="українська" lang="uk" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh" href="/paths/16/course_templates/53/labs/592810?locale=zh" label="简体中文" lang="zh" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/paths/16/course_templates/53/labs/592810?locale=zh_TW" label="繁體中文" lang="zh-TW" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+</ql-menu>
+
+<ql-icon-button data-tooltip-text="My account" id="my_account" label="My account" translate="no" type="button" data-original-title="My account" aria-controls="my_account_menu" aria-haspopup="true">
+<ql-avatar src="https://lh3.googleusercontent.com/a/ACg8ocJkyb3naiKxKingQ4lR9pgOsDBVojfWRR-2DtNTxs00yi75mbI=s320-c"></ql-avatar>
+</ql-icon-button>
+<ql-menu for="my_account" id="my_account_menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="my_account">
+<div class="learner-profile-account-menu my-account-menu">
+<div class="learner-profile-account-menu__notifications">
+</div>
+<div class="learner-profile-account-menu__profile">
+<ql-avatar size="88" src="https://lh3.googleusercontent.com/a/ACg8ocJkyb3naiKxKingQ4lR9pgOsDBVojfWRR-2DtNTxs00yi75mbI=s320-c"></ql-avatar>
+<div class="learner-profile-account-menu__metadata">
+<h4 class="ql-title-large">Izthak Zadwing</h4>
+<p class="ql-body-medium text--light">
+</p>
+<div class="ql-body-medium l-mbs">Member since 2024</div>
+<a class="ql-title-small" style="text-decoration:none" href="https://www.skills.google/my_account/payments"><ql-chip class="relaunch" icon="deployed_code">
+Starter
+</ql-chip>
+</a><div class="learner-profile-account-menu__credits">
+<ql-button href="/subscriptions" label="Buy subscription" text="" type="button"></ql-button>
+</div>
+</div>
+</div>
+<div class="learner-profile-account-menu__options">
+<ql-button href="/" icon="dashboard" label="Dashboard" text="" type="button"></ql-button>
+<ql-button href="/profile/activity" icon="lists" label="Progress" text="" type="button"></ql-button>
+<ql-button href="/my_account/profile" icon="settings" label="Settings" text="" type="button"></ql-button>
+<ql-button data-analytics-action="clicked_sign_out" href="/users/sign_out" icon="logout" label="Sign Out" method="delete" text="" type="button" data-analytics-init="true"></ql-button>
+</div>
+<div class="learner-profile-account-menu__footer">
+<ql-button href="/privacy_policy" label="Privacy" target="_blank" text="" type="button"></ql-button>
+<ql-button href="/terms_of_service" label="Terms" text="" type="button"></ql-button>
+</div>
+</div>
+</ql-menu>
+
+
+
+</div>
+</ql-toolbar>
+</div>
+<div class="body-container__inner">
+<ql-sidenav id="app-nav" items="[{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Dashboard&quot;,&quot;icon&quot;:&quot;dashboard&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Dashboard&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Catalog&quot;,&quot;icon&quot;:&quot;book_2&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/catalog&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Catalog&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Paths&quot;,&quot;icon&quot;:&quot;conversion_path&quot;,&quot;active&quot;:true,&quot;href&quot;:&quot;/paths&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Paths&quot;}},{&quot;type&quot;:&quot;dropdown&quot;,&quot;label&quot;:&quot;Collections&quot;,&quot;icon&quot;:&quot;category&quot;,&quot;active&quot;:false,&quot;children&quot;:[{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;AI Boost Bites&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/collections/ai-boost-bites&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_collections&quot;,&quot;label&quot;:&quot;AI Boost Bites&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Cloud&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/collections/cloud&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_collections&quot;,&quot;label&quot;:&quot;Cloud&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;DeepMind&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/collections/deepmind&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_collections&quot;,&quot;label&quot;:&quot;DeepMind&quot;}}],&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Collections&quot;}},{&quot;type&quot;:&quot;dropdown&quot;,&quot;label&quot;:&quot;Credentials&quot;,&quot;icon&quot;:&quot;license&quot;,&quot;active&quot;:false,&quot;children&quot;:[{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Certificate&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/credentials/certificate&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_credentials&quot;,&quot;label&quot;:&quot;Certificate&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Skill badge&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/credentials/skill_badge&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_credentials&quot;,&quot;label&quot;:&quot;Skill badge&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Certification&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/credentials/tech_certification&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_credentials&quot;,&quot;label&quot;:&quot;Certification&quot;}}],&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Credentials&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Subscriptions&quot;,&quot;icon&quot;:&quot;subscriptions&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/subscriptions&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Subscriptions&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Organizations&quot;,&quot;icon&quot;:&quot;corporate_fare&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/learningcenter&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Organizations&quot;}}]">
+<ql-fab class="navrail-search-button" data-analytics-action="click_button" data-analytics-button-text="Search" data-analytics-label="Search" data-analytics-position="application_sidenav" data-analytics-type="eventParams" expandable="" icon="search" label="Search" slot="start" type="button" data-analytics-init="true"></ql-fab>
+</ql-sidenav>
+
+<div class="body-content">
+<div class="banner">
+<div id="callout-container">
+</div>
+
+</div>
+<div class="page-header">
+<div class="page-main-banner">
+<div class="page-main-banner-breadcrumbs">
+<nav aria-label="Breadcrumb" class="breadcrumbs-container" role="navigation">
+<ol>
+<li class="breadcrumb-item ql-label-medium">
+<ql-icon-button href="/" icon="home_filled" iconfill="" translate="no" type="button"></ql-icon-button>
+
+<ql-icon class="breadcrumb-arrow" translate="no">navigate_next</ql-icon>
+</li>
+<li class="breadcrumb-item ql-label-medium">
+<a href="https://www.skills.google/paths/16">Professional Data Engineer Certification</a>
+<ql-icon class="breadcrumb-arrow" translate="no">navigate_next</ql-icon>
+</li>
+<li class="breadcrumb-item ql-label-medium">
+<a href="https://www.skills.google/paths/16/course_templates/53">Build Batch Data Pipelines on Google Cloud</a>
+<ql-icon class="breadcrumb-arrow" translate="no">navigate_next</ql-icon>
+</li>
+<li class="breadcrumb-item ql-label-medium" tabindex="0">
+Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark
+</li>
+</ol>
+</nav>
+
+</div>
+<aside aria-label="Free trial" class="page-main-banner-console-free-trial">
+<div class="console-free-trial">
+<p class="console-free-trial-content ql-body-medium">
+Apply your skills in Google Cloud console
+</p>
+<div class="console-free-trial-actions">
+<ql-button data-analytics-action="gcp_cta" data-analytics-position="free trial banner" data-analytics-type="eventParams" elevated="" href="https://console.cloud.google.com/freetrial" label="Get started" target="_blank" type="button" data-analytics-init="true"></ql-button>
+</div>
+</div>
+</aside>
+</div>
+
+</div>
+<main id="jump-content" tabindex="-1">
+<ql-drawer-container class="course-container">
+<ql-drawer-content class="course-activity" slot="drawer-content">
+<div class="course-activity-header">
+<div class="course-toc-cont">
+<ql-contents-menu modules="[{&quot;id&quot;:&quot;83853&quot;,&quot;title&quot;:&quot;When to choose batch data pipelines&quot;,&quot;description&quot;:&quot;\u003cp\u003eYou will learn the critical role of a data engineer in developing and maintaining batch data pipelines, understand their core components and lifecycle, and analyze common challenges in batch data processing. You'll also identify key Google Cloud services that address these challenges.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599838&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592791&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592791&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Batch data pipelines and their use cases&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599839&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592792&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592792&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Processing and common challenges&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599840&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592793&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/quizzes/592793&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Module 1 Quiz: When to choose batch data pipelines&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;83854&quot;,&quot;title&quot;:&quot;Design and build batch data pipelines&quot;,&quot;description&quot;:&quot;\u003cp\u003eYou will design scalable batch data pipelines for high-volume data ingestion and transformation. You'll also optimize batch jobs for high throughput and cost-efficiency using various resource management and performance tuning techniques.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599841&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592794&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592794&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Design batch pipelines&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599842&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592795&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592795&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Large scale data transformations&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599843&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592796&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592796&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Dataflow and Serverless for Apache Spark&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599844&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592797&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/quizzes/592797&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Module 2 Quiz: Design and transformations&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599845&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592798&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592798&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Data connections and orchestration&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599846&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592799&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592799&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Execute an Apache Spark pipeline&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599847&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592800&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592800&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Optimize batch pipeline performance&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599848&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592801&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/labs/592801&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Use Serverless for Apache Spark to Load BigQuery&quot;,&quot;description&quot;:&quot;This hands-on lab shows you how to use Serverless for Apache Spark templates to load BigQuery.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599849&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592802&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/labs/592802&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Build a Simple Batch Pipeline with Dataflow Job Builder UI&quot;,&quot;description&quot;:&quot;Build a batch data pipeline using Dataflow job builder UI.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;83855&quot;,&quot;title&quot;:&quot;Control data quality in batch data pipelines&quot;,&quot;description&quot;:&quot;\u003cp\u003eYou will develop data validation rules and cleansing logic to ensure data quality within batch pipelines. You'll also implement strategies for managing schema evolution and performing data deduplication in large datasets.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599850&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592803&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592803&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Batch data validation and cleansing&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599851&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592804&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592804&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Log and analyze errors&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599852&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592805&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592805&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Schema evolution for batch pipelines&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599853&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592806&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/quizzes/592806&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Module 3 Quiz: Data validation and schema evolution&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599854&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592807&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592807&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Data integrity and duplication&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599855&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592808&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592808&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Deduplication with Serverless for Apache Spark&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599856&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592809&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592809&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Deduplication with Dataflow&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599857&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592810&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/labs/592810&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark&quot;,&quot;description&quot;:&quot;In this hands-on lab, you will use assess and validate data quality in a batch data pipeline, using Serverless for Apache Spark.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;83856&quot;,&quot;title&quot;:&quot;Orchestrate and monitor batch data pipelines&quot;,&quot;description&quot;:&quot;\u003cp\u003eYou will orchestrate complex batch data pipeline workflows for efficient scheduling and lineage tracking. You'll also implement robust error handling, monitoring, and observability for batch data pipelines.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599858&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592811&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592811&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Orchestration for batch processing&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599859&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592812&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592812&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Cloud Composer&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599860&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592813&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/quizzes/592813&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Module 4 Quiz: Orchestrations and DAGs&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599861&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592814&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592814&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Unified observability&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599862&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592815&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592815&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Alerts and troubleshooting&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599863&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592816&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/quizzes/592816&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Module 4 Quiz: Observability&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599864&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592817&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592817&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Visual pipeline management&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599865&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592818&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/labs/592818&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Building Batch Pipelines in Cloud Data Fusion&quot;,&quot;description&quot;:&quot;This lab will teach you how to use the Pipeline Studio in Cloud Data Fusion to build an ETL pipeline. Pipeline Studio exposes the building blocks and built-in plugins for you to build your batch pipeline, one node at a time. You will also use the Wrangler plugin to build and apply transformations to your data that goes through the pipeline.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599866&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592819&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/42471475/html_bundles/592819&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Congratulations: Course summary&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;next-steps&quot;,&quot;title&quot;:&quot;Your Next Steps&quot;,&quot;description&quot;:null,&quot;steps&quot;:[{&quot;id&quot;:&quot;badge-step&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;badge&quot;,&quot;href&quot;:&quot;/paths/16/course_templates/53/badge&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Completion&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;credential&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;credentialType&quot;:null}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;survey-0-step&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;survey-0&quot;,&quot;href&quot;:&quot;/paths/16/course_templates/53/course_surveys/0&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Course Survey&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;survey&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:true}]" overviewlink="/paths/16/course_templates/53" selectedactivityid="592810" selectedcontenttitle="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark"></ql-contents-menu>
+<div class="course-toc-buttons">
+
+<div class="feedback-button-container">
+<ql-button class="feedback-button" data-analytics-action="button_click" data-analytics-button-text="Send feedback" data-analytics-type="eventParams" icon="rate_review" label="Send feedback" onclick="ql.sendFeedback();
+userfeedback.api.startFeedback(
+{
+'productId': '5080217',
+'enableAnonymousFeedback': true,
+'authuser': 'undefined',
+'locale': 'en'
+},
+{
+'user_id': '14510693',
+'current_organization': ''
+})" outlined="" type="button" data-analytics-init="true"></ql-button>
+</div>
+
+</div>
+</div>
+</div>
+<div class="course-activity-content with-space-for-navigation-buttons" role="region" tabindex="0">
+
+
+<div class="lab-assessment__tab js-open-lab-assessment-panel">
+<button class="js-lab-assessment-total-score">
+—/100
+</button>
+</div>
+<div aria-labelledby="lab-assessment-checkpoint" class="lab-assessment__panel js-lab-assessment-panel" role="dialog">
+<div class="lab-assessment__panel__header">
+<h4 id="lab-assessment-checkpoint">Checkpoints</h4>
+<ql-icon-button class="js-close-lab-assessment-panel" icon="arrow_forward" label="Close dialog" translate="no" type="button"></ql-icon-button>
+</div>
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Enable the Dataproc API
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Enable the Dataproc API" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Enable the Dataproc API" step_no="1" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-1">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Create a BigQuery dataset
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Create a BigQuery dataset" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Create a BigQuery dataset" step_no="2" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-2">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Prepare the PySpark Data Quality Script
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Prepare the PySpark Data Quality Script" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Prepare the PySpark Data Quality Script" step_no="3" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-3">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Run the Batch Pipeline
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Run the Batch Pipeline" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Run the Batch Pipeline" step_no="4" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-4">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Verify the Data in BigQuery
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Verify the Data in BigQuery" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Verify the Data in BigQuery" step_no="5" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-5">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class="js-lab-state" data-analytics-payload="{&quot;label&quot;:&quot;Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark&quot;,&quot;lab_name&quot;:&quot;Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;google-run&quot;}" data-credits="20.0" data-focus-id="852538702" data-lab-duration="5400" data-learning-plan-id="16" data-parent="course_session" data-payment-required="" data-recaptcha-enabled="" data-recaptcha-error-message="reCAPTCHA verification error. Please refresh and try again." data-recaptcha-load-error-message="reCAPTCHA could not load. Please disable any ad blockers or privacy extensions and try again." id="lab-container">
+<script src="03_data_quality_files/api_002_YeSC.js"></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+             grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                  var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+          var element = document.getElementById(id);
+          if (element !== null) element.value = token;
+        }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response " style="" value="0cAFcWeA6-AJDz4ex59qRKK5yPxgDDsMHtYLV19nnKU3Etoh9zZLhAA4pCwqxv5zyAOFCHF0rZMu6nv5uSKGdXfdtsriPh5LHKTE7Kl2ec_9rtTRQ3uOie6QS47KPxZfw4G9Qa7woAdnGuQO7oSVplvUZ4SnvugBOGru0sCoTxabE6NqtWpQwSElQRNOLeMRiyX1D9mXavPxcLhcB9IYFzKWqYd3qsBhCz5kaX4J2mP0gIeZbsDKs4eEDdQ__uNft4hmh8g69GzqwajC_V4_QHzIy9yNQpjViBvYCioEuN6yG4k7thcNqVo9EdRuQ7Ou-GrjQSCEU_A-Oi60yGUhmW13sfpvLlkYBCCsZyujJ38RsuOJPcIZsZTJ5n89dsJQKIJbT8ZjefHonh84iLTSVYGNlL7wVtneiB23T3E36YOeTq4W2UcsHD4Ub0T6qNmh00CL4AoOCz3WaOlkVvgdOw5U5Ekj8ubbfHbHom8h6ldR0X62bHvpesvMx_-GjHIdOa76xNMjCvA2-CbetSS8xfYQPT1a6AqoODgd6ntQJAUz3YMJLU0qGI6oo2DthIlR-PzIMLiRA0GnvD9XPqxKaCKOIOOpHbyziB1188LJkToKpjGTzVWs1_dSkCsbVOuQ5R68YK5S943Pbefrva3_tepcgu9c37bnnT5bbeaeSSEz4aqy_CuU_Lsm_8ycjaF-Iv406jpgEWeCt4wC1FAA0y2KXbs7Yq0M15cgakX6-ZKGizuNGuACMpJ0EDdioD2a8zrV2_-pJ8Tk39Ynt05_uJKbASb4ULvT-rJrAe7jpJP5pv0aqRomJi3NxDcSSkFpHbwzRYPz_rPvJuY6GofmZ4y51y-BW4Di441sJnqvOuXRw7ScnoVjioAqjNjJdgms8xCZqKsNTnPP9P9_9DbrsYwRsw0acwLZbZCpooefIWEdjFFtOvubHSj65G-OK50vN9CtDSpuZ2YpsN6Qth8IJIwN6jibl7iPyPOkkg1Qv9ku7wN_RKuG-Dy2x2LEbrdMfl6orJ8qOzAHjKSyBzYOXcNBkgtBF4i2pM4yRDYt-blWbnPxNAMqS56VuVSaNQlhLwAIdQms9tQkHQsocP8IMdfuEEMsxT6JHR5F_PCEE1UQuvJuskUHOJsa2zeLi6mwUsO6nrQF7n8r0fK6qxzUCZbOTRj7yayiQHYzGsInc5MSnROa5gsdnoTtbZH29XIAtjqDd88NubkB3WctkvBrtA1XxuxGqdraxvki0hgi3tqKfHrLKu_3a7BcQIeI6u-J1e2sVBYz7W6CLe2LZ3ZNyZUtURQ0O9PyJHJLsx0XMS5e2wtS-8CN6TABLO8In_xjWg-MBNefg9XhkJUcsLZW3rnVCMEtmjXqbHvdS-U_WQkURENWtx2ruV55kyNyssSmIOjMqnKi-lYur7FjQIgZMqSdl_z1VsZWYBdxsLiRf26OFel2-vLlq_wELaJDxhe7oxA_IeBshpqQMUaCW5rwDOc4sbx2mTw2EzVnHOnLVpBSl3kWmKJLKXDeT1VKXW9mv7FMFzE5mUnQC7WRnS8GmkTNZ85KqfaYTAnkKjI_rqtiSurz9rjarnPxuN62yTEutZn4ac07ifea7XBnLMHDHNNzAsO9JwRODY__-9eMiiIv2iMErnJtSIDQ_nP7zfZ1hvIad6VSgvbZOchJ7NORQrZ_iquDFuFI1FYtMugosNzLZGsAVTAIsInTSvC9-omgxymC6RwiElXReUi92Gf8W6w0JYSoQoIfsjZjP1biKZqtybRbEFy40ZU3tmYuOPHmklUpAonDjrECF0DKw3GlwLNplV_KoRrbnO02dnGjgIzHaLclP3KIszf4_b3nBHOATB18fhAkH2bkpu7VOk3Ue5a-_5FwZbMApI7GUtBdIJcwO5t9IDQAYSJ0IWsqdcn91BCs1YfUvgyR9ncUZN1CqJV8m5fgtwN-jkTseUMuyvC8sf21c3zH6ehd4mt5REdSwzdhWNz4XhMUE--9APWiyyhC4GzaYPdEwWxW5lagYebfQnBFyhfoiWjsPxvh6EQCeZ1-W6TcMjUooNiklW6gkzDZp_R43uQVLylU7ijI94K5l-GcJU3Yxxkk49mRAECSbZ7Yw2Z_PPEi3NKMKdyrv7l18yPAuIuIS33KzZYYl3YLdIuUIvwgxDVx1D1dWYmkPNE7on7U9prJqevD37l1gTf4JrX5Yo7kNbCuQBe5m4pnmgaL5-8BNcNcliPGyD3z84GS4IKmjEzODEKW-e7w756nQeJfaxRA5Itq6VI99M4GAgByrLUsnlSKumZh5WsB5y040IqhZUHP7B"><div style="width: 304px; height: 78px;"><div><iframe title="reCAPTCHA" width="304" height="78" role="presentation" name="a-ve2fiammhfb8" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="03_data_quality_files/anchor_YeSC.html"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div>
+
+<ql-drawer id="terminal-drawer" slot="drawer" style="visibility: hidden;" tabindex="-1" aria-hidden="true" role="region" mode="side">
+<iframe allow="clipboard-read" class="terminal" id="embedded-resource"></iframe>
+</ql-drawer>
+<ql-drawer-content class="js-lab-wrapper" id="lab-content" slot="drawer-content">
+<ql-drawer-container id="lab-content-container">
+<ql-drawer-content id="lab-instructions" slot="drawer-content">
+<div class="lab-content-container">
+<div class="alert alert--fake js-alert">
+<p class="alert__message js-alert-message" role="alert"></p>
+<ql-icon-button class="alert__close js-alert-close" icon="clear" translate="no" type="button"></ql-icon-button>
+<iframe class="l-ie-iframe-fix" tabindex="-1"></iframe>
+</div>
+<div class="lab-content__renderable-instructions js-lab-content">
+<ql-lab-header chips="[&quot;5 Credits&quot;,&quot;1 hour&quot;,&quot;Intermediate&quot;,&quot;Updated 9 days ago&quot;]" class="js-lab-control-panel" connectionfiles="[]" currentpoints="0" labcontentitems="[{&quot;id&quot;:&quot;step1&quot;,&quot;title&quot;:&quot;Overview&quot;},{&quot;id&quot;:&quot;step2&quot;,&quot;title&quot;:&quot;Setup and requirements&quot;},{&quot;id&quot;:&quot;step3&quot;,&quot;title&quot;:&quot;Your Lab Environment&quot;},{&quot;id&quot;:&quot;step4&quot;,&quot;title&quot;:&quot;Task 1. Explore the Environment and Prepare Services&quot;},{&quot;id&quot;:&quot;step5&quot;,&quot;title&quot;:&quot;Task 2. Prepare the BigQuery Environment&quot;},{&quot;id&quot;:&quot;step6&quot;,&quot;title&quot;:&quot;Task 3. Prepare the PySpark Data Quality Script&quot;},{&quot;id&quot;:&quot;step7&quot;,&quot;title&quot;:&quot;Task 4. Configure and Run the Batch Pipeline&quot;},{&quot;id&quot;:&quot;step8&quot;,&quot;title&quot;:&quot;Task 5. Verify the Clean Data in BigQuery&quot;},{&quot;id&quot;:&quot;step9&quot;,&quot;title&quot;:&quot;Task 6. Review the Invalid Records in the DLQ&quot;},{&quot;id&quot;:&quot;step10&quot;,&quot;title&quot;:&quot;Congratulations!&quot;}]" labcontrolbutton="{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}" labdetails="[]" labtimer="{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:5400,&quot;totalDurationSeconds&quot;:5400}" labtitle="Validate Data Quality for a Batch Data Pipeline using Serverless for Apache Spark" provisioning="false" provisioningsecondsremaining="null" studentresources="[]" totalpoints="100" style="--ql-lab-header-sticky-top: -284px;">
+<div aria-live="polite" class="hidden" id="recaptcha-v2-start-lab" slot="recaptcha">
+<script src="03_data_quality_files/api_YeSC.js" async="" defer="defer"></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "><div style="width: 304px; height: 78px;"><div><iframe title="reCAPTCHA" width="304" height="78" role="presentation" name="a-740yectddbjw" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="03_data_quality_files/anchor_002_YeSC.html"></iframe></div><textarea id="g-recaptcha-response-1" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Enable the Dataproc API
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Enable the Dataproc API" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Enable the Dataproc API" step_no="1" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-1">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Create a BigQuery dataset
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Create a BigQuery dataset" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Create a BigQuery dataset" step_no="2" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-2">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Prepare the PySpark Data Quality Script
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Prepare the PySpark Data Quality Script" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Prepare the PySpark Data Quality Script" step_no="3" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-3">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Run the Batch Pipeline
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Run the Batch Pipeline" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Run the Batch Pipeline" step_no="4" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-4">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Verify the Data in BigQuery
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Verify the Data in BigQuery" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Verify the Data in BigQuery" step_no="5" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-5">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+</ql-lab-header>
+
+<div class="lab-preamble__ai_notice">
+<ql-callout icon="spark" id="ai-notice-32581" severity="info">
+<div slot="content">
+This lab may incorporate AI tools to support your learning.
+</div>
+</ql-callout>
+</div>
+<div class="markdown-lab-instructions js-markdown-instructions" id="markdown-lab-instructions">
+
+<h2 id="step1">Overview</h2>
+<p>Serverless for Apache Spark from Google Cloud is a fully-managed 
+service that simplifies running Spark batch workloads without managing 
+infrastructure. This pattern provides a robust approach for ETL 
+(Extract, Transform, Load) workflows, ensuring that only high-quality 
+data lands in your analytical systems.</p>
+<h3>The challenge</h3>
+<p>Raw data ingested into a data lake often contains imperfections such 
+as missing values, incorrect formats, or invalid entries. Loading this 
+data directly into an analytical warehouse can corrupt reports and lead 
+to poor business decisions.</p>
+<h3>The solution</h3>
+<p>Create an automated data quality pipeline. This pipeline intercepts 
+raw data, applies a set of validation rules, and then intelligently 
+routes the data. Clean records are sent to the production data 
+warehouse, while records that fail validation are sent to a "dead-letter
+ queue" (DLQ) for inspection and remediation.</p>
+<p>In this lab, you will build this solution by running a custom PySpark job on Serverless for Apache Spark. The job will:</p>
+<ol>
+<li>Read a raw CSV file from a Cloud Storage bucket.</li>
+<li>Apply data quality rules to validate each record.</li>
+<li>Load the clean, valid records into a BigQuery table.</li>
+<li>Write the invalid records to a separate DLQ bucket in Cloud Storage.</li>
+</ol>
+<p>This pattern ensures that your data warehouse remains pristine and provides a clear, auditable process for handling data errors.</p>
+<h3>Enterprise use cases</h3>
+<ul>
+<li>
+<strong>E-commerce</strong>: A pipeline validates incoming order data, 
+ensuring product IDs are valid and customer emails are correctly 
+formatted before loading into a sales analytics BigQuery table. Invalid 
+orders are routed to a DLQ for manual review.</li>
+<li>
+<strong>Healthcare</strong>: A system processes patient records, 
+validating that medical codes exist and dates are in the correct format.
+ Records with errors are sent to a secure DLQ bucket for data 
+stewardship review to ensure compliance.</li>
+<li>
+<strong>Finance</strong>: A daily pipeline ingests stock market data, checking for null values in critical fields like <code>close_price</code>. Incomplete ticker data is sent to a DLQ, preventing corruption of time-series analysis models.</li>
+</ul>
+<h3>Objectives</h3>
+<p>In this lab, you will learn how to:</p>
+<ul>
+<li>Explore the pre-configured lab environment provisioned by Terraform.</li>
+<li>Complete the environment setup by creating a BigQuery dataset.</li>
+<li>Write a commented, custom PySpark script with data quality and routing logic.</li>
+<li>Configure and execute a Spark batch job on a custom, secure VPC network.</li>
+<li>Verify the clean data output in a BigQuery table.</li>
+<li>Review the invalid records in the Cloud Storage DLQ.</li>
+</ul>
+<hr>
+<h2 id="step2">Setup and requirements</h2>
+<p>For each lab, you get a new Google Cloud project and set of resources for a fixed time at no cost.</p>
+<ol>
+<li>
+<p>Sign in to Google Skills using an <strong>incognito window</strong>.</p>
+</li>
+<li>
+<p>Note the lab's access time (for example, <code>1:15:00</code>), and make sure you can finish within that time.<br>
+There is no pause feature. You can restart if needed, but you have to start at the beginning.</p>
+</li>
+<li>
+<p>When ready, click <strong>Start lab</strong>.</p>
+</li>
+<li>
+<p>Note your lab credentials (<strong>Username</strong> and <strong>Password</strong>). You will use them to sign in to the Google Cloud Console.</p>
+</li>
+<li>
+<p>Click <strong>Open Google Console</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Use another account</strong> and copy/paste credentials for <strong>this</strong> lab into the prompts.<br>
+If you use other credentials, you'll receive errors or <strong>incur charges</strong>.</p>
+</li>
+<li>
+<p>Accept the terms and skip the recovery resource page.</p>
+</li>
+</ol>
+<aside class="warning"><p><strong>Note:</strong> Do not click <strong>End Lab</strong> unless you have finished the lab or want to restart it. This clears your work and removes the project.
+  </p>
+</aside>
+
+<h3>Activate Cloud Shell</h3>
+<p>Cloud Shell is a virtual machine that contains development tools. It 
+offers a persistent 5-GB home directory and runs on Google Cloud. Cloud 
+Shell provides command-line access to your Google Cloud resources. <code>gcloud</code> is the command-line tool for Google Cloud. It comes pre-installed on Cloud Shell and supports tab completion.</p>
+<ol>
+<li>
+<p>Click the <strong>Activate Cloud Shell</strong> button (<button class="js-img-container" aria-haspopup="true"><img alt="Activate Cloud Shell icon" src="03_data_quality_files/ep8HmqYGdD_kUncAAYpV47OYoHwC8+g0WK_8sidHquE=_YeSC.png"></button>) at the top right of the console.</p>
+</li>
+<li>
+<p>Click <strong>Continue</strong>.<br>
+It takes a few moments to provision and connect to the environment. When
+ you are connected, you are also authenticated, and the project is set 
+to your <em>PROJECT_ID</em>.</p>
+</li>
+</ol>
+<h4>Sample commands</h4>
+<ul>
+<li>List the active account name:</li>
+</ul>
+<ql-code-block language="plaintext">
+gcloud auth list
+</ql-code-block>
+<p>(Output)</p>
+<ql-code-block language="plaintext" output="">
+Credentialed accounts:
+ - &lt;myaccount&gt;@&lt;mydomain&gt;.com (active)
+</ql-code-block>
+<p>(Example output)</p>
+<ql-code-block language="plaintext" output="">
+Credentialed accounts:
+ - google1623327_student@qwiklabs.net
+</ql-code-block>
+<ul>
+<li>List the project ID:</li>
+</ul>
+<ql-code-block language="plaintext">
+gcloud config list project
+</ql-code-block>
+<p>(Output)</p>
+<ql-code-block language="plaintext" output="">
+[core]
+project = &lt;project_ID&gt;
+</ql-code-block>
+<p>(Example output)</p>
+<ql-code-block language="plaintext" output="">
+[core]
+project = qwiklabs-gcp-44776a13dea667a6
+</ql-code-block>
+<ql-infobox>
+<strong>Note: </strong>Full documentation of <strong>gcloud</strong> is available in the <a href="https://cloud.google.com/sdk/gcloud" target="_blank">gcloud CLI overview guide</a>.
+</ql-infobox>
+
+<hr>
+<h2 id="step3">Your Lab Environment</h2>
+<p>When you begin this lab, a Terraform script runs to automatically 
+provision most of the necessary infrastructure and resources. The 
+following have been created for you:</p>
+<ul>
+<li>
+<p><strong>Project ID</strong> = <ql-variable key="project_0.project_id"></ql-variable></p>
+</li>
+<li>
+<p><strong>Region</strong> = <ql-variable key="project_0.default_region"></ql-variable></p>
+</li>
+<li>
+<p><strong>Zone</strong> = <ql-variable key="project_0.default_zone"></ql-variable></p>
+</li>
+<li>
+<p><strong>A custom VPC Network</strong> (<code>spark-network</code>) and Subnet (<code>spark-subnet</code>) configured with the required network access for Serverless for Apache Spark.</p>
+</li>
+<li>
+<p><strong>Two Cloud Storage buckets</strong>:</p>
+<ol>
+<li>A <strong>main bucket</strong> (gs://<ql-variable key="project_0.project_id"></ql-variable>-main-bucket) used for storing your PySpark script (<code>scripts/</code>), the raw input data (<code>source/</code>), and as a temporary staging area for the BigQuery connector.</li>
+<li>A <strong>DLQ bucket</strong> (gs://<ql-variable key="project_0.project_id"></ql-variable>-dlq-bucket) dedicated to storing invalid records.</li>
+</ol>
+</li>
+<li>
+<p><strong>A raw data file</strong>: A Python script has automatically generated and uploaded a <strong>1,000-record CSV file</strong> (<code>source/customer_contacts_1000.csv</code>) to the main bucket. Approximately <strong>20%</strong> of these records contain intentional imperfections (e.g., missing IDs, invalid emails) to test your pipeline.</p>
+</li>
+</ul>
+<p>Your goal is to write a script that can identify and separate the 
+good records from the bad ones and then load them into the correct 
+destinations.</p>
+<h4>Note on Bucket Strategy:</h4>
+<ql-infobox>
+For simplicity in this lab, the main bucket is used for scripts, source 
+data, and BigQuery temporary staging. In production environments, it is a
+ best practice to use three separate buckets: one for raw/input data, 
+one for the dead-letter queue, and a dedicated bucket for temporary 
+staging data used by connectors like the BigQuery connector. This 
+provides better isolation, security, and lifecycle management.
+</ql-infobox>
+<hr>
+<h2 id="step4">Task 1. Explore the Environment and Prepare Services</h2>
+<p>First, you'll confirm that the lab resources were created correctly and preview the source data you will be working with.</p>
+<h3>Confirm the Cloud Storage buckets</h3>
+<ol>
+<li>In the Google Cloud Console, use the <strong>Navigation menu</strong> (☰) to go to <strong>Cloud Storage &gt; Buckets</strong>.</li>
+<li>Confirm that you see two buckets listed: one ending in <code>-main-bucket</code> and another ending in <code>-dlq-bucket</code>.</li>
+</ol>
+<h3>Preview the raw data and enable the API</h3>
+<p><button class="js-img-container" aria-haspopup="true"><img alt="Click the Cloud Shell Icon" src="03_data_quality_files/ysuA1_2i2kxygggjksmCG9m+9MCx3XGDMzx4mZQ_9iM=_YeSC.png"></button></p>
+<ol>
+<li>
+<p><strong>Activate Cloud Shell</strong>.</p>
+</li>
+<li>
+<p>Run the following command to view the header and the first 10 records of the raw CSV file located in your main bucket.</p>
+<ql-code-block templated="" language="awk">
+gsutil cat gs://{{{project_0.project_id|Project_ID}}}-main-bucket/source/customer_contacts_1000.csv | head -n 11
+</ql-code-block>
+</li>
+<li>
+<p>Before you can run a job, you must enable the Dataproc API. Run the following command in Cloud Shell to enable it:</p>
+<ql-code-block language="routeros">
+gcloud services enable dataproc.googleapis.com
+</ql-code-block>
+</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify your performed task.</p>
+<ql-activity-tracking step="1">
+    Enable the Dataproc API.
+  </ql-activity-tracking>
+<h2 id="step5">Task 2. Prepare the BigQuery Environment</h2>
+<p>Your Terraform script has set up the network and storage, but you 
+still need to create the destination BigQuery dataset where your clean 
+data will be loaded.</p>
+<h3>Create the dataset</h3>
+<ol>
+<li>
+<p>In <strong>Cloud Shell</strong>, run the following command to create a new BigQuery dataset named <code>customer_data_clean</code>.</p>
+<ql-code-block language="ebnf">
+bq mk customer_data_clean
+</ql-code-block>
+</li>
+<li>
+<p>You can now validate that the dataset was created successfully in the console. Use the <strong>Navigation Menu</strong> (☰) to go to <strong>BigQuery</strong>. In the <strong>Classic explorer</strong> panel, click the arrow next to your project ID to expand its contents, and you should see your new <code>customer_data_clean</code> dataset.</p>
+</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify your performed task.</p>
+<ql-activity-tracking step="2">
+    Create a BigQuery dataset.
+  </ql-activity-tracking>
+<h2 id="step6">Task 3. Prepare the PySpark Data Quality Script</h2>
+<p>Now, create the custom PySpark script that contains the logic for validating the data. The script's logic is straightforward:</p>
+<ul>
+<li>it reads the source CSV file from Cloud Storage into a DataFrame,</li>
+<li>applies a series of validation rules to check for null IDs and valid email formats,</li>
+<li>splits the DataFrame into two—one with clean records and one with invalid records, and finally,</li>
+<li>writes the clean data to BigQuery and the invalid data to the DLQ bucket in Cloud Storage.</li>
+</ul>
+<h3>Write and upload the script</h3>
+<ol>
+<li>
+<p>In <strong>Cloud Shell</strong>, create the PySpark script file named <code>customer_dq.py</code>.</p>
+<ql-code-block language="nginx">
+nano customer_dq.py
+</ql-code-block>
+</li>
+<li>
+<p>Paste the following commented Python code into the <code>nano</code> editor.</p>
+<ql-code-block templated="" language="python">
+# Import necessary libraries
+
+import sys
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, when
+
+# This script expects 1 command-line argument:
+# 1. The destination BigQuery table path in format 'dataset.table'
+
+if len(sys.argv) != 2:
+    print("Usage: customer_dq.py &lt;bq_dataset_table&gt;")
+    sys.exit(-1)
+
+# Assign command-line argument to variable
+bq_dataset_table = sys.argv[1]
+
+# Lab variables are substituted here when the lab runs
+bq_project = "{{{project_0.project_id|Project_ID}}}"
+gcs_source_path = f"gs://{bq_project}-main-bucket/source/customer_contacts_1000.csv"
+gcs_dlq_path = f"gs://{bq_project}-dlq-bucket/errors/"
+
+# Initialize a new Spark Session
+spark = SparkSession.builder.appName("Customer DQ Check").getOrCreate()
+
+# Step 1: Read the source CSV data from the GCS bucket
+df = spark.read.option("header", "true").option("inferSchema", "true").csv(gcs_source_path)
+
+# Step 2: Define the Data Quality rules
+# Rule 1: The 'id' column must not be null.
+dq_rule_id = col("id").isNotNull()
+
+# Rule 2: The 'email' column must not be null and must match a valid email format regex.
+email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+dq_rule_email = col("email").isNotNull().__and__(col("email").rlike(email_regex))
+
+# Step 3: Apply rules and split the DataFrame into clean and error records
+df_with_dq = df.withColumn("dq_passed", when(dq_rule_id.__and__(dq_rule_email), True).otherwise(False))
+clean_df = df_with_dq.filter(col("dq_passed") == True).drop("dq_passed")
+error_df = df_with_dq.filter(col("dq_passed") == False).drop("dq_passed")
+
+# Step 4: Write the clean records to the specified BigQuery table
+# The BigQuery connector requires a temporary GCS bucket NAME.
+temp_gcs_bucket_name = f"{bq_project}-main-bucket"
+
+clean_df.write \
+    .format("bigquery") \
+    .option("table", bq_dataset_table) \
+    .option("temporaryGcsBucket", temp_gcs_bucket_name) \
+    .option("project", bq_project) \
+    .mode("overwrite") \
+    .save()
+
+# Step 5: Write the error records to the DLQ bucket in GCS as a single CSV file
+error_df.repartition(1).write \
+    .option("header", "true") \
+    .mode("overwrite") \
+    .csv(gcs_dlq_path)
+
+# Stop the Spark session
+spark.stop()
+  </ql-code-block>
+</li>
+</ol>
+<p><strong>Critical Note</strong> Ensure the final line of the script is <code>spark.stop()</code>.  Delete anything that is below it, such as <code>&lt;/bq_dataset_table&gt;</code>.</p>
+<ol start="3">
+<li>
+<p>Press <strong>CTRL+X</strong>, then <strong>Y</strong>, and then <strong>Enter</strong> to save and exit <code>nano</code>.</p>
+</li>
+<li>
+<p>Upload your new PySpark script to the main Cloud Storage bucket.</p>
+<ql-code-block templated="" language="awk">
+
+    # The command below uploads the script to a 'scripts' folder in the main data bucket
+    gcloud storage cp customer_dq.py gs://{{{project_0.project_id|Project_ID}}}-main-bucket/scripts/
+
+  </ql-code-block>
+</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify your performed task.</p>
+<ql-activity-tracking step="3">
+    Prepare the PySpark Data Quality Script.
+  </ql-activity-tracking>
+<h2 id="step7">Task 4. Configure and Run the Batch Pipeline</h2>
+<p>With the script uploaded, you can now configure and submit the job to Serverless for Apache Spark.</p>
+<h3>Execute the Spark job</h3>
+<p>1.&nbsp;  Set the following environment variables in <strong>Cloud Shell</strong>. These variables create shortcuts to the resources provisioned by Terraform.</p>
+<ql-code-block templated="" language="routeros">
+
+      # The name for the final table in BigQuery
+      export BQ_TABLE="valid_customers"
+
+      # The BigQuery table path in 'dataset.table' format
+      export BQ_DATASET_TABLE="customer_data_clean.${BQ_TABLE}"
+
+      # The path to the 1000-record source CSV file
+      export 
+GCS_SOURCE_PATH="gs://{{{project_0.project_id|Project_ID}}}-main-bucket/source/customer_contacts_1000.csv"
+
+      # The GCS path where error records will be written
+      export 
+GCS_DLQ_PATH="gs://{{{project_0.project_id|Project_ID}}}-dlq-bucket/errors/"
+
+      # The GCS path to the PySpark script you just uploaded
+      export 
+PYSPARK_SCRIPT_PATH="gs://{{{project_0.project_id|Project_ID}}}-main-bucket/scripts/customer_dq.py"
+
+      # The full URI of the custom subnet created by Terraform
+      export SUBNET_URI="projects/{{{project_0.project_id 
+|PROJECT_ID}}}/regions/{{{project_0.default_region 
+|REGION}}}/subnetworks/spark-subnet"
+
+  </ql-code-block>
+<ol start="2">
+<li>
+<p>Review the command below before running it. It submits your script as
+ a batch job and passes your environment variables as arguments.</p>
+<ul>
+<li>
+<code>--subnet</code>: This flag is critical. It tells the job to run within the secure, custom <code>spark-subnet</code> created by Terraform, which is a security best practice.</li>
+<li>
+<code>--deps-bucket</code>: This flag specifies a GCS bucket for staging job dependencies.</li>
+<li>
+<code>--</code>: This double-dash separates the <code>gcloud</code> command's flags from the arguments that will be passed directly to your PySpark script.</li>
+</ul>
+</li>
+<li>
+<p>Run the command to submit the job:</p>
+<ql-code-block templated="" language="routeros">
+
+  gcloud dataproc batches submit pyspark $PYSPARK_SCRIPT_PATH \
+      --version=2.1 \
+      --batch="customer-dq-job-$(date +%s)" \
+      --region={{{project_0.default_region |REGION}}} \
+      --subnet=$SUBNET_URI \
+      --deps-bucket=gs://{{{project_0.project_id |PROJECT_ID}}}-main-bucket \
+      -- \
+      $BQ_DATASET_TABLE
+
+ </ql-code-block>
+</li>
+</ol>
+<ql-infobox>
+<strong>Note:</strong> The job will take 3-5 minutes to complete. You can monitor its progress in the Google Cloud Console by navigating to <strong>Managed Apache Spark &gt; Serverless &gt; Batches</strong>.
+  </ql-infobox>
+<p>Click <strong>Check my progress</strong> to verify your performed task.</p>
+<ql-activity-tracking step="4">
+    Run the Batch Pipeline.
+  </ql-activity-tracking>
+<h2 id="step8">Task 5. Verify the Clean Data in BigQuery</h2>
+<p>Now that the pipeline has run, verify that only the clean records were loaded into BigQuery.</p>
+<h3>Query the results table</h3>
+<ol>
+<li>
+<p>In <strong>Cloud Shell</strong>, run a query to count the clean records in the BigQuery table. The count should be approximately 800.</p>
+<ql-code-block language="n1ql">
+bq query \
+  --use_legacy_sql=false \
+  'SELECT count(*) as total_clean_records FROM `customer_data_clean.valid_customers`;'
+</ql-code-block>
+</li>
+<li>
+<p>To view a sample of the clean data, run the following command. The 
+output will show records that all have valid IDs and email formats.</p>
+<ql-code-block language="n1ql">
+bq query \
+  --use_legacy_sql=false \
+  'SELECT * FROM `customer_data_clean.valid_customers` LIMIT 10;'
+</ql-code-block>
+</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify your performed task.</p>
+<ql-activity-tracking step="5">
+    Verify the Data in BigQuery.
+  </ql-activity-tracking>
+<h2 id="step9">Task 6. Review the Invalid Records in the DLQ</h2>
+<p>Finally, verify that the records that failed the data quality checks were correctly routed to the DLQ bucket for later analysis.</p>
+<h3>Inspect the error files via Cloud Shell</h3>
+<ol>
+<li>
+<p>In <strong>Cloud Shell</strong>, view a sample of the invalid records in the DLQ bucket. The <code>head -n 11</code> command will show the header row plus the first 10 error records.</p>
+<ql-code-block templated="" language="awk">
+gcloud storage cat gs://{{{project_0.project_id |PROJECT_ID}}}-dlq-bucket/errors/*.csv | head -n 11
+</ql-code-block>
+</li>
+<li>
+<p>The command should return a sample of the approximately 200 records 
+that failed validation. You will see rows with missing IDs or malformed 
+emails.</p>
+<p>Example output:</p>
+<ql-code-block nowrap="" output="" templated="" language="gherkin">
+id,first_name,last_name,email
+,Isabella,Smith,&lt;REDACTED_EMAIL&gt;
+12,Michael,Johnson,
+21,Sophia,Williams,sophia.williams@example
+</ql-code-block>
+</li>
+</ol>
+<h3>(Optional) Inspect the error files via the console</h3>
+<p>You can also view the error file directly in the Google Cloud Console:</p>
+<ol>
+<li>In the <strong>Navigation Menu</strong> (☰), go to <strong>Cloud Storage &gt; Buckets</strong>.</li>
+<li>Click on the name of the bucket ending in <strong>-dlq-bucket</strong>.</li>
+<li>Navigate into the <code>errors/</code> folder.</li>
+<li>Click on the name of the <code>.csv</code> file to open and view its contents in the browser.</li>
+</ol>
+<hr>
+<h2 id="step10">Congratulations!</h2>
+<p>You have successfully built and tested a production-grade, batch data quality pipeline!</p>
+<p>In this lab, you wrote a custom PySpark job to validate and process a
+ file from Cloud Storage, loaded the clean results into a BigQuery 
+table, and routed the invalid records to a DLQ bucket, all within a 
+pre-provisioned, secure network environment. This pattern is a 
+foundational component of modern, reliable data platforms.</p>
+<h3>Next steps / Learn more</h3>
+<ul>
+<li>Learn more about the BigQuery Connector for Spark in the official <a href="https://cloud.google.com/dataproc/docs/concepts/connectors/bigquery" target="_blank">Google Cloud documentation</a>.</li>
+<li>Discover pre-built solutions for common data tasks in the <a href="https://github.com/GoogleCloudPlatform/dataproc-templates" target="_blank">Managed Service for Spark Templates GitHub repository</a>.</li>
+</ul>
+<p>Copyright 2026 Google LLC All rights reserved. Google and the Google 
+logo are trademarks of Google LLC. All other company and product names 
+may be trademarks of the respective companies with which they are 
+associated.</p>
+
+
+
+
+
+</div>
+<dialog class="lab-content__image-overlay js-zoomed-image">
+    <form method="dialog">
+      <button>
+        <img class="lab-content__image" src="">
+      </button>
+    </form>
+  </dialog></div>
+
+
+<div class="lab-content__end-lab-button js-end-lab-button-container hidden">
+<ql-lab-control-button class="js-end-lab-button" running=""></ql-lab-control-button>
+</div>
+<div class="lab-content__renderable-instructions">
+<turbo-cable-stream-source channel="Turbo::StreamsChannel" signed-stream-name="ImxhYl9yZWNvbW1lbmRhdGlvbnNfMzI1ODFfdXNlcl8xNDUxMDY5MyI=--27675da23b152c4b7c11f9ecbe5770f93740661973bd0e5aa644b3ea24017699" connected=""></turbo-cable-stream-source>
+<div id="lab_recommendations_32581_user_14510693">
+</div>
+
+</div>
+</div>
+</ql-drawer-content>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+
+
+
+</div>
+<div class="course-navigation-buttons">
+<ql-button aria-label="Previous" class="hide-mobile prev-button" href="/paths/16/course_sessions/42471475/html_bundles/592809" icon="navigate_before" type="button">Previous</ql-button>
+<div class="next-navigation-buttons">
+
+<ql-button class="next-button" href="/paths/16/course_sessions/42471475/html_bundles/592811" icon="navigate_next" trailingicon="" type="button">Next</ql-button>
+</div>
+</div>
+</ql-drawer-content>
+</ql-drawer-container>
+
+</main>
+
+<footer slot="drawer-content">
+<nav arialabel="Footer navigation" class="application-footer relaunch-extra">
+
+<div class="footer-container">
+<div class="footer-logo">
+<a class="custom-logo" aria-label="Google Skills" href="https://www.skills.google/"><div class="custom-logo"><img alt="Google Skills" height="24" aria-label="Google Skills" src="03_data_quality_files/lqJbxogu4tSLez1OvjDcIO8rwow6cPLwvrfIdmQLf6U=_YeSC.png"></div></a>
+</div>
+<div class="footer-row">
+<a href="https://www.skills.google/">Dashboard</a>
+<a href="https://www.skills.google/catalog">Catalog</a>
+<a href="https://www.skills.google/paths">Paths</a>
+<a href="https://www.skills.google/subscriptions">Subscriptions</a>
+<a href="https://www.skills.google/profile/stay_on_track">Activities</a>
+<a href="https://www.skills.google/profile/badges">Achievements</a>
+<a href="https://www.skills.google/my_account/profile">Settings</a>
+<a rel="nofollow" data-method="delete" href="https://www.skills.google/users/sign_out">Sign out</a>
+</div>
+<div class="footer-row">
+<a class="g-cloud-youtube" target="_blank" rel="noopener" href="https://www.youtube.com/@googlecloud"><ql-icon icon="video_youtube" translate="no"></ql-icon>
+Youtube
+</a><a rel="noopener" onclick='hallofmirrors.helpService.startHelp({"productData":{"userId":14510693},"context":"lab"}); return false;' href="https://www.skills.google/help">Help Center</a>
+<a href="https://www.skills.google/terms_of_service">Terms</a>
+<a target="_blank" href="https://www.skills.google/privacy_policy">Privacy</a>
+<a aria-hidden="true" class="glue-cookie-notification-bar-control">
+Manage cookies
+</a>
+</div>
+</div>
+
+</nav>
+</footer>
+</div>
+</div>
+</div>
+
+
+<span class="hidden" id="flash-sibling-before"></span>
+<ql-snackbar aria-live="polite" role="alert"></ql-snackbar>
+
+<script data-glue-cookie-notification-bar-category="2A" src="03_data_quality_files/cookienotificationbar.min_YeSC.js"></script>
+
+
+
+<ql-dialog id="connect-certmetrics-modal" nocloseicon="" nodefaultaction="" nodefaultdismiss="" inert="">
+<div class="certmetrics-modal" id="sso-modal-body">
+<div id="sso-header-image">
+<img alt="Authorize Header" src="03_data_quality_files/certmetrics_modal_connect-41dccb0f7c320144dca93f8f89ac1_YeSC.svg">
+</div>
+<h2 class="ql-headline-4" id="sso-modal-title">
+Recertify in 3 simple steps:
+</h2>
+<ql-card class="info-card" elevation="0" padded="">
+<div class="recertify-step">
+<ql-icon icon="counter_1" size="24" translate="no"></ql-icon>
+<span>Link your Google Skills and certification account profiles using the same email to get started.</span>
+</div>
+<div class="recertify-step">
+<ql-icon icon="counter_2" size="24" translate="no"></ql-icon>
+<span>Instantly see which certifications are eligible for renewal.</span>
+</div>
+<div class="recertify-step">
+<ql-icon icon="counter_3" size="24" translate="no"></ql-icon>
+<span>Complete courses and skill badges to renew your certifications automatically.</span>
+</div>
+<p class="ql-body-medium">
+By clicking "Accept", I consent to share my name, email, and course 
+completion data with Google Skills' certification partner, CM Connect, 
+to receive continuing education credit for certification renewal.
+</p>
+</ql-card>
+</div>
+<ql-button id="sso-cancel-btn" label="Close" onclick='document.querySelector("#connect-certmetrics-modal").close();' slot="action" text="" type="button"></ql-button>
+<ql-button id="sso-approve-btn" label="Accept" onclick="this.loading = true; document.querySelector('#sso-cancel-btn').disabled = true; document.querySelector('#sso-consent-form').requestSubmit();" raised="" slot="action" type="button"></ql-button>
+<form id="sso-consent-form" data-turbo="true" action="/oidc/connect_certmetrics_account" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="mhk9T7Pmp7gxxycMYheh3C3RrAj8Dxy51RrJJp-5jK0_j_lyBUniCI72jzpwyoZg5r2nK0qpNpk0kQJUUM4GpA" autocomplete="off"></form>
+</ql-dialog>
+
+<ql-dialog carousel="" id="private-mode-modal" nodefaultdismiss="" showpaginationprogress="" inert="">
+<div class="page" slot="page" style="display: block;">
+<div class="page-content">
+<img src="03_data_quality_files/start_lab-f45aca49782d4033c3ff688160387ac98c66941d_YeSC.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Before you begin
+</h1>
+<div class="ql-body-large">
+<ol>
+  <li>Labs create a Google Cloud project and resources for a fixed time</li>
+  <li>Labs have a time limit and no pause feature. If you end the lab, you'll have to restart from the beginning.</li>
+  <li>On the top left of your screen, click <strong>Start lab</strong> to begin</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="page" slot="page" style="display: none;">
+<div class="page-content">
+<img src="03_data_quality_files/open_incognito_window-3ab2004605e88542dd7732361c3fc0e01_YeSC.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Use private browsing
+</h1>
+<div class="ql-body-large">
+<ol>
+  <li>Copy the provided <strong>Username</strong> and <strong>Password</strong> for the lab</li>
+  <li>Click <strong>Open console</strong> in private mode</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="page" slot="page" style="display: none;">
+<div class="page-content">
+<img src="03_data_quality_files/google_sign_in-f9eb84339d08f7db8c5fdfa7ce7726d3531dae80_YeSC.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Sign in to the Console
+</h1>
+<div class="ql-body-large">
+<ol>
+  <li><strong>Sign in</strong> using your lab credentials. Using other credentials might cause errors or incur charges.</li>
+  <li><strong>Accept</strong> the terms, and skip the recovery resource page</li>
+  <li>Don't click <strong>End lab</strong> unless you've finished the lab or want to restart it, as it will clear your work and remove the project</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</ql-dialog>
+
+<ql-dialog headline="Score Details" icon="task_alt" id="jupyter-feedback-modal" inert="">
+<iframe id="jupyter-feedback-frame" srcdoc="" title="Jupyter Feedback"></iframe>
+</ql-dialog>
+
+<ql-dialog id="lab-notification-dialog" nodefaultaction="" nodefaultdismiss="" inert="">
+<img src="03_data_quality_files/disable_lab-47cff1f6bc3610f58767251ff93c2f99cf4f9040_YeSC.png">
+<p class="title ql-headline-4">This content is not currently available</p>
+<p class="description ql-body-1">We will notify you via email when it becomes available</p>
+<ql-button href="/focuses/852538702/set_up_lab_forward_url?course_template=53&amp;parent=course_session" id="lab-notification-close-button" label="No, thanks" slot="action" text="" type="button"></ql-button>
+<ql-button fill="" id="lab-notification-submit" label="Yes, notify me" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+<ql-dialog id="lab-notification-subscribed-dialog" nodefaultaction="" nodefaultdismiss="" inert="">
+<img src="03_data_quality_files/notifcation_subscribed-2b4f9e51439e1a107488ab58a6e13c3c_YeSC.png">
+<p class="title ql-headline-4">Great!</p>
+<p class="description ql-body-1">We will contact you via email if it becomes available</p>
+<ql-button href="/focuses/852538702/set_up_lab_forward_url?course_template=53&amp;parent=course_session" id="lab-notification-subscribed-close-button" label="Back to screen" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+
+<ql-dialog forinnovator="" id="lab-quota-modal" nodefaultaction="" inert="">
+<img id="quota-image" class="lab-image-small" src="03_data_quality_files/quota_empty-2ba3ec879dea3091828ec9cfa060947292e2c554_YeSC.png">
+<p class="title quota-header">
+</p><p class="description quota-body"></p>
+<ql-button filled="" id="close_button" label="Got it" slot="action" text="" type="button"></ql-button>
+<p></p>
+</ql-dialog>
+<ql-dialog forinnovator="" id="lab-quota-one-lab-modal" nodefaultaction="" inert="">
+<img id="quota-image" class="lab-image-medium" src="03_data_quality_files/one_lab_quota-77010e9a83e0a6c7543477868b8b808d70222adb_YeSC.png">
+<p class="title quota-header">One lab at a time</p>
+<p class="description quota-body">Confirm to end all existing labs and start this one</p>
+<ql-button filled="" id="cancel_button" label="Cancel" onclick="ql.quotaManagementAlert.closeOneLabModal();" slot="action" text="" type="button"></ql-button>
+<ql-button filled="" id="confirm_button" label="Confirm" slot="action" text="" type="button"></ql-button>
+<script>
+  var quotaEmptyPath = "https://cdn.qwiklabs.com/assets/quota_management/quota_empty-2ba3ec879dea3091828ec9cfa060947292e2c554.png";
+  var quotaWarningOneLeftPath = "https://cdn.qwiklabs.com/assets/quota_management/quota_1_warning-d4669345281d01d38c7a13eed888f72469860ed8.png";
+  var quotaWarningFiveLeftPath = "https://cdn.qwiklabs.com/assets/quota_management/quota_5_warning-4f647be02bcbb65e2bbf18ea19d5493032524116.png";
+</script>
+</ql-dialog>
+
+<ql-dialog id="incorrect-start-lab-modal" nodefaultaction="" nodefaultdismiss="" inert="">
+<div class="body">
+<img src="03_data_quality_files/open_incognito_window-3ab2004605e88542dd7732361c3fc0e01_YeSC.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Use private browsing to run the lab
+</h1>
+<div class="ql-body-large">
+Using an Incognito or private browser window is the best way to run
+this lab. This prevents any conflicts between your personal account
+and the Student account, which may cause extra charges incurred to
+your personal account.
+</div>
+</div>
+</div>
+<div class="actions">
+<ql-button id="incorrect-start-lab-modal-cancel" label="Cancel" onclick="document.getElementById('incorrect-start-lab-modal').close()" slot="action" type="button"></ql-button>
+</div>
+</ql-dialog>
+
+<div class="modal fade" id="lab-details-modal">
+<div class="modal-container">
+<div class="modal-content mdl-shadow--24dp">
+<div class="modal-body">
+<p class="l-mbm">
+In this hands-on lab, you will use assess and validate data quality in a batch data pipeline, using Serverless for Apache Spark.
+</p>
+<p class="small-label l-mbs">
+<strong>
+Duration:
+</strong>
+4m setup
+·
+90m access
+·
+60m completion
+</p>
+<p class="small-label l-mbs">
+<strong>AWS Region:</strong>
+[] <strong></strong>
+</p>
+<p class="small-label l-mbs">
+<span><strong>Levels: </strong>intermediate</span>
+</p>
+<p class="small-label">
+<strong>
+Permalink:
+</strong>
+<a href="https://www.skills.google/catalog_lab/32581">https://www.skills.google/catalog_lab/32581</a>
+</p>
+</div>
+<div class="modal-actions">
+<a class="button button--text" data-dismiss="modal">
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" tabindex="-1" title="modal"></iframe>
+</div>
+<ql-dialog headline="How satisfied are you with this lab?&lt;span aria-hidden=&quot;true&quot;&gt;*&lt;/span&gt;" id="lab-review-dialog" inert="">
+<form class="simple_form js-lab-review-form" id="edit_lab_review_64082687" action="/lab_reviews/64082687" accept-charset="UTF-8" data-remote="true" method="post"><input type="hidden" name="_method" value="patch" autocomplete="off"><div aria-labelledby="lab-review-dialog" aria-required="true" aria-valuemax="5" aria-valuemin="0" aria-valuenow="4" class="rateit js-rateit" data-rateit-max="5" data-rateit-min="0" data-rateit-resetable="false" data-rateit-step="1" data-rateit-value="4" id="lab-review-rateit" role="slider" tabindex="0"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 64px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+<div class="l-mtm">
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" value="14510693" name="lab_review[user_id]" id="lab_review_user_id"></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id"></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" value="32581" name="lab_review[lab_id]" id="lab_review_lab_id"></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id"></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" autocomplete="off" type="hidden" value="1" name="lab_review[rating]" id="lab_review_rating"></div></div>
+<div class="control-group text optional lab_review_comment lab-review-comment"><label class="text optional control-label" for="lab_review_comment">Additional Comments</label><div class="controls"><textarea no_monkey_patch="true" class="text optional" label="Additional Comments" name="lab_review[comment]" id="lab_review_comment">very useful. 
+I had an issue 
+
+Batch job is FAILED. Detail: Permission 'dataproc.autoscalingPolicies.use' denied on resource</textarea></div></div>
+</div>
+</form><ql-button disabled="" id="submit" label="Submit" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+
+<div class="modal fade" id="lab-access-modal">
+<div class="modal-container">
+<div class="modal-content mdl-shadow--24dp">
+<a class="lab-access-modal-close" data-analytics-action="dismissed_lab_payment_modal" data-analytics-actions="[&quot;close_dialog&quot;, &quot;dismissed_lab_payment_modal&quot;]" data-analytics-legacy-event-name="dismissed_lab_payment_modal" data-analytics-name="lab-access-modal" data-analytics-type="eventParams" data-dismiss="modal" data-analytics-init="true">
+<i class="material-icons">close</i>
+</a>
+<form class="js-lab-access-form" action="/focuses/process_lab_access_request?parent=course_session" accept-charset="UTF-8" data-remote="true" method="post"><input type="hidden" name="authenticity_token" value="mhk9T7Pmp7gxxycMYheh3C3RrAj8Dxy51RrJJp-5jK0_j_lyBUniCI72jzpwyoZg5r2nK0qpNpk0kQJUUM4GpA" autocomplete="off">
+<div class="modal-body">
+<div class="lab-access-modal">
+<input type="hidden" name="id" id="id" value="852538702" autocomplete="off">
+<input type="hidden" name="user_id" id="user_id" value="14510693" autocomplete="off">
+<input type="hidden" name="launch_with_credits" id="launch_with_credits" value="0" class="js-launch-with-credits-input" autocomplete="off">
+<input type="hidden" name="launch_with_subs" id="launch_with_subs" value="0" class="js-launch-with-subscription-input" autocomplete="off">
+<input type="hidden" name="launch_with_access_code" id="launch_with_access_code" value="0" class="js-launch-with-access-code" autocomplete="off">
+<div class="lab-access-modal__method">
+<p>
+This lab costs
+5 Credits.
+</p>
+<p>
+20 Credits
+available
+</p>
+<a class="button js-launch-with-credits-button js-lab-access-modal-button" data-analytics-action="clicked_launch_with_credits_button" data-analytics-actions="[&quot;clicked_launch_with_credits_button&quot;, &quot;click_button&quot;]" data-analytics-button-text="Launch with" data-analytics-label="Launch with" data-analytics-legacy-event-name="clicked_launch_with_credits_button" data-analytics-type="eventParams" data-analytics-init="true">
+Launch with
+5 Credits
+</a>
+</div>
+<div class="lab-access-modal__method">
+<p>
+Enter Lab Token:
+</p>
+<div class="lab-access-modal__code js-access-code">
+<input type="text" name="uuid_1" id="uuid_1" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+<input type="text" name="uuid_2" id="uuid_2" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+<input type="text" name="uuid_3" id="uuid_3" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+<input type="text" name="uuid_4" id="uuid_4" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+</div>
+<a class="button js-launch-with-access-code-button js-lab-access-modal-button" data-analytics-action="clicked_launch_with_access_code_button" data-analytics-actions="[&quot;clicked_launch_with_access_code_button&quot;, &quot;click_button&quot;]" data-analytics-button-text="Launch with Token" data-analytics-label="Launch with Token" data-analytics-legacy-event-name="clicked_launch_with_access_code_button" data-analytics-type="eventParams" data-analytics-init="true">
+Launch with Token
+</a>
+</div>
+</div>
+<p class="ql-label-medium l-mtl">
+I hereby consent to the immediate performance of the contract and 
+acknowledge that I will lose my right of withdrawal from the contract 
+once the lab has begun.
+</p>
+</div>
+</form>
+
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" tabindex="-1" title="modal"></iframe>
+</div>
+<ql-dialog headline="Are you sure? You may not be able to restart the lab, and you'll need to start from the beginning if you do." icon="error_outline" id="js-lab-are-you-sure-dialog" inert="">
+<ql-button id="js-are-you-sure-button" label="End Lab" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+<ql-dialog dismissallabel="Not right now" headline="Update to the new version" icon="error" id="course-session-upgrade-modal" inert="">
+<p>Your progress will carry over, but the completion percentage might change.</p>
+<ql-button href="/paths/16/course_templates/53/preview" label="Update now" slot="action" type="button">
+Preview
+</ql-button>
+</ql-dialog>
+
+
+
+<script>
+  document.addEventListener("turbo:load", function () {
+    ql.initMaterialInputs();
+    ql.tomSelect.init();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    Turbo.session.drive = false;
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labRedesign.setupRedesignStickyHeader();
+  ql.labRedesign.initRedesignToc();
+  ql.incorrectStartLabModal.init();
+  initLabReviewModal();
+  initLabReviewTranslations( {"star_amount_1":"1 of 5 stars","star_amount_2":"2 of 5 stars","star_amount_3":"3 of 5 stars","star_amount_4":"4 of 5 stars","star_amount_5":"5 of 5 stars"} )
+  initLabAccessModal();
+  ql.labAssessment.init({ openPanelAutomatically: true });
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"Are you sure? You may not be able to restart the lab, and you'll need to start from the beginning if you do.","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.course_resize_layout.init("Professional Data Engineer Certification", "Path", "Build Batch Data Pipelines on Google Cloud", "Course", "Control data quality in batch data pipelines");
+  ql.course_navigation.init("42494351");
+  ql.searchHeader.init({isRelaunch: true});
+  (new ql.searchAutocomplete()).init({forHeaderNew: true, topSuggestions: [{"label":"mars, incorporated"},{"label":"cloud architecture"},{"label":"generative ai"},{"label":"data analyst"},{"label":"security fundamentals"}]});
+  ql.messages.init();
+  ql.jumpContent.init();
+  
+  }, {once: true});
+</script>
+<script>
+  document.addEventListener("turbo:load", () => ql.analyticsV2.init(), {once: true});
+  document.addEventListener("turbo:frame-load", () => ql.analyticsV2.init(), {once: true});
+</script>
+<script>
+  document.addEventListener("turbo:load", function () {
+    ql.celebrations.init({"course_complete":"COURSE COMPLETED","document_complete":"DOCUMENT COMPLETED","experience_label":"Experience points","lab_complete":"LAB COMPLETED","learning_plan_complete":"PATH COMPLETED","lesson_complete":"LESSON COMPLETED","quiz_complete":"QUIZ COMPLETED","video_complete":"VIDEO COMPLETED"});
+    ql.achievements.init();
+  }, {once: true});
+</script>
+
+
+
+
+
+
+<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-afg8lkon8n6s" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="03_data_quality_files/anchor_003_YeSC.html"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;">0cAFcWeA6-AJDz4ex59qRKK5yPxgDDsMHtYLV19nnKU3Etoh9zZLhAA4pCwqxv5zyAOFCHF0rZMu6nv5uSKGdXfdtsriPh5LHKTE7Kl2ec_9rtTRQ3uOie6QS47KPxZfw4G9Qa7woAdnGuQO7oSVplvUZ4SnvugBOGru0sCoTxabE6NqtWpQwSElQRNOLeMRiyX1D9mXavPxcLhcB9IYFzKWqYd3qsBhCz5kaX4J2mP0gIeZbsDKs4eEDdQ__uNft4hmh8g69GzqwajC_V4_QHzIy9yNQpjViBvYCioEuN6yG4k7thcNqVo9EdRuQ7Ou-GrjQSCEU_A-Oi60yGUhmW13sfpvLlkYBCCsZyujJ38RsuOJPcIZsZTJ5n89dsJQKIJbT8ZjefHonh84iLTSVYGNlL7wVtneiB23T3E36YOeTq4W2UcsHD4Ub0T6qNmh00CL4AoOCz3WaOlkVvgdOw5U5Ekj8ubbfHbHom8h6ldR0X62bHvpesvMx_-GjHIdOa76xNMjCvA2-CbetSS8xfYQPT1a6AqoODgd6ntQJAUz3YMJLU0qGI6oo2DthIlR-PzIMLiRA0GnvD9XPqxKaCKOIOOpHbyziB1188LJkToKpjGTzVWs1_dSkCsbVOuQ5R68YK5S943Pbefrva3_tepcgu9c37bnnT5bbeaeSSEz4aqy_CuU_Lsm_8ycjaF-Iv406jpgEWeCt4wC1FAA0y2KXbs7Yq0M15cgakX6-ZKGizuNGuACMpJ0EDdioD2a8zrV2_-pJ8Tk39Ynt05_uJKbASb4ULvT-rJrAe7jpJP5pv0aqRomJi3NxDcSSkFpHbwzRYPz_rPvJuY6GofmZ4y51y-BW4Di441sJnqvOuXRw7ScnoVjioAqjNjJdgms8xCZqKsNTnPP9P9_9DbrsYwRsw0acwLZbZCpooefIWEdjFFtOvubHSj65G-OK50vN9CtDSpuZ2YpsN6Qth8IJIwN6jibl7iPyPOkkg1Qv9ku7wN_RKuG-Dy2x2LEbrdMfl6orJ8qOzAHjKSyBzYOXcNBkgtBF4i2pM4yRDYt-blWbnPxNAMqS56VuVSaNQlhLwAIdQms9tQkHQsocP8IMdfuEEMsxT6JHR5F_PCEE1UQuvJuskUHOJsa2zeLi6mwUsO6nrQF7n8r0fK6qxzUCZbOTRj7yayiQHYzGsInc5MSnROa5gsdnoTtbZH29XIAtjqDd88NubkB3WctkvBrtA1XxuxGqdraxvki0hgi3tqKfHrLKu_3a7BcQIeI6u-J1e2sVBYz7W6CLe2LZ3ZNyZUtURQ0O9PyJHJLsx0XMS5e2wtS-8CN6TABLO8In_xjWg-MBNefg9XhkJUcsLZW3rnVCMEtmjXqbHvdS-U_WQkURENWtx2ruV55kyNyssSmIOjMqnKi-lYur7FjQIgZMqSdl_z1VsZWYBdxsLiRf26OFel2-vLlq_wELaJDxhe7oxA_IeBshpqQMUaCW5rwDOc4sbx2mTw2EzVnHOnLVpBSl3kWmKJLKXDeT1VKXW9mv7FMFzE5mUnQC7WRnS8GmkTNZ85KqfaYTAnkKjI_rqtiSurz9rjarnPxuN62yTEutZn4ac07ifea7XBnLMHDHNNzAsO9JwRODY__-9eMiiIv2iMErnJtSIDQ_nP7zfZ1hvIad6VSgvbZOchJ7NORQrZ_iquDFuFI1FYtMugosNzLZGsAVTAIsInTSvC9-omgxymC6RwiElXReUi92Gf8W6w0JYSoQoIfsjZjP1biKZqtybRbEFy40ZU3tmYuOPHmklUpAonDjrECF0DKw3GlwLNplV_KoRrbnO02dnGjgIzHaLclP3KIszf4_b3nBHOATB18fhAkH2bkpu7VOk3Ue5a-_5FwZbMApI7GUtBdIJcwO5t9IDQAYSJ0IWsqdcn91BCs1YfUvgyR9ncUZN1CqJV8m5fgtwN-jkTseUMuyvC8sf21c3zH6ehd4mt5REdSwzdhWNz4XhMUE--9APWiyyhC4GzaYPdEwWxW5lagYebfQnBFyhfoiWjsPxvh6EQCeZ1-W6TcMjUooNiklW6gkzDZp_R43uQVLylU7ijI94K5l-GcJU3Yxxkk49mRAECSbZ7Yw2Z_PPEi3NKMKdyrv7l18yPAuIuIS33KzZYYl3YLdIuUIvwgxDVx1D1dWYmkPNE7on7U9prJqevD37l1gTf4JrX5Yo7kNbCuQBe5m4pnmgaL5-8BNcNcliPGyD3z84GS4IKmjEzODEKW-e7w756nQeJfaxRA5Itq6VI99M4GAgByrLUsnlSKumZh5WsB5y040IqhZUHP7B</textarea></div></div><div style="background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 3px; position: absolute; transition: visibility 0s linear 0.3s, opacity 0.3s linear; opacity: 0; visibility: hidden; z-index: 2000000000; left: 0px; top: -10000px;"><div style="width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; z-index: 2000000000; background-color: rgb(255, 255, 255); opacity: 0.05;"></div><div style="border: 11px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -11px; z-index: 2000000000;" class="g-recaptcha-bubble-arrow"></div><div style="border: 10px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -10px; z-index: 2000000000;" class="g-recaptcha-bubble-arrow"></div><div style="z-index: 2000000000; position: relative;"><iframe title="recaptcha challenge expires in two minutes" style="width: 100%; height: 100%;" name="c-740yectddbjw" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="03_data_quality_files/bframe_YeSC.html"></iframe></div></div></body></html>

@@ -2,5 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gcp_labs/batch/dataproc-templates" vcs="Git" />
   </component>
 </project>

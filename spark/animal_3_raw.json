@@ -1,0 +1,6 @@
+[
+{ "specie": "cat",      "name": "Clowy" , "age": 5 },
+{ "specie": "dog",      "name": "Drako" , "age": 4 },
+{ "specie": "elephant", "name": "Dumbo" , "age": -2 },
+{ "specie": "falcon",   "name": "Bullet", "age": -3 }
+]

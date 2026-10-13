@@ -5,10 +5,13 @@ links:
     https://beam.apache.org/get-started/wordcount-example
 '''
 
+import logging
 import re
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+
+
 
 input_file = '/home/art/data/songs/eye_of_the_tiger.txt'
 output_file = '/home/art/data/songs/out_say_so.txt'

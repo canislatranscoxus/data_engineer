@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<html lang="en" class="mdl-js"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style type="text/css">.turbo-progress-bar {
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: #0076ff;
+  z-index: 2147483647;
+  transition:
+    width 300ms ease-out,
+    opacity 150ms 150ms ease-in;
+  transform: translate3d(0, 0, 0);
+}
+</style><style type="text/css" data-tag-name="trix-editor">trix-editor {
+    display: block;
+}
+
+trix-editor:empty:not(:focus)::before {
+    content: attr(placeholder);
+    color: graytext;
+    cursor: text;
+    pointer-events: none;
+    white-space: pre-line;
+}
+
+trix-editor a[contenteditable=false] {
+    cursor: text;
+}
+
+trix-editor img {
+    max-width: 100%;
+    height: auto;
+}
+
+trix-editor [data-trix-attachment] figcaption textarea {
+    resize: none;
+}
+
+trix-editor [data-trix-attachment] figcaption textarea.trix-autoresize-clone {
+    position: absolute;
+    left: -9999px;
+    max-height: 0px;
+}
+
+trix-editor [data-trix-attachment] figcaption[data-trix-placeholder]:empty::before {
+    content: attr(data-trix-placeholder);
+    color: graytext;
+}
+
+trix-editor [data-trix-cursor-target] {
+    display: inline-block !important;
+    width: 1px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+trix-editor [data-trix-cursor-target=left] {
+    vertical-align: top !important;
+    margin-left: -1px !important;
+}
+
+trix-editor [data-trix-cursor-target=right] {
+    vertical-align: bottom !important;
+    margin-right: -1px !important;
+}</style><style type="text/css" data-tag-name="trix-toolbar">trix-toolbar {
+  display: block;
+}
+
+trix-toolbar {
+  white-space: nowrap;
+}
+
+trix-toolbar [data-trix-dialog] {
+  display: none;
+}
+
+trix-toolbar [data-trix-dialog][data-trix-active] {
+  display: block;
+}
+
+trix-toolbar [data-trix-dialog] [data-trix-validate]:invalid {
+  background-color: #ffdddd;
+}</style>
+<title>Product deep dives - Stream data with pipelines - Esports Use case | Google Skills</title>
+<link crossorigin="" href="https://cdn.qwiklabs.com/" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect">
+<link crossorigin="" href="https://fonts.googleapis.com/" rel="preconnect">
+<link as="font" crossorigin="anonymous" href="https://cdn.qwiklabs.com/fonts/google-symbols.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.qwiklabs.com/fonts/material-icons.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.qwiklabs.com/fonts/google-material-icons.woff2" rel="preload" type="font/woff2">
+<style>
+  @mixin font_face_props {
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Google Material Icons';
+    src: url('https://cdn.qwiklabs.com/fonts/google-material-icons.woff2') format('woff2');
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Material Icons';
+    src: url('https://cdn.qwiklabs.com/fonts/material-icons.woff2') format('woff2');
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Google Symbols';
+    src: url('https://cdn.qwiklabs.com/fonts/google-symbols.woff2') format('woff2');
+  }
+  
+  .material-icons {
+    font-family: 'Material Icons';
+  }
+  
+  .google-symbols {
+    font-family: 'Google Symbols';
+  }
+  
+  .google-material-icons {
+    font-family: 'Google Material Icons';
+  }
+  
+  .material-icons,
+  .google-symbols,
+  .google-material-icons {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+</style>
+
+<meta name="action-cable-url" content="/cable">
+<script type="text/javascript" async="" src="01_esports_use_case_files/js_UAqZ"></script><script async="" src="01_esports_use_case_files/gtm_UAqZ.js"></script><script type="text/javascript" async="" charset="utf-8" src="01_esports_use_case_files/recaptcha__en_UAqZ.js" crossorigin="anonymous" integrity="sha384-zKvX1tZtoUZjakAq6NG+v14XLO6jHaCtSniDaDnvzrORQB0ysw4QsbpTR9k0YMmj"></script><script type="text/javascript" async="" charset="utf-8" src="01_esports_use_case_files/recaptcha__en_UAqZ.js" crossorigin="anonymous" integrity="sha384-zKvX1tZtoUZjakAq6NG+v14XLO6jHaCtSniDaDnvzrORQB0ysw4QsbpTR9k0YMmj"></script><script>
+//<![CDATA[
+window.gon={};gon.deployment="google-run";
+//]]>
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  const properties = JSON.parse(atob('eyJsb2NhbGUiOiJlbiIsInVzZXJfcm9sZXMiOiJzdHVkZW50IiwiZmVhdHVyZV9wYXRoZmluZGVyX2pvdXJuZXlfdmlldyI6ZmFsc2UsImZlYXR1cmVfdXNlX2RvY2Vib19mZWF0dXJlcyI6dHJ1ZSwiZmVhdHVyZV9zd2l0Y2hfcGF0aF9hbmRfZXhwbG9yZV9oZWFkZXJzIjp0cnVlLCJmZWF0dXJlX3Nob3dfbmV3X2NvdXJzZV9leGFtcyI6dHJ1ZSwiZmVhdHVyZV9sZWFybmluZ19wbGFuX3NlYXJjaCI6dHJ1ZSwiZmVhdHVyZV9zZWFyY2hfc3VnZ2VzdGlvbnMiOnRydWUsImZlYXR1cmVfZGlhbG9nX3F1ZXVlIjp0cnVlLCJmZWF0dXJlX3JlbGF1bmNoX2NyZWRlbnRpYWxzIjp0cnVlLCJmZWF0dXJlX25ld19vcmdfZGFzaGJvYXJkX2Fubm91bmNlbWVudCI6dHJ1ZSwiZmVhdHVyZV91c2VfbW9zYWljIjp0cnVlLCJmZWF0dXJlX2NvdXJzZV9idWlsZGVyIjpmYWxzZSwiZmVhdHVyZV9pbm5vdmF0b3JfZ2Vhcl9zaWduX2luIjp0cnVlLCJmZWF0dXJlX2xhbmRpbmdfcGFnZSI6dHJ1ZSwiZmVhdHVyZV9kYXNoYm9hcmRfam9icyI6dHJ1ZSwiZmVhdHVyZV9jb3Vyc2VfZXhhbXMiOnRydWUsImZlYXR1cmVfbmtfcm9sbGJhY2tfdmVyc2lvbiI6ZmFsc2UsImZlYXR1cmVfb25lX3N0b3BfaHViIjp0cnVlLCJmZWF0dXJlX3NlYXJjaF9hdXRvY29tcGxldGUiOnRydWUsImZlYXR1cmVfbW9zYWljX3NraWxsc19sYWJfcmVjb21tZW5kYXRpb24iOnRydWUsImZlYXR1cmVfcGF0aGZpbmRlcl9vcmdfb25ib2FyZGluZyI6ZmFsc2UsImZlYXR1cmVfc2hvd19vcmdfY2F0YWxvZ19idXR0b24iOnRydWUsImZlYXR1cmVfbGFiX3BhZ2VfcmVkZXNpZ24iOnRydWUsImZlYXR1cmVfcmVsYXVuY2giOnRydWUsImZlYXR1cmVfcmVsYXVuY2hfZW1lcmdlbmN5X2J1dHRvbiI6ZmFsc2UsImZlYXR1cmVfYW5hbHl0aWNzX3YyIjp0cnVlLCJmZWF0dXJlX3R1cmJvIjpmYWxzZSwiZmVhdHVyZV9uZXh0XzIwMjZfY29sbGVjdGlvbnMiOnRydWUsImZlYXR1cmVfcmVjZXJ0Ijp0cnVlLCJmZWF0dXJlX2RvY2Vib19zeW5jIjp0cnVlLCJmZWF0dXJlX2NhY2hlX2V4cGxvcmVfcGFnZV9yZXN1bHQiOnRydWUsImZlYXR1cmVfZ2FtaWZpY2F0aW9uIjp0cnVlLCJmZWF0dXJlX2xlYXJuZXJfZ3JhY2VfcGVyaW9kX3VwZ3JhZGUiOnRydWUsImZlYXR1cmVfcmVtb3ZlX2dkcF9zdWJzY3JpcHRpb24iOnRydWUsImZlYXR1cmVfaW5fY29udGV4dF9hbGxfbGFicyI6dHJ1ZSwiZmVhdHVyZV9vZmZib2FyZF9nd2dfanVuZSI6dHJ1ZSwiZmVhdHVyZV9uZXdfc2lkZW5hdiI6dHJ1ZSwiZmVhdHVyZV9sZWFybmluZ19wbGFuX3NsdWciOnRydWUsImZlYXR1cmVfYWxleGFuZHJpYV9zaG93X2J1bmRsZV9lcnJvcnMiOmZhbHNlLCJmZWF0dXJlX2NoaW1lX3VzZV9hYnVzZV9kZXRhaWxzIjp0cnVlLCJmZWF0dXJlX2xhYl9leHBhbmRlZF9oaW50IjpmYWxzZSwiZmVhdHVyZV9zZWFyY2hfc29ydF9ieSI6dHJ1ZSwiZmVhdHVyZV9nYW1pZmljYXRpb25feHAiOnRydWUsImZlYXR1cmVfZnJvbnRfZG9vcl9sYW5kaW5nX3BhZ2UiOnRydWUsImZlYXR1cmVfY3JlZGx5X2ludGVncmF0aW9uX2Fubm91bmNlbWVudF9tb2RhbCI6dHJ1ZSwiZmVhdHVyZV9pbnRlcnZpZXdfd2FybXVwX3R1cm5kb3duIjp0cnVlLCJmZWF0dXJlX3plbmRlc2tfdG9fY2FzZXMiOnRydWUsImZlYXR1cmVfcmVjZXJ0X3F1ZXJ5X2FsbF91c2VkX2NlcnRfYWN0aXZpdGllcyI6dHJ1ZSwiZmVhdHVyZV9sZWFybl93aXRoX2FpIjp0cnVlLCJmZWF0dXJlX2dhbWlmaWNhdGlvbl91aSI6dHJ1ZSwiZmVhdHVyZV9jaGFsbGVuZ2VfbGFiX2Zhc3RfdHJhY2siOnRydWUsImZlYXR1cmVfZ3dnX3BhaWRfY2hpcCI6dHJ1ZSwiZmVhdHVyZV9ub19sdGlfc2Vzc2lvbl9yZWRpcmVjdCI6ZmFsc2UsImZlYXR1cmVfZW50aXR5X2FwaV9rZXlzIjp0cnVlLCJmZWF0dXJlX3NlYXJjaF9hc3luYyI6dHJ1ZSwiZmVhdHVyZV9haV9zZWFyY2hfc3VtbWFyeSI6ZmFsc2UsImZlYXR1cmVfdXBkYXRlZF9yZWNhbGN1bGF0aW9uX3V4Ijp0cnVlLCJmZWF0dXJlX3NpdGVtYXBfcG9jIjp0cnVlLCJmZWF0dXJlX2lsdF9jb250ZW50X3Byb2dyYW0iOmZhbHNlLCJmZWF0dXJlX2RvY2Vib19zeW5jX29yZ19zdXBwb3J0Ijp0cnVlLCJmZWF0dXJlX2ZlZWRiYWNrIjp0cnVlLCJmZWF0dXJlX3JlbGF1bmNoX2dyaWRfbGlzdCI6dHJ1ZSwiZmVhdHVyZV9hZ2VfZ2F0ZV9yZXNldCI6ZmFsc2UsImZlYXR1cmVfY2RuX2ZvbnRzIjp0cnVlLCJmZWF0dXJlX3dpcGVvdXRfaGFyZF9kZWxldGUiOnRydWUsImZlYXR1cmVfcGF0aGZpbmRlcl9vbmJvYXJkaW5nIjpmYWxzZSwiZmVhdHVyZV9jcmVkbHkiOnRydWUsImZlYXR1cmVfbmV3X3Byb2dyYW1fZGFzaGJvYXJkIjp0cnVlLCJmZWF0dXJlX2V4cGVyaW1lbnRhdGlvbiI6dHJ1ZSwiZmVhdHVyZV9nYW1pZmljYXRpb25fbGVhZGVyYm9hcmRzIjp0cnVlLCJmZWF0dXJlX3JlbGF1bmNoX3N1YnNjcmlwdGlvbnMiOnRydWUsImZlYXR1cmVfc3Vic2NyaXB0aW9uX3V4Ijp0cnVlLCJmZWF0dXJlX29yZ19pbnZpdGVfbGluayI6dHJ1ZSwiZmVhdHVyZV9jb25jdXJyZW50X2hvdGxhYl9hbGxvY2F0aW9uIjpmYWxzZSwiZmVhdHVyZV91c2VfcmVjb21tZW5kZXJfYWdlbnQiOnRydWUsImZlYXR1cmVfZ2FtaWZpY2F0aW9uX3N0cmVha3MiOnRydWUsImZlYXR1cmVfZ2NzYm9fZG9tYWluX3JlZGlyZWN0IjpmYWxzZSwiZmVhdHVyZV9yZWNhbGN1bGF0ZV9hY3Rpdml0aWVzIjp0cnVlLCJmZWF0dXJlX2Rpc2NvdmVyeV9sYWJfZHVyYXRpb25fZXN0aW1hdGUiOnRydWUsImZlYXR1cmVfb25lX3RhcCI6dHJ1ZSwiZmVhdHVyZV9iYW5uZXJfYnJlYWRjcnVtYnMiOnRydWUsImZlYXR1cmVfbmV4dF8yMDI2X2VuYWJsZWQiOmZhbHNlLCJmZWF0dXJlX3Nzb19yZWRpcmVjdCI6dHJ1ZSwiZmVhdHVyZV9vZmZib2FyZF9nd2dfYXVnIjp0cnVlLCJmZWF0dXJlX2hpZGVfdW5wb3B1bGFyX2ZpbHRlcnMiOnRydWUsImZlYXR1cmVfcmVyb3V0ZV9uZXdfaW50ZXJ2aWV3X3dhcm11cCI6dHJ1ZSwiZmVhdHVyZV9xdW90YV9zZXJ2aWNlX3VzZV9sdWEiOnRydWUsImZlYXR1cmVfbGFiX2FpX2hpbnRzIjpmYWxzZSwiZmVhdHVyZV9zc29faW50ZWdyYXRpb25fYWNjZXNzX2FsbG93bGlzdCI6ZmFsc2UsImZlYXR1cmVfZ29vZ2xlX2Rldl9wYXltZW50Ijp0cnVlLCJmZWF0dXJlX29hdXRoX3Jpc2Nfc2h1dG9mZiI6dHJ1ZSwiZmVhdHVyZV9hYm5fc3VydmV5X2ZlZWRiYWNrIjpmYWxzZSwiZmVhdHVyZV9pbl9jb250ZXh0X3ZpZXciOnRydWUsImZlYXR1cmVfb25yYW1wIjp0cnVlLCJmZWF0dXJlX2FsZXhhbmRyaWFfc3Vic2NyaXB0aW9uc19wYWdpbmF0aW9uIjp0cnVlLCJmZWF0dXJlX3JlbGF1bmNoX2Zvcl9zc28iOnRydWUsImZlYXR1cmVfZG9jZWJvX3V4Ijp0cnVlLCJmZWF0dXJlX3JlbGF1bmNoX2V4dHJhIjp0cnVlLCJmZWF0dXJlX2Nhbm9uaWNhbF9kb21haW5fcmVkaXJlY3QiOnRydWUsImZlYXR1cmVfYXV0b19jb3Vyc2VfdXBncmFkZSI6ZmFsc2UsImZlYXR1cmVfY3JlZGx5X21hbmFnZW1lbnQiOmZhbHNlLCJmZWF0dXJlX2d1ZXN0X3VzZXIiOmZhbHNlLCJmZWF0dXJlX3JlcG9ydF9wYXJlbnRzIjpmYWxzZSwiZmVhdHVyZV9jYXRhbG9nX2ZpbHRlcl9jaGlwcyI6dHJ1ZSwiZmVhdHVyZV9nYW1pZmljYXRpb25fYWNoaWV2ZW1lbnRzIjp0cnVlLCJmZWF0dXJlX25ld19vcmdfZGFzaGJvYXJkIjp0cnVlLCJmZWF0dXJlX3JlbGF1bmNoX2NvbGxlY3Rpb25fYWkiOnRydWUsImZlYXR1cmVfY2F0YWxvZ19maWx0ZXJzX2J1dHRvbiI6dHJ1ZSwiZmVhdHVyZV9pbm5vdmF0b3Jfc2lnbl9pbiI6dHJ1ZSwiZmVhdHVyZV9nb2xkZW5fbGFiX2F1dG9fbG9jYXRpb25zX3BpbG90IjpmYWxzZSwiZmVhdHVyZV9nYW1pZmljYXRpb25fbGVhZ3VlcyI6dHJ1ZSwiZmVhdHVyZV9hdXRvX3VwZ3JhZGVfZ2FtZV9sYWJzIjp0cnVlLCJmZWF0dXJlX2dhbWlmaWNhdGlvbl91aV9kYXRhIjpmYWxzZSwiZmVhdHVyZV9nd2dfY2F0YWxvZyI6dHJ1ZSwiZ3JvdXBfc3VhZG1pbnMiOmZhbHNlLCJncm91cF9ub25fc3VhZG1pbnMiOnRydWUsImdyb3VwX2FkbWlucyI6ZmFsc2UsImdyb3VwX3RyYWluZXJzIjpmYWxzZSwiZ3JvdXBfY29vcmRpbmF0b3JzIjpmYWxzZSwiZ3JvdXBfY3JlYXRvcnMiOmZhbHNlLCJncm91cF9zdHVkZW50cyI6dHJ1ZSwiZ3JvdXBfbm9uX29yZ2FuaXphdGlvbiI6dHJ1ZSwiZ3JvdXBfb3JnYW5pemF0aW9uX21lbWJlcnMiOmZhbHNlLCJncm91cF9ub25fcHJvZ3JhbSI6dHJ1ZSwiZ3JvdXBfZ29vZ2xlcnMiOmZhbHNlLCJncm91cF9DTFMiOmZhbHNlLCJncm91cF9lbmdfcHJvZHVjdCI6ZmFsc2UsImdyb3VwX2dhbWlmaWNhdGlvbl9iZXRhX3Rlc3RlcnMiOmZhbHNlfQ=='));
+  properties.event = 'user_properties';
+  dataLayer.push(properties);
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    if (arguments[0] === 'event') {
+      dataLayer.push({ event: arguments[1], eventParams: arguments[2] }, { eventParams: undefined });
+    } else {
+      dataLayer.push(arguments);
+    }
+  }
+  let gtmLoaded = false;
+  function glueCookieNotificationBarLoaded() {
+    if (!gtmLoaded) {
+      dataLayerInit(
+        true,
+        false,
+        false,
+        false,
+        'google-run'
+      );
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer',"GTM-MBRHNDG7");
+      pushPageEvent();
+      if (typeof sessEvent !== 'undefined') {
+        pushSessionEvent(sessEvent, sessLoginStatus, sessPreviousPath);
+      }
+      gtmLoaded = true;
+    }
+  }
+</script>
+<script src="01_esports_use_case_files/webcomponents-loader-2e147cb1679d97581f981243bfc2d1c03dc_UAqZ.js"></script>
+<script src="01_esports_use_case_files/head_scripts-78121e337319c81329ed63eb61196ea57f74a57d_UAqZ.js"></script>
+<script src="01_esports_use_case_files/vendor-1c75122c864db561eb016ef97dbd4eb4a740856f_UAqZ.js"></script>
+<script src="01_esports_use_case_files/application-c5a15ca47015aa0fa0b6ec5262c9252da7676440_UAqZ.js"></script><script src="01_esports_use_case_files/loader_UAqZ.js"></script><style>:root {
+  --game-color: #E52592;
+  --classroom-color: #01877E;
+  --external-course-color: #D56E0C;
+  --certification-color: #C5221F;
+}
+
+abbr[title],
+abbr[data-original-title] {
+  border-bottom: none !important;
+}
+
+label abbr[title] {
+  color: var(--primary-text-on-surface-color);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--hairline-color);
+  display: block;
+  height: 1px;
+  margin: 24px 0;
+  padding: 0;
+}
+
+mark {
+  background-color: #F9AB00;
+  border-radius: 2px;
+  color: inherit;
+  padding: 2px 0px;
+}
+
+p, li {
+  font: var(--md-sys-typescale-body-large);
+}
+
+._small-label_1ygxc_37,
+._label--small_1ygxc_38 {
+  font: var(--md-sys-typescale-body-medium);
+  text-decoration: none;
+}
+
+strong {
+  font-weight: 700;
+}
+
+._mdl-typography--small-title_1ygxc_47 {
+  color: #202124;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+._text--blue_1ygxc_53 {
+  color: var(--primary-text-on-surface-color);
+}
+
+._text--center_1ygxc_57 {
+  text-align: center;
+}
+
+._text--capitalize_1ygxc_61 {
+  text-transform: capitalize;
+}
+
+._text--code_1ygxc_65 {
+  font-family: "Roboto Mono", monospace;
+}
+
+._text--copy_1ygxc_69 {
+  font-family: var(--md-ref-typeface-plain);
+}
+
+._text--error_1ygxc_73 {
+  color: var(--warn-color);
+}
+
+._text--free_1ygxc_77 {
+  color: var(--success-color);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+._text--gray_1ygxc_83 {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+._text--light_1ygxc_87 {
+  color: var(--light-text-on-surface-color) !important;
+}
+
+._text--right_1ygxc_91 {
+  text-align: right;
+}
+
+._text--sign_1ygxc_95 {
+  font-family: "Oswald", sans-serif;
+}
+
+._text--small_1ygxc_99 {
+  font-size: 14px !important;
+}
+
+._text--large_1ygxc_103 {
+  font-size: 20px !important;
+}
+
+._text--success_1ygxc_107 {
+  color: var(--success-color) !important;
+}
+
+._text--yellow_1ygxc_111 {
+  color: #F9AB00;
+}
+
+._text--red_1ygxc_115 {
+  color: #D93025;
+}
+
+._text--green_1ygxc_119 {
+  color: #34A853;
+}
+
+u {
+  text-decoration: none;
+}
+
+._material-icons_1ygxc_127 {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}
+
+._ellipsis_1ygxc_149 {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+._text--rtl_1ygxc_155 {
+  direction: rtl;
+}
+
+._body-wrapper_1ygxc_159 {
+  max-width: 800px;
+}
+
+._text--button_1ygxc_163 {
+  font: var(--md-sys-typescale-label-large);
+}
+
+._video-button-outline_1ygxc_167 {
+  --md-focus-ring-color: transparent;
+  position: relative;
+}
+._video-button-outline_1ygxc_167:focus-within::after {
+  border: 3px solid var(--md-sys-color-secondary);
+  border-radius: calc(var(--icon-size) * 0.18);
+  content: "";
+  height: calc(var(--icon-size) * 0.59);
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, calc(-50% - 11px));
+  width: calc(var(--icon-size) * 0.86);
+}</style>
+<script src="01_esports_use_case_files/hallofmirrors-2ae2e0f37efd678fb7dd01e3f99da82a2b8eb380_UAqZ.js"></script>
+<custom-style>
+  <style is="custom-style">[hidden] {
+  display: none !important;
+}
+
+</style>
+</custom-style>
+<custom-style>
+  <style is="custom-style">html {
+  --layout_-_display:  flex;;
+
+      --layout-inline_-_display:  inline-flex;;
+
+      --layout-horizontal_-_display:  var(--layout_-_display); --layout-horizontal_-_-ms-flex-direction:  row; --layout-horizontal_-_-webkit-flex-direction:  row; --layout-horizontal_-_flex-direction:  row;;
+
+      --layout-horizontal-reverse_-_display:  var(--layout_-_display); --layout-horizontal-reverse_-_-ms-flex-direction:  row-reverse; --layout-horizontal-reverse_-_-webkit-flex-direction:  row-reverse; --layout-horizontal-reverse_-_flex-direction:  row-reverse;;
+
+      --layout-vertical_-_display:  var(--layout_-_display); --layout-vertical_-_-ms-flex-direction:  column; --layout-vertical_-_-webkit-flex-direction:  column; --layout-vertical_-_flex-direction:  column;;
+
+      --layout-vertical-reverse_-_display:  var(--layout_-_display); --layout-vertical-reverse_-_-ms-flex-direction:  column-reverse; --layout-vertical-reverse_-_-webkit-flex-direction:  column-reverse; --layout-vertical-reverse_-_flex-direction:  column-reverse;;
+
+      --layout-wrap_-_-ms-flex-wrap:  wrap; --layout-wrap_-_-webkit-flex-wrap:  wrap; --layout-wrap_-_flex-wrap:  wrap;;
+
+      --layout-wrap-reverse_-_-ms-flex-wrap:  wrap-reverse; --layout-wrap-reverse_-_-webkit-flex-wrap:  wrap-reverse; --layout-wrap-reverse_-_flex-wrap:  wrap-reverse;;
+
+      --layout-flex-auto_-_-ms-flex:  1 1 auto; --layout-flex-auto_-_-webkit-flex:  1 1 auto; --layout-flex-auto_-_flex:  1 1 auto;;
+
+      --layout-flex-none_-_-ms-flex:  none; --layout-flex-none_-_-webkit-flex:  none; --layout-flex-none_-_flex:  none;;
+
+      --layout-flex_-_-ms-flex:  1 1 0.000000001px; --layout-flex_-_-webkit-flex:  1; --layout-flex_-_flex:  1; --layout-flex_-_-webkit-flex-basis:  0.000000001px; --layout-flex_-_flex-basis:  0.000000001px;;
+
+      --layout-flex-2_-_-ms-flex:  2; --layout-flex-2_-_-webkit-flex:  2; --layout-flex-2_-_flex:  2;;
+
+      --layout-flex-3_-_-ms-flex:  3; --layout-flex-3_-_-webkit-flex:  3; --layout-flex-3_-_flex:  3;;
+
+      --layout-flex-4_-_-ms-flex:  4; --layout-flex-4_-_-webkit-flex:  4; --layout-flex-4_-_flex:  4;;
+
+      --layout-flex-5_-_-ms-flex:  5; --layout-flex-5_-_-webkit-flex:  5; --layout-flex-5_-_flex:  5;;
+
+      --layout-flex-6_-_-ms-flex:  6; --layout-flex-6_-_-webkit-flex:  6; --layout-flex-6_-_flex:  6;;
+
+      --layout-flex-7_-_-ms-flex:  7; --layout-flex-7_-_-webkit-flex:  7; --layout-flex-7_-_flex:  7;;
+
+      --layout-flex-8_-_-ms-flex:  8; --layout-flex-8_-_-webkit-flex:  8; --layout-flex-8_-_flex:  8;;
+
+      --layout-flex-9_-_-ms-flex:  9; --layout-flex-9_-_-webkit-flex:  9; --layout-flex-9_-_flex:  9;;
+
+      --layout-flex-10_-_-ms-flex:  10; --layout-flex-10_-_-webkit-flex:  10; --layout-flex-10_-_flex:  10;;
+
+      --layout-flex-11_-_-ms-flex:  11; --layout-flex-11_-_-webkit-flex:  11; --layout-flex-11_-_flex:  11;;
+
+      --layout-flex-12_-_-ms-flex:  12; --layout-flex-12_-_-webkit-flex:  12; --layout-flex-12_-_flex:  12;;
+
+      
+
+      --layout-start_-_-ms-flex-align:  start; --layout-start_-_-webkit-align-items:  flex-start; --layout-start_-_align-items:  flex-start;;
+
+      --layout-center_-_-ms-flex-align:  center; --layout-center_-_-webkit-align-items:  center; --layout-center_-_align-items:  center;;
+
+      --layout-end_-_-ms-flex-align:  end; --layout-end_-_-webkit-align-items:  flex-end; --layout-end_-_align-items:  flex-end;;
+
+      --layout-baseline_-_-ms-flex-align:  baseline; --layout-baseline_-_-webkit-align-items:  baseline; --layout-baseline_-_align-items:  baseline;;
+
+      
+
+      --layout-start-justified_-_-ms-flex-pack:  start; --layout-start-justified_-_-webkit-justify-content:  flex-start; --layout-start-justified_-_justify-content:  flex-start;;
+
+      --layout-center-justified_-_-ms-flex-pack:  center; --layout-center-justified_-_-webkit-justify-content:  center; --layout-center-justified_-_justify-content:  center;;
+
+      --layout-end-justified_-_-ms-flex-pack:  end; --layout-end-justified_-_-webkit-justify-content:  flex-end; --layout-end-justified_-_justify-content:  flex-end;;
+
+      --layout-around-justified_-_-ms-flex-pack:  distribute; --layout-around-justified_-_-webkit-justify-content:  space-around; --layout-around-justified_-_justify-content:  space-around;;
+
+      --layout-justified_-_-ms-flex-pack:  justify; --layout-justified_-_-webkit-justify-content:  space-between; --layout-justified_-_justify-content:  space-between;;
+
+      --layout-center-center_-_-ms-flex-align:  var(--layout-center_-_-ms-flex-align); --layout-center-center_-_-webkit-align-items:  var(--layout-center_-_-webkit-align-items); --layout-center-center_-_align-items:  var(--layout-center_-_align-items); --layout-center-center_-_-ms-flex-pack:  var(--layout-center-justified_-_-ms-flex-pack); --layout-center-center_-_-webkit-justify-content:  var(--layout-center-justified_-_-webkit-justify-content); --layout-center-center_-_justify-content:  var(--layout-center-justified_-_justify-content);;
+
+      
+
+      --layout-self-start_-_-ms-align-self:  flex-start; --layout-self-start_-_-webkit-align-self:  flex-start; --layout-self-start_-_align-self:  flex-start;;
+
+      --layout-self-center_-_-ms-align-self:  center; --layout-self-center_-_-webkit-align-self:  center; --layout-self-center_-_align-self:  center;;
+
+      --layout-self-end_-_-ms-align-self:  flex-end; --layout-self-end_-_-webkit-align-self:  flex-end; --layout-self-end_-_align-self:  flex-end;;
+
+      --layout-self-stretch_-_-ms-align-self:  stretch; --layout-self-stretch_-_-webkit-align-self:  stretch; --layout-self-stretch_-_align-self:  stretch;;
+
+      --layout-self-baseline_-_-ms-align-self:  baseline; --layout-self-baseline_-_-webkit-align-self:  baseline; --layout-self-baseline_-_align-self:  baseline;;
+
+      
+
+      --layout-start-aligned_-_-ms-flex-line-pack:  start; --layout-start-aligned_-_-ms-align-content:  flex-start; --layout-start-aligned_-_-webkit-align-content:  flex-start; --layout-start-aligned_-_align-content:  flex-start;;
+
+      --layout-end-aligned_-_-ms-flex-line-pack:  end; --layout-end-aligned_-_-ms-align-content:  flex-end; --layout-end-aligned_-_-webkit-align-content:  flex-end; --layout-end-aligned_-_align-content:  flex-end;;
+
+      --layout-center-aligned_-_-ms-flex-line-pack:  center; --layout-center-aligned_-_-ms-align-content:  center; --layout-center-aligned_-_-webkit-align-content:  center; --layout-center-aligned_-_align-content:  center;;
+
+      --layout-between-aligned_-_-ms-flex-line-pack:  justify; --layout-between-aligned_-_-ms-align-content:  space-between; --layout-between-aligned_-_-webkit-align-content:  space-between; --layout-between-aligned_-_align-content:  space-between;;
+
+      --layout-around-aligned_-_-ms-flex-line-pack:  distribute; --layout-around-aligned_-_-ms-align-content:  space-around; --layout-around-aligned_-_-webkit-align-content:  space-around; --layout-around-aligned_-_align-content:  space-around;;
+
+      
+
+      --layout-block_-_display:  block;;
+
+      --layout-invisible_-_visibility:  hidden !important;;
+
+      --layout-relative_-_position:  relative;;
+
+      --layout-fit_-_position:  absolute; --layout-fit_-_top:  0; --layout-fit_-_right:  0; --layout-fit_-_bottom:  0; --layout-fit_-_left:  0;;
+
+      --layout-scroll_-_-webkit-overflow-scrolling:  touch; --layout-scroll_-_overflow:  auto;;
+
+      --layout-fullbleed_-_margin:  0; --layout-fullbleed_-_height:  100vh;;
+
+      
+
+      --layout-fixed-top_-_position:  fixed; --layout-fixed-top_-_top:  0; --layout-fixed-top_-_left:  0; --layout-fixed-top_-_right:  0;;
+
+      --layout-fixed-right_-_position:  fixed; --layout-fixed-right_-_top:  0; --layout-fixed-right_-_right:  0; --layout-fixed-right_-_bottom:  0;;
+
+      --layout-fixed-bottom_-_position:  fixed; --layout-fixed-bottom_-_right:  0; --layout-fixed-bottom_-_bottom:  0; --layout-fixed-bottom_-_left:  0;;
+
+      --layout-fixed-left_-_position:  fixed; --layout-fixed-left_-_top:  0; --layout-fixed-left_-_bottom:  0; --layout-fixed-left_-_left:  0;;
+}
+
+</style>
+</custom-style><style>[hidden] { display: none !important; }</style><custom-style>
+  <style is="custom-style">html {
+  --google-red-100: #f4c7c3;
+      --google-red-300: #e67c73;
+      --google-red-500: #db4437;
+      --google-red-700: #c53929;
+
+      --google-blue-100: #c6dafc;
+      --google-blue-300: #7baaf7;
+      --google-blue-500: #4285f4;
+      --google-blue-700: #3367d6;
+
+      --google-green-100: #b7e1cd;
+      --google-green-300: #57bb8a;
+      --google-green-500: #0f9d58;
+      --google-green-700: #0b8043;
+
+      --google-yellow-100: #fce8b2;
+      --google-yellow-300: #f7cb4d;
+      --google-yellow-500: #f4b400;
+      --google-yellow-700: #f09300;
+
+      --google-grey-100: #f5f5f5;
+      --google-grey-300: #e0e0e0;
+      --google-grey-500: #9e9e9e;
+      --google-grey-700: #616161;
+
+      
+
+      --paper-red-50: #ffebee;
+      --paper-red-100: #ffcdd2;
+      --paper-red-200: #ef9a9a;
+      --paper-red-300: #e57373;
+      --paper-red-400: #ef5350;
+      --paper-red-500: #f44336;
+      --paper-red-600: #e53935;
+      --paper-red-700: #d32f2f;
+      --paper-red-800: #c62828;
+      --paper-red-900: #b71c1c;
+      --paper-red-a100: #ff8a80;
+      --paper-red-a200: #ff5252;
+      --paper-red-a400: #ff1744;
+      --paper-red-a700: #d50000;
+
+      --paper-pink-50: #fce4ec;
+      --paper-pink-100: #f8bbd0;
+      --paper-pink-200: #f48fb1;
+      --paper-pink-300: #f06292;
+      --paper-pink-400: #ec407a;
+      --paper-pink-500: #e91e63;
+      --paper-pink-600: #d81b60;
+      --paper-pink-700: #c2185b;
+      --paper-pink-800: #ad1457;
+      --paper-pink-900: #880e4f;
+      --paper-pink-a100: #ff80ab;
+      --paper-pink-a200: #ff4081;
+      --paper-pink-a400: #f50057;
+      --paper-pink-a700: #c51162;
+
+      --paper-purple-50: #f3e5f5;
+      --paper-purple-100: #e1bee7;
+      --paper-purple-200: #ce93d8;
+      --paper-purple-300: #ba68c8;
+      --paper-purple-400: #ab47bc;
+      --paper-purple-500: #9c27b0;
+      --paper-purple-600: #8e24aa;
+      --paper-purple-700: #7b1fa2;
+      --paper-purple-800: #6a1b9a;
+      --paper-purple-900: #4a148c;
+      --paper-purple-a100: #ea80fc;
+      --paper-purple-a200: #e040fb;
+      --paper-purple-a400: #d500f9;
+      --paper-purple-a700: #aa00ff;
+
+      --paper-deep-purple-50: #ede7f6;
+      --paper-deep-purple-100: #d1c4e9;
+      --paper-deep-purple-200: #b39ddb;
+      --paper-deep-purple-300: #9575cd;
+      --paper-deep-purple-400: #7e57c2;
+      --paper-deep-purple-500: #673ab7;
+      --paper-deep-purple-600: #5e35b1;
+      --paper-deep-purple-700: #512da8;
+      --paper-deep-purple-800: #4527a0;
+      --paper-deep-purple-900: #311b92;
+      --paper-deep-purple-a100: #b388ff;
+      --paper-deep-purple-a200: #7c4dff;
+      --paper-deep-purple-a400: #651fff;
+      --paper-deep-purple-a700: #6200ea;
+
+      --paper-indigo-50: #e8eaf6;
+      --paper-indigo-100: #c5cae9;
+      --paper-indigo-200: #9fa8da;
+      --paper-indigo-300: #7986cb;
+      --paper-indigo-400: #5c6bc0;
+      --paper-indigo-500: #3f51b5;
+      --paper-indigo-600: #3949ab;
+      --paper-indigo-700: #303f9f;
+      --paper-indigo-800: #283593;
+      --paper-indigo-900: #1a237e;
+      --paper-indigo-a100: #8c9eff;
+      --paper-indigo-a200: #536dfe;
+      --paper-indigo-a400: #3d5afe;
+      --paper-indigo-a700: #304ffe;
+
+      --paper-blue-50: #e3f2fd;
+      --paper-blue-100: #bbdefb;
+      --paper-blue-200: #90caf9;
+      --paper-blue-300: #64b5f6;
+      --paper-blue-400: #42a5f5;
+      --paper-blue-500: #2196f3;
+      --paper-blue-600: #1e88e5;
+      --paper-blue-700: #1976d2;
+      --paper-blue-800: #1565c0;
+      --paper-blue-900: #0d47a1;
+      --paper-blue-a100: #82b1ff;
+      --paper-blue-a200: #448aff;
+      --paper-blue-a400: #2979ff;
+      --paper-blue-a700: #2962ff;
+
+      --paper-light-blue-50: #e1f5fe;
+      --paper-light-blue-100: #b3e5fc;
+      --paper-light-blue-200: #81d4fa;
+      --paper-light-blue-300: #4fc3f7;
+      --paper-light-blue-400: #29b6f6;
+      --paper-light-blue-500: #03a9f4;
+      --paper-light-blue-600: #039be5;
+      --paper-light-blue-700: #0288d1;
+      --paper-light-blue-800: #0277bd;
+      --paper-light-blue-900: #01579b;
+      --paper-light-blue-a100: #80d8ff;
+      --paper-light-blue-a200: #40c4ff;
+      --paper-light-blue-a400: #00b0ff;
+      --paper-light-blue-a700: #0091ea;
+
+      --paper-cyan-50: #e0f7fa;
+      --paper-cyan-100: #b2ebf2;
+      --paper-cyan-200: #80deea;
+      --paper-cyan-300: #4dd0e1;
+      --paper-cyan-400: #26c6da;
+      --paper-cyan-500: #00bcd4;
+      --paper-cyan-600: #00acc1;
+      --paper-cyan-700: #0097a7;
+      --paper-cyan-800: #00838f;
+      --paper-cyan-900: #006064;
+      --paper-cyan-a100: #84ffff;
+      --paper-cyan-a200: #18ffff;
+      --paper-cyan-a400: #00e5ff;
+      --paper-cyan-a700: #00b8d4;
+
+      --paper-teal-50: #e0f2f1;
+      --paper-teal-100: #b2dfdb;
+      --paper-teal-200: #80cbc4;
+      --paper-teal-300: #4db6ac;
+      --paper-teal-400: #26a69a;
+      --paper-teal-500: #009688;
+      --paper-teal-600: #00897b;
+      --paper-teal-700: #00796b;
+      --paper-teal-800: #00695c;
+      --paper-teal-900: #004d40;
+      --paper-teal-a100: #a7ffeb;
+      --paper-teal-a200: #64ffda;
+      --paper-teal-a400: #1de9b6;
+      --paper-teal-a700: #00bfa5;
+
+      --paper-green-50: #e8f5e9;
+      --paper-green-100: #c8e6c9;
+      --paper-green-200: #a5d6a7;
+      --paper-green-300: #81c784;
+      --paper-green-400: #66bb6a;
+      --paper-green-500: #4caf50;
+      --paper-green-600: #43a047;
+      --paper-green-700: #388e3c;
+      --paper-green-800: #2e7d32;
+      --paper-green-900: #1b5e20;
+      --paper-green-a100: #b9f6ca;
+      --paper-green-a200: #69f0ae;
+      --paper-green-a400: #00e676;
+      --paper-green-a700: #00c853;
+
+      --paper-light-green-50: #f1f8e9;
+      --paper-light-green-100: #dcedc8;
+      --paper-light-green-200: #c5e1a5;
+      --paper-light-green-300: #aed581;
+      --paper-light-green-400: #9ccc65;
+      --paper-light-green-500: #8bc34a;
+      --paper-light-green-600: #7cb342;
+      --paper-light-green-700: #689f38;
+      --paper-light-green-800: #558b2f;
+      --paper-light-green-900: #33691e;
+      --paper-light-green-a100: #ccff90;
+      --paper-light-green-a200: #b2ff59;
+      --paper-light-green-a400: #76ff03;
+      --paper-light-green-a700: #64dd17;
+
+      --paper-lime-50: #f9fbe7;
+      --paper-lime-100: #f0f4c3;
+      --paper-lime-200: #e6ee9c;
+      --paper-lime-300: #dce775;
+      --paper-lime-400: #d4e157;
+      --paper-lime-500: #cddc39;
+      --paper-lime-600: #c0ca33;
+      --paper-lime-700: #afb42b;
+      --paper-lime-800: #9e9d24;
+      --paper-lime-900: #827717;
+      --paper-lime-a100: #f4ff81;
+      --paper-lime-a200: #eeff41;
+      --paper-lime-a400: #c6ff00;
+      --paper-lime-a700: #aeea00;
+
+      --paper-yellow-50: #fffde7;
+      --paper-yellow-100: #fff9c4;
+      --paper-yellow-200: #fff59d;
+      --paper-yellow-300: #fff176;
+      --paper-yellow-400: #ffee58;
+      --paper-yellow-500: #ffeb3b;
+      --paper-yellow-600: #fdd835;
+      --paper-yellow-700: #fbc02d;
+      --paper-yellow-800: #f9a825;
+      --paper-yellow-900: #f57f17;
+      --paper-yellow-a100: #ffff8d;
+      --paper-yellow-a200: #ffff00;
+      --paper-yellow-a400: #ffea00;
+      --paper-yellow-a700: #ffd600;
+
+      --paper-amber-50: #fff8e1;
+      --paper-amber-100: #ffecb3;
+      --paper-amber-200: #ffe082;
+      --paper-amber-300: #ffd54f;
+      --paper-amber-400: #ffca28;
+      --paper-amber-500: #ffc107;
+      --paper-amber-600: #ffb300;
+      --paper-amber-700: #ffa000;
+      --paper-amber-800: #ff8f00;
+      --paper-amber-900: #ff6f00;
+      --paper-amber-a100: #ffe57f;
+      --paper-amber-a200: #ffd740;
+      --paper-amber-a400: #ffc400;
+      --paper-amber-a700: #ffab00;
+
+      --paper-orange-50: #fff3e0;
+      --paper-orange-100: #ffe0b2;
+      --paper-orange-200: #ffcc80;
+      --paper-orange-300: #ffb74d;
+      --paper-orange-400: #ffa726;
+      --paper-orange-500: #ff9800;
+      --paper-orange-600: #fb8c00;
+      --paper-orange-700: #f57c00;
+      --paper-orange-800: #ef6c00;
+      --paper-orange-900: #e65100;
+      --paper-orange-a100: #ffd180;
+      --paper-orange-a200: #ffab40;
+      --paper-orange-a400: #ff9100;
+      --paper-orange-a700: #ff6500;
+
+      --paper-deep-orange-50: #fbe9e7;
+      --paper-deep-orange-100: #ffccbc;
+      --paper-deep-orange-200: #ffab91;
+      --paper-deep-orange-300: #ff8a65;
+      --paper-deep-orange-400: #ff7043;
+      --paper-deep-orange-500: #ff5722;
+      --paper-deep-orange-600: #f4511e;
+      --paper-deep-orange-700: #e64a19;
+      --paper-deep-orange-800: #d84315;
+      --paper-deep-orange-900: #bf360c;
+      --paper-deep-orange-a100: #ff9e80;
+      --paper-deep-orange-a200: #ff6e40;
+      --paper-deep-orange-a400: #ff3d00;
+      --paper-deep-orange-a700: #dd2c00;
+
+      --paper-brown-50: #efebe9;
+      --paper-brown-100: #d7ccc8;
+      --paper-brown-200: #bcaaa4;
+      --paper-brown-300: #a1887f;
+      --paper-brown-400: #8d6e63;
+      --paper-brown-500: #795548;
+      --paper-brown-600: #6d4c41;
+      --paper-brown-700: #5d4037;
+      --paper-brown-800: #4e342e;
+      --paper-brown-900: #3e2723;
+
+      --paper-grey-50: #fafafa;
+      --paper-grey-100: #f5f5f5;
+      --paper-grey-200: #eeeeee;
+      --paper-grey-300: #e0e0e0;
+      --paper-grey-400: #bdbdbd;
+      --paper-grey-500: #9e9e9e;
+      --paper-grey-600: #757575;
+      --paper-grey-700: #616161;
+      --paper-grey-800: #424242;
+      --paper-grey-900: #212121;
+
+      --paper-blue-grey-50: #eceff1;
+      --paper-blue-grey-100: #cfd8dc;
+      --paper-blue-grey-200: #b0bec5;
+      --paper-blue-grey-300: #90a4ae;
+      --paper-blue-grey-400: #78909c;
+      --paper-blue-grey-500: #607d8b;
+      --paper-blue-grey-600: #546e7a;
+      --paper-blue-grey-700: #455a64;
+      --paper-blue-grey-800: #37474f;
+      --paper-blue-grey-900: #263238;
+
+      
+      --dark-divider-opacity: 0.12;
+      --dark-disabled-opacity: 0.38; 
+      --dark-secondary-opacity: 0.54;
+      --dark-primary-opacity: 0.87;
+
+      
+      --light-divider-opacity: 0.12;
+      --light-disabled-opacity: 0.3; 
+      --light-secondary-opacity: 0.7;
+      --light-primary-opacity: 1.0;
+}
+
+</style>
+</custom-style><custom-style>
+  <style is="custom-style">html {
+  --primary-text-color: var(--light-theme-text-color);
+      --primary-background-color: var(--light-theme-background-color);
+      --secondary-text-color: var(--light-theme-secondary-color);
+      --disabled-text-color: var(--light-theme-disabled-color);
+      --divider-color: var(--light-theme-divider-color);
+      --error-color: var(--paper-deep-orange-a700);
+
+      
+      --primary-color: var(--paper-indigo-500);
+      --light-primary-color: var(--paper-indigo-100);
+      --dark-primary-color: var(--paper-indigo-700);
+
+      --accent-color: var(--paper-pink-a200);
+      --light-accent-color: var(--paper-pink-a100);
+      --dark-accent-color: var(--paper-pink-a400);
+
+
+      
+      --light-theme-background-color: #ffffff;
+      --light-theme-base-color: #000000;
+      --light-theme-text-color: var(--paper-grey-900);
+      --light-theme-secondary-color: #737373;  
+      --light-theme-disabled-color: #9b9b9b;  
+      --light-theme-divider-color: #dbdbdb;
+
+      
+      --dark-theme-background-color: var(--paper-grey-900);
+      --dark-theme-base-color: #ffffff;
+      --dark-theme-text-color: #ffffff;
+      --dark-theme-secondary-color: #bcbcbc;  
+      --dark-theme-disabled-color: #646464;  
+      --dark-theme-divider-color: #3c3c3c;
+
+      
+      --text-primary-color: var(--dark-theme-text-color);
+      --default-primary-color: var(--primary-color);
+}
+
+</style>
+</custom-style><script async="" src="01_esports_use_case_files/lazy.min_UAqZ.js"></script>
+<script src="01_esports_use_case_files/index_UAqZ.js"></script>
+<script src="01_esports_use_case_files/api_003_UAqZ.js"></script>
+
+
+<meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="AMAc9O2rVmqN0v800aimTNj4CVyA8fyBMBz3liqgUhe1zEuX5KTpEOVSWyvt9SDIKli-DAxWPgmWuCKpZbUrXg">
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport">
+<meta content="1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0" name="google-site-verification">
+<meta content="max-snippet:-1, max-image-preview:large" name="robots">
+<meta content="#3681E4" property="msapplication-TileColor">
+<meta content="/super_G_optimized.png" property="msapplication-TileImage">
+<meta content="{&quot;userId&quot;:14510693,&quot;experimentIds&quot;:[&quot;use_docebo_features&quot;,&quot;switch_path_and_explore_headers&quot;,&quot;show_new_course_exams&quot;,&quot;learning_plan_search&quot;,&quot;search_suggestions&quot;,&quot;dialog_queue&quot;,&quot;relaunch_credentials&quot;,&quot;new_org_dashboard_announcement&quot;,&quot;use_mosaic&quot;,&quot;innovator_gear_sign_in&quot;,&quot;landing_page&quot;,&quot;dashboard_jobs&quot;,&quot;course_exams&quot;,&quot;one_stop_hub&quot;,&quot;search_autocomplete&quot;,&quot;mosaic_skills_lab_recommendation&quot;,&quot;show_org_catalog_button&quot;,&quot;lab_page_redesign&quot;,&quot;relaunch&quot;,&quot;analytics_v2&quot;,&quot;next_2026_collections&quot;,&quot;recert&quot;,&quot;docebo_sync&quot;,&quot;cache_explore_page_result&quot;,&quot;gamification&quot;,&quot;learner_grace_period_upgrade&quot;,&quot;remove_gdp_subscription&quot;,&quot;in_context_all_labs&quot;,&quot;offboard_gwg_june&quot;,&quot;new_sidenav&quot;,&quot;learning_plan_slug&quot;,&quot;chime_use_abuse_details&quot;,&quot;search_sort_by&quot;,&quot;gamification_xp&quot;,&quot;front_door_landing_page&quot;,&quot;credly_integration_announcement_modal&quot;,&quot;interview_warmup_turndown&quot;,&quot;zendesk_to_cases&quot;,&quot;recert_query_all_used_cert_activities&quot;,&quot;learn_with_ai&quot;,&quot;gamification_ui&quot;,&quot;challenge_lab_fast_track&quot;,&quot;gwg_paid_chip&quot;,&quot;entity_api_keys&quot;,&quot;search_async&quot;,&quot;updated_recalculation_ux&quot;,&quot;sitemap_poc&quot;,&quot;docebo_sync_org_support&quot;,&quot;feedback&quot;,&quot;relaunch_grid_list&quot;,&quot;cdn_fonts&quot;,&quot;wipeout_hard_delete&quot;,&quot;credly&quot;,&quot;new_program_dashboard&quot;,&quot;experimentation&quot;,&quot;gamification_leaderboards&quot;,&quot;relaunch_subscriptions&quot;,&quot;subscription_ux&quot;,&quot;org_invite_link&quot;,&quot;use_recommender_agent&quot;,&quot;gamification_streaks&quot;,&quot;recalculate_activities&quot;,&quot;discovery_lab_duration_estimate&quot;,&quot;one_tap&quot;,&quot;banner_breadcrumbs&quot;,&quot;sso_redirect&quot;,&quot;offboard_gwg_aug&quot;,&quot;hide_unpopular_filters&quot;,&quot;reroute_new_interview_warmup&quot;,&quot;quota_service_use_lua&quot;,&quot;google_dev_payment&quot;,&quot;oauth_risc_shutoff&quot;,&quot;in_context_view&quot;,&quot;onramp&quot;,&quot;alexandria_subscriptions_pagination&quot;,&quot;relaunch_for_sso&quot;,&quot;docebo_ux&quot;,&quot;relaunch_extra&quot;,&quot;canonical_domain_redirect&quot;,&quot;catalog_filter_chips&quot;,&quot;gamification_achievements&quot;,&quot;new_org_dashboard&quot;,&quot;relaunch_collection_ai&quot;,&quot;catalog_filters_button&quot;,&quot;innovator_sign_in&quot;,&quot;gamification_leagues&quot;,&quot;auto_upgrade_game_labs&quot;,&quot;gamification_ui_data&quot;,&quot;gwg_catalog&quot;]}" name="help-api-product-data">
+<meta content="{&quot;groupIds&quot;:[&quot;non_suadmins&quot;,&quot;students&quot;,&quot;non_organization&quot;,&quot;non_program&quot;]}" name="help-api-custom-data">
+<meta content="In this lab you learn ingest, transform and store Esports data using pipelines." name="description">
+<meta content="Google Skills" name="author">
+<meta content="https://www.skills.google/paths/16/course_templates/52/labs/592750" property="og:url">
+<meta content="Product deep dives - Stream data with pipelines - Esports Use case | Google Skills" property="og:title">
+<meta content="website" property="og:type">
+<meta content="/super_G_optimized.png" property="og:image">
+<meta content="1200" property="og:image:width">
+<meta content="630" property="og:image:height">
+<meta content="image/png" property="og:image:type">
+<meta content="Google Skills" property="og:site_name">
+<meta content="In this lab you learn ingest, transform and store Esports data using pipelines." property="og:description">
+
+
+<link href="https://cdn.qwiklabs.com/X46FrQX4iLxHW5MxL8jICvgZM0evMEKscCeQO%2BazGdo%3D" rel="icon" type="image/x-icon">
+<link href="https://www.skills.google/paths/16/course_templates/52/labs/592750" rel="canonical">
+
+
+<link rel="stylesheet" href="01_esports_use_case_files/css_UAqZ.css">
+
+<link rel="stylesheet" href="01_esports_use_case_files/application-0f83bb8ea15d6b71458d6405bbd648818f06c103_UAqZ.css" media="all">
+<link rel="stylesheet" href="01_esports_use_case_files/cookienotificationbar.min_UAqZ.css">
+
+
+<style>
+  :root {
+    --primary-text-on-surface-color: #355d9c;
+    --primary-text-on-surface-color-dark: #2f538b;
+    --primary-text-on-surface-color-darker: #29497a;
+    --primary-text-on-surface-color-darkest: #243e69;
+    --primary-surface-color: #586d8d;
+    --primary-surface-color-rgb: 88,109,141;
+    --primary-surface-color-light: #e0e4eb;
+    --primary-surface-color-lightest: #eff2f5;
+    --text-on-primary-color: #ffffff;
+    --accent-text-on-surface-color: #f000e8;
+    --accent-surface-color: #f9ab00;
+    --accent-surface-color-rgb: 249,171,0;
+    --accent-surface-color-light: #ffefcc;
+    --text-on-accent-color: #000000;
+  }
+</style>
+
+
+
+</head>
+<body class="lab-show l-full relaunch lab-page-redesign course-layout-body l-full relaunch  learner-layout-body relaunch ">
+<div class="body-container" relaunch="">
+<div class="body-header">
+<ql-toolbar class="app-toolbar" jumpenabled="" role="banner">
+<div class="toolbar-navigation" slot="navigation">
+<ql-toggle-button animatedtoggle="" class="always-show" data-tooltip-text="Menu" for="app-nav" icon="menu" id="menu-toggle" label="Menu" officon="menu" onicon="menu_open" translate="no" type="button" data-original-title="Menu"></ql-toggle-button>
+
+</div>
+<div class="toolbar-title gs-logo" slot="title">
+<a class="custom-logo" aria-label="Google Skills" href="https://www.skills.google/"><div class="custom-logo"><img alt="Google Skills" height="24" aria-label="Google Skills" src="01_esports_use_case_files/lqJbxogu4tSLez1OvjDcIO8rwow6cPLwvrfIdmQLf6U=_UAqZ.png"></div></a>
+
+</div>
+<div class="search-bar tablet-hide" slot="search"><div class="search-bar-container visible-search-header">
+<form class="header-search-form" action="/catalog" accept-charset="UTF-8" method="get">
+<input aria-autocomplete="list" aria-controls="searchbar-autocomplete-menu-center" aria-expanded="false" autocomplete="off" class="header-search-input" id="searchbar-autocomplete-center" name="keywords" placeholder="What do you want to learn today?" role="combobox" style="transition: none; border-radius: 28px;">
+<div class="elevation-3" id="searchbar-autocomplete-loading-icon-center">
+<ql-spinner></ql-spinner>
+<div class="ql-body-small">Loading...</div>
+</div>
+<div class="elevation-3" id="searchbar-autocomplete-no-results-center" style="display: none;">
+<div class="ql-body-small">No results found.</div>
+</div>
+<ul aria-hidden="true" aria-live="polite" class="hide" id="searchbar-autocomplete-menu-center" role="listbox"></ul>
+<ql-icon-button class="search-bar-button search-button" icon="search" label="Search" type="submit" translate="no"></ql-icon-button>
+</form>
+
+<ql-icon-button class="exit-search-button show-tablet" icon="close" inert="" label="Exit search" translate="no" type="button"></ql-icon-button>
+</div>
+</div>
+<div class="toolbar-actions" slot="action">
+<ql-icon-button class="mobile-hide" data-tooltip-text="Share" icon="share" id="share_32535" label="Share on social media" translate="no" type="button" data-original-title="Share" aria-controls="" aria-haspopup="true"></ql-icon-button>
+<ql-menu class="social-share-menu" for="share_32535" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="share_32535">
+<ql-menu-item data-analytics-action="Shared to LinkedIn Feed." data-analytics-category="Lab" data-analytics-label="Stream data with pipelines - Esports Use case" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32535%3Futm_medium%3Dsocial%26utm_source%3Dlinkedin%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_linkedin-a277effb6f261f5d3b8ad0fc692fb0025ff82eaf.png" label="Share on LinkedIn Feed" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Share on LinkedIn Feed</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to X." data-analytics-category="Lab" data-analytics-label="Stream data with pipelines - Esports Use case" href="https://x.com/intent/tweet?text=Learn%20cloud%20tech%20through%20hands-on%20training%20on%20%23GoogleSkills%21&amp;url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32535%3Futm_medium%3Dsocial%26utm_source%3Dx%26utm_campaign%3Dql-social-share&amp;hashtags=" iconsrc="https://cdn.qwiklabs.com/assets/logo_x-2abcf45e0673a8f244a6b686ea7f0189457d4fe3.png" label="X" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">X</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to Facebook." data-analytics-category="Lab" data-analytics-label="Stream data with pipelines - Esports Use case" href="https://facebook.com/sharer.php?display=popup&amp;u=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32535%3Futm_medium%3Dsocial%26utm_source%3Dfacebook%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_facebook-5ccdec05e255be16449f837fff607b6d33ae9b87.png" label="Facebook" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Facebook</span>
+</ql-menu-item>
+
+<ql-copyable-input label="Share Link" value="https://www.skills.google/catalog_lab/32535"></ql-copyable-input>
+
+</ql-menu>
+
+<ql-icon-button id="control-panel-target" style="display: none;" translate="no" type="button" aria-controls="control-panel-menu" aria-haspopup="true">
+dashboard
+</ql-icon-button>
+<ql-menu for="control-panel-target" id="control-panel-menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="control-panel-target"></ql-menu>
+
+<ql-icon-button class="header-search-button show-tablet" data-toggle="tooltip" icon="search" label="Search for Google Skills content" title="Search" translate="no" type="button"></ql-icon-button>
+
+<div class="toolbar-actions__points">
+<ql-user-points data-tooltip-text="Experience points" points="5465" data-original-title="Experience points"></ql-user-points>
+</div>
+<div class="toolbar-actions__streak-count mobile-hide" data-tooltip-text="Current streak count" data-original-title="Current streak count">
+<img alt="Current streak count" src="01_esports_use_case_files/streak_icon-21476b37c13f49828a5aaa2d86c4d3378cca4117_UAqZ.svg">
+<div class="ql-body-large count-label">4</div>
+</div>
+<ql-icon-button class="mobile-hide" data-tooltip-text="Help" icon="help_outline" id="help-menu-button" label="Help options" translate="no" type="button" data-original-title="Help" aria-controls="help-menu" aria-haspopup="true"></ql-icon-button>
+<ql-menu for="help-menu-button" id="help-menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="help-menu-button">
+<ql-menu-item data-analytics-action="opened_help" data-analytics-label="lab" label="Help Center" onclick='hallofmirrors.helpService.startHelp({"productData":{"userId":14510693},"context":"lab"})' type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item href="https://support.google.com/qwiklabs/contact/Google_Skills" label="Contact Us" target="_blank" type="button"></ql-menu-item>
+<ql-menu-item label="Send feedback" onclick="userfeedback.api.startFeedback(
+{
+'productId': '5080217',
+'enableAnonymousFeedback': true,
+'authuser': 'undefined',
+'locale': 'en'
+},
+{
+'user_id': '14510693',
+'current_organization': ''
+})" type="button"></ql-menu-item>
+<ql-menu-item href="https://reportingwidget.google.com/widget/54?cid=1&amp;url=https://www.skills.google/paths/16/course_templates/52/labs/592750?" label="Report Illegal Content" type="button"></ql-menu-item>
+</ql-menu>
+
+<ql-icon-button class="mobile-hide" data-tooltip-text="Language" icon="language" id="language" label="Language options" translate="no" type="button" data-original-title="Language" aria-controls="" aria-haspopup="true"></ql-icon-button>
+<ql-menu for="language" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="language">
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ar" href="/paths/16/course_templates/52/labs/592750?locale=ar" label="العربية‬‎" lang="ar" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="de" href="/paths/16/course_templates/52/labs/592750?locale=de" label="Deutsch" lang="de" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="en" href="/paths/16/course_templates/52/labs/592750?locale=en" label="English" lang="en" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="es" href="/paths/16/course_templates/52/labs/592750?locale=es" label="español (Latinoamérica)" lang="es" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr" href="/paths/16/course_templates/52/labs/592750?locale=fr" label="français" lang="fr" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr_CA" href="/paths/16/course_templates/52/labs/592750?locale=fr_CA" label="français (Canada)" lang="fr-CA" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="he" href="/paths/16/course_templates/52/labs/592750?locale=he" label="עברית" lang="he" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="id" href="/paths/16/course_templates/52/labs/592750?locale=id" label="bahasa Indonesia" lang="id" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="it" href="/paths/16/course_templates/52/labs/592750?locale=it" label="italiano" lang="it" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ja" href="/paths/16/course_templates/52/labs/592750?locale=ja" label="日本語" lang="ja" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ko" href="/paths/16/course_templates/52/labs/592750?locale=ko" label="한국어" lang="ko" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pl" href="/paths/16/course_templates/52/labs/592750?locale=pl" label="polski" lang="pl" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/paths/16/course_templates/52/labs/592750?locale=pt_BR" label="português (Brasil)" lang="pt-BR" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/paths/16/course_templates/52/labs/592750?locale=pt_PT" label="português (Portugal)" lang="pt-PT" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ru" href="/paths/16/course_templates/52/labs/592750?locale=ru" label="русский" lang="ru" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="tr" href="/paths/16/course_templates/52/labs/592750?locale=tr" label="Türkçe" lang="tr" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="uk" href="/paths/16/course_templates/52/labs/592750?locale=uk" label="українська" lang="uk" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh" href="/paths/16/course_templates/52/labs/592750?locale=zh" label="简体中文" lang="zh" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/paths/16/course_templates/52/labs/592750?locale=zh_TW" label="繁體中文" lang="zh-TW" type="button" data-analytics-init="true"></ql-menu-item>
+</ql-menu>
+
+<ql-icon-button aria-expanded="false" aria-haspopup="true" aria-label="More options" class="mobile-show" data-toggle="tooltip" icon="more_vert" id="mobile-more-menu-button" title="More options" translate="no" type="button" aria-controls="mobile-more-menu"></ql-icon-button>
+<ql-menu for="mobile-more-menu-button" id="mobile-more-menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="mobile-more-menu-button">
+<ql-menu-item aria-controls="share-submenu" aria-expanded="false" aria-haspopup="true" id="share_mobile_32535" label="Share" role="button" tabindex="0" type="button"></ql-menu-item>
+
+
+<ql-menu-item aria-controls="help-submenu" aria-expanded="false" aria-haspopup="true" id="help-submenu-button" label="Help" role="button" tabindex="0" type="button"></ql-menu-item>
+<ql-menu-item aria-controls="language-submenu" aria-expanded="false" aria-haspopup="true" id="language-submenu-button" label="Language" role="button" tabindex="0" type="button"></ql-menu-item>
+</ql-menu>
+<ql-menu class="submenu" for="share_mobile_32535" id="share-submenu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="share_mobile_32535">
+<ql-menu-item data-analytics-action="Shared to LinkedIn Feed." data-analytics-category="Lab" data-analytics-label="Stream data with pipelines - Esports Use case" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32535%3Futm_medium%3Dsocial%26utm_source%3Dlinkedin%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_linkedin-a277effb6f261f5d3b8ad0fc692fb0025ff82eaf.png" label="Share on LinkedIn Feed" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Share on LinkedIn Feed</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to X." data-analytics-category="Lab" data-analytics-label="Stream data with pipelines - Esports Use case" href="https://x.com/intent/tweet?text=Learn%20cloud%20tech%20through%20hands-on%20training%20on%20%23GoogleSkills%21&amp;url=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32535%3Futm_medium%3Dsocial%26utm_source%3Dx%26utm_campaign%3Dql-social-share&amp;hashtags=" iconsrc="https://cdn.qwiklabs.com/assets/logo_x-2abcf45e0673a8f244a6b686ea7f0189457d4fe3.png" label="X" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">X</span>
+</ql-menu-item>
+
+<ql-menu-item data-analytics-action="Shared to Facebook." data-analytics-category="Lab" data-analytics-label="Stream data with pipelines - Esports Use case" href="https://facebook.com/sharer.php?display=popup&amp;u=https%3A%2F%2Fwww.skills.google%2Fcatalog_lab%2F32535%3Futm_medium%3Dsocial%26utm_source%3Dfacebook%26utm_campaign%3Dql-social-share" iconsrc="https://cdn.qwiklabs.com/assets/logo_facebook-5ccdec05e255be16449f837fff607b6d33ae9b87.png" label="Facebook" role="link" target="_blank" type="button" data-analytics-init="true">
+<span class="label">Facebook</span>
+</ql-menu-item>
+
+<ql-copyable-input label="Share Link" value="https://www.skills.google/catalog_lab/32535"></ql-copyable-input>
+
+</ql-menu>
+
+<ql-menu class="submenu" for="help-submenu-button" id="help-submenu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="help-submenu-button">
+<ql-menu-item data-analytics-action="opened_help" data-analytics-label="lab" label="Help Center" onclick='hallofmirrors.helpService.startHelp({"productData":{"userId":14510693},"context":"lab"})' type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item href="https://support.google.com/qwiklabs/contact/Google_Skills" label="Contact Us" target="_blank" type="button"></ql-menu-item>
+<ql-menu-item label="Send feedback" onclick="userfeedback.api.startFeedback(
+{
+'productId': '5080217',
+'enableAnonymousFeedback': true,
+'authuser': 'undefined',
+'locale': 'en'
+},
+{
+'user_id': '14510693',
+'current_organization': ''
+})" type="button"></ql-menu-item>
+<ql-menu-item href="https://reportingwidget.google.com/widget/54?cid=1&amp;url=https%3A%2F%2Fwww.skills.google%2Fpaths%2F16%2Fcourse_templates%2F52%2Flabs%2F592750%3F" label="Report Illegal Content" type="button"></ql-menu-item>
+</ql-menu>
+<ql-menu class="submenu" for="language-submenu-button" id="language-submenu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="language-submenu-button">
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ar" href="/paths/16/course_templates/52/labs/592750?locale=ar" label="العربية‬‎" lang="ar" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="de" href="/paths/16/course_templates/52/labs/592750?locale=de" label="Deutsch" lang="de" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="en" href="/paths/16/course_templates/52/labs/592750?locale=en" label="English" lang="en" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="es" href="/paths/16/course_templates/52/labs/592750?locale=es" label="español (Latinoamérica)" lang="es" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr" href="/paths/16/course_templates/52/labs/592750?locale=fr" label="français" lang="fr" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="fr_CA" href="/paths/16/course_templates/52/labs/592750?locale=fr_CA" label="français (Canada)" lang="fr-CA" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="he" href="/paths/16/course_templates/52/labs/592750?locale=he" label="עברית" lang="he" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="id" href="/paths/16/course_templates/52/labs/592750?locale=id" label="bahasa Indonesia" lang="id" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="it" href="/paths/16/course_templates/52/labs/592750?locale=it" label="italiano" lang="it" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ja" href="/paths/16/course_templates/52/labs/592750?locale=ja" label="日本語" lang="ja" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ko" href="/paths/16/course_templates/52/labs/592750?locale=ko" label="한국어" lang="ko" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pl" href="/paths/16/course_templates/52/labs/592750?locale=pl" label="polski" lang="pl" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_BR" href="/paths/16/course_templates/52/labs/592750?locale=pt_BR" label="português (Brasil)" lang="pt-BR" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="pt_PT" href="/paths/16/course_templates/52/labs/592750?locale=pt_PT" label="português (Portugal)" lang="pt-PT" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="ru" href="/paths/16/course_templates/52/labs/592750?locale=ru" label="русский" lang="ru" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="tr" href="/paths/16/course_templates/52/labs/592750?locale=tr" label="Türkçe" lang="tr" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="uk" href="/paths/16/course_templates/52/labs/592750?locale=uk" label="українська" lang="uk" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh" href="/paths/16/course_templates/52/labs/592750?locale=zh" label="简体中文" lang="zh" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+<ql-menu-item data-analytics-action="changed_locale" data-analytics-label="zh_TW" href="/paths/16/course_templates/52/labs/592750?locale=zh_TW" label="繁體中文" lang="zh-TW" role="menuitem" type="button" data-analytics-init="true"></ql-menu-item>
+</ql-menu>
+
+<ql-icon-button data-tooltip-text="My account" id="my_account" label="My account" translate="no" type="button" data-original-title="My account" aria-controls="my_account_menu" aria-haspopup="true">
+<ql-avatar src="https://lh3.googleusercontent.com/a/ACg8ocJkyb3naiKxKingQ4lR9pgOsDBVojfWRR-2DtNTxs00yi75mbI=s320-c"></ql-avatar>
+</ql-icon-button>
+<ql-menu for="my_account" id="my_account_menu" style="left: -1000px; top: -1000px; opacity: 0; visibility: hidden;" tabindex="-1" inert="" exportparts="body" role="menu" aria-labelledby="my_account">
+<div class="learner-profile-account-menu my-account-menu">
+<div class="learner-profile-account-menu__notifications">
+</div>
+<div class="learner-profile-account-menu__profile">
+<ql-avatar size="88" src="https://lh3.googleusercontent.com/a/ACg8ocJkyb3naiKxKingQ4lR9pgOsDBVojfWRR-2DtNTxs00yi75mbI=s320-c"></ql-avatar>
+<div class="learner-profile-account-menu__metadata">
+<h4 class="ql-title-large">Izthak Zadwing</h4>
+<p class="ql-body-medium text--light">
+</p>
+<div class="ql-body-medium l-mbs">Member since 2024</div>
+<a class="ql-title-small" style="text-decoration:none" href="https://www.skills.google/my_account/payments"><ql-chip class="relaunch" icon="deployed_code">
+Starter
+</ql-chip>
+</a><div class="learner-profile-account-menu__credits">
+<ql-button href="/subscriptions" label="Buy subscription" text="" type="button"></ql-button>
+</div>
+</div>
+</div>
+<div class="learner-profile-account-menu__options">
+<ql-button href="/" icon="dashboard" label="Dashboard" text="" type="button"></ql-button>
+<ql-button href="/profile/activity" icon="lists" label="Progress" text="" type="button"></ql-button>
+<ql-button href="/my_account/profile" icon="settings" label="Settings" text="" type="button"></ql-button>
+<ql-button data-analytics-action="clicked_sign_out" href="/users/sign_out" icon="logout" label="Sign Out" method="delete" text="" type="button" data-analytics-init="true"></ql-button>
+</div>
+<div class="learner-profile-account-menu__footer">
+<ql-button href="/privacy_policy" label="Privacy" target="_blank" text="" type="button"></ql-button>
+<ql-button href="/terms_of_service" label="Terms" text="" type="button"></ql-button>
+</div>
+</div>
+</ql-menu>
+
+
+
+</div>
+</ql-toolbar>
+</div>
+<div class="body-container__inner">
+<ql-sidenav id="app-nav" items="[{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Dashboard&quot;,&quot;icon&quot;:&quot;dashboard&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Dashboard&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Catalog&quot;,&quot;icon&quot;:&quot;book_2&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/catalog&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Catalog&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Paths&quot;,&quot;icon&quot;:&quot;conversion_path&quot;,&quot;active&quot;:true,&quot;href&quot;:&quot;/paths&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Paths&quot;}},{&quot;type&quot;:&quot;dropdown&quot;,&quot;label&quot;:&quot;Collections&quot;,&quot;icon&quot;:&quot;category&quot;,&quot;active&quot;:false,&quot;children&quot;:[{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;AI Boost Bites&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/collections/ai-boost-bites&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_collections&quot;,&quot;label&quot;:&quot;AI Boost Bites&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Cloud&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/collections/cloud&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_collections&quot;,&quot;label&quot;:&quot;Cloud&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;DeepMind&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/collections/deepmind&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_collections&quot;,&quot;label&quot;:&quot;DeepMind&quot;}}],&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Collections&quot;}},{&quot;type&quot;:&quot;dropdown&quot;,&quot;label&quot;:&quot;Credentials&quot;,&quot;icon&quot;:&quot;license&quot;,&quot;active&quot;:false,&quot;children&quot;:[{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Certificate&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/credentials/certificate&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_credentials&quot;,&quot;label&quot;:&quot;Certificate&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Skill badge&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/credentials/skill_badge&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_credentials&quot;,&quot;label&quot;:&quot;Skill badge&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Certification&quot;,&quot;icon&quot;:null,&quot;active&quot;:false,&quot;href&quot;:&quot;/credentials/tech_certification&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav_credentials&quot;,&quot;label&quot;:&quot;Certification&quot;}}],&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Credentials&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Subscriptions&quot;,&quot;icon&quot;:&quot;subscriptions&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/subscriptions&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Subscriptions&quot;}},{&quot;type&quot;:&quot;item&quot;,&quot;label&quot;:&quot;Organizations&quot;,&quot;icon&quot;:&quot;corporate_fare&quot;,&quot;active&quot;:false,&quot;href&quot;:&quot;/learningcenter&quot;,&quot;analytics&quot;:{&quot;position&quot;:&quot;application_sidenav&quot;,&quot;label&quot;:&quot;Organizations&quot;}}]">
+<ql-fab class="navrail-search-button" data-analytics-action="click_button" data-analytics-button-text="Search" data-analytics-label="Search" data-analytics-position="application_sidenav" data-analytics-type="eventParams" expandable="" icon="search" label="Search" slot="start" type="button" data-analytics-init="true"></ql-fab>
+</ql-sidenav>
+
+<div class="body-content">
+<div class="banner">
+<div id="callout-container">
+</div>
+
+</div>
+<div class="page-header">
+<div class="page-main-banner">
+<div class="page-main-banner-breadcrumbs">
+<nav aria-label="Breadcrumb" class="breadcrumbs-container" role="navigation">
+<ol>
+<li class="breadcrumb-item ql-label-medium">
+<ql-icon-button href="/" icon="home_filled" iconfill="" translate="no" type="button"></ql-icon-button>
+
+<ql-icon class="breadcrumb-arrow" translate="no">navigate_next</ql-icon>
+</li>
+<li class="breadcrumb-item ql-label-medium">
+<a href="https://www.skills.google/paths/16">Professional Data Engineer Certification</a>
+<ql-icon class="breadcrumb-arrow" translate="no">navigate_next</ql-icon>
+</li>
+<li class="breadcrumb-item ql-label-medium">
+<a href="https://www.skills.google/paths/16/course_templates/52">Build Streaming Data Pipelines on Google Cloud</a>
+<ql-icon class="breadcrumb-arrow" translate="no">navigate_next</ql-icon>
+</li>
+<li class="breadcrumb-item ql-label-medium" tabindex="0">
+Stream data with pipelines - Esports Use case
+</li>
+</ol>
+</nav>
+
+</div>
+<aside aria-label="Free trial" class="page-main-banner-console-free-trial">
+<div class="console-free-trial">
+<p class="console-free-trial-content ql-body-medium">
+Apply your skills in Google Cloud console
+</p>
+<div class="console-free-trial-actions">
+<ql-button data-analytics-action="gcp_cta" data-analytics-position="free trial banner" data-analytics-type="eventParams" elevated="" href="https://console.cloud.google.com/freetrial" label="Get started" target="_blank" type="button" data-analytics-init="true"></ql-button>
+</div>
+</div>
+</aside>
+</div>
+
+</div>
+<main id="jump-content" tabindex="-1">
+<ql-drawer-container class="course-container">
+<ql-drawer-content class="course-activity" slot="drawer-content">
+<div class="course-activity-header">
+<div class="course-toc-cont">
+<ql-contents-menu modules="[{&quot;id&quot;:&quot;83845&quot;,&quot;title&quot;:&quot;Course introduction&quot;,&quot;description&quot;:&quot;\u003cp\u003eThis module introduces the fundamentals of building streaming data pipelines on Google Cloud, providing a foundation for the entire course. It begins by outlining the course's overall learning objectives and introducing a practical, hands-on scenario that will be used throughout the content and labs to make the concepts tangible.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599793&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592746&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592746&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;What's in it for me?&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;83846&quot;,&quot;title&quot;:&quot;Streaming use cases and reference architectures&quot;,&quot;description&quot;:&quot;\u003cp\u003eThis module provides an introduction to streaming data use cases and architectures. You will learn about the applications and common architectural patterns for real-time data processing across four key scenarios: Streaming ETL, Streaming AI/ML, Streaming Application, and Reverse ETL.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599794&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592747&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592747&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;The power of streaming data pipelines with Google Cloud products&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;83847&quot;,&quot;title&quot;:&quot;Product deep dives&quot;,&quot;description&quot;:&quot;\u003cp\u003eThis module provides a comprehensive overview of building streaming data pipelines on Google Cloud, covering the core services for messaging, processing, and analysis. It's designed to give you a hands-on understanding of how these components work together in a cohesive, real-time architecture.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599795&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592748&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592748&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Understanding the products&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599796&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592749&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592749&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Architectural considerations for Pub/Sub and Managed Service for Apache Kafka&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:true,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:true,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599797&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592750&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/labs/592750&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Stream data with pipelines - Esports Use case&quot;,&quot;description&quot;:&quot;In this lab you learn ingest, transform and store Esports data using pipelines.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599798&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592751&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/quizzes/592751&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Quiz 1: Pub/Sub and Managed Service for Apache Kafka&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599799&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592752&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592752&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Dataflow: The processing powerhouse&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599800&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592753&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/labs/592753&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Use Apache Beam and Bigtable to Enrich esports DLC Data&quot;,&quot;description&quot;:&quot;In this lab, you will use Apache Beam and BigTable to enrich esports DLC data, using a Jupyter Notebook in Agent Platform.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599801&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592754&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/quizzes/592754&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Quiz 2: Dataflow&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599802&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592755&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592755&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;BigQuery: The analytical engine&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599803&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592756&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/labs/592756&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Stream E-sports Data with Pub/Sub and BigQuery&quot;,&quot;description&quot;:&quot;In this lab you learn ingest, transform and store Esports data using Pub/Sub and BigQuery.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599804&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592757&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/quizzes/592757&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Quiz 3: BigQuery&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599805&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592758&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592758&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Bigtable: The solution for operational data&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599806&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592759&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/labs/592759&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Monitor E-sports Chat with Streamlit&quot;,&quot;description&quot;:&quot;In this lab you learn how to monitor e-sports chat with Streamlit.&quot;,&quot;type&quot;:&quot;lab&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;599807&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:false,&quot;activities&quot;:[{&quot;id&quot;:&quot;592760&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/quizzes/592760&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;Quiz 4: Bigtable&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;quiz&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;83848&quot;,&quot;title&quot;:&quot;Key takeaways&quot;,&quot;description&quot;:&quot;\u003cp\u003eThis module provides a comprehensive wrap-up of the course, summarizing the key concepts you've learned for building resilient and robust streaming data pipelines on Google Cloud.\u003c/p\u003e&quot;,&quot;steps&quot;:[{&quot;id&quot;:&quot;599808&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;592761&quot;,&quot;href&quot;:&quot;/paths/16/course_sessions/44960185/html_bundles/592761&quot;,&quot;isLocked&quot;:false,&quot;duration&quot;:null,&quot;title&quot;:&quot;What did I walk away with?&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;html_bundle&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false,&quot;paid&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:false},{&quot;id&quot;:&quot;next-steps&quot;,&quot;title&quot;:&quot;Your Next Steps&quot;,&quot;description&quot;:null,&quot;steps&quot;:[{&quot;id&quot;:&quot;badge-step&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;badge&quot;,&quot;href&quot;:null,&quot;isLocked&quot;:true,&quot;duration&quot;:null,&quot;title&quot;:&quot;Completion&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;credential&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:true,&quot;credentialType&quot;:null}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false},{&quot;id&quot;:&quot;survey-0-step&quot;,&quot;prompt&quot;:null,&quot;isOptional&quot;:true,&quot;activities&quot;:[{&quot;id&quot;:&quot;survey-0&quot;,&quot;href&quot;:null,&quot;isLocked&quot;:true,&quot;duration&quot;:null,&quot;title&quot;:&quot;Course Survey&quot;,&quot;description&quot;:null,&quot;type&quot;:&quot;survey&quot;,&quot;isComplete&quot;:false,&quot;inProgress&quot;:false,&quot;score&quot;:null,&quot;disabled&quot;:false}],&quot;isComplete&quot;:false,&quot;isTestedOut&quot;:false,&quot;allActivitiesRequired&quot;:false}],&quot;expanded&quot;:true}]" overviewlink="/paths/16/course_templates/52" selectedactivityid="592750" selectedcontenttitle="Stream data with pipelines - Esports Use case"></ql-contents-menu>
+<div class="course-toc-buttons">
+
+<div class="feedback-button-container">
+<ql-button class="feedback-button" data-analytics-action="button_click" data-analytics-button-text="Send feedback" data-analytics-type="eventParams" icon="rate_review" label="Send feedback" onclick="ql.sendFeedback();
+userfeedback.api.startFeedback(
+{
+'productId': '5080217',
+'enableAnonymousFeedback': true,
+'authuser': 'undefined',
+'locale': 'en'
+},
+{
+'user_id': '14510693',
+'current_organization': ''
+})" outlined="" type="button" data-analytics-init="true"></ql-button>
+</div>
+
+</div>
+</div>
+</div>
+<div class="course-activity-content with-space-for-navigation-buttons" role="region" tabindex="0">
+
+
+<div class="lab-assessment__tab js-open-lab-assessment-panel">
+<button class="js-lab-assessment-total-score">
+—/100
+</button>
+</div>
+<div aria-labelledby="lab-assessment-checkpoint" class="lab-assessment__panel js-lab-assessment-panel" role="dialog">
+<div class="lab-assessment__panel__header">
+<h4 id="lab-assessment-checkpoint">Checkpoints</h4>
+<ql-icon-button class="js-close-lab-assessment-panel" icon="arrow_forward" label="Close dialog" translate="no" type="button"></ql-icon-button>
+</div>
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Create the cloud resources
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Create the cloud resources" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Create the cloud resources" step_no="1" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-1">
+</span>
+/ 30
+</p>
+</div>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Retrieve the Python files and configure them
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Retrieve the Python files and configure them" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Retrieve the Python files and configure them" step_no="2" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-2">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Generate synthetic data and run the pipeline
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Generate synthetic data and run the pipeline" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Generate synthetic data and run the pipeline" step_no="3" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-3">
+</span>
+/ 30
+</p>
+</div>
+</div>
+
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Verify the results in BigQuery
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Verify the results in BigQuery" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Verify the results in BigQuery" step_no="4" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-4">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<ql-drawer-container class="js-lab-state" data-analytics-payload="{&quot;label&quot;:&quot;Stream data with pipelines - Esports Use case&quot;,&quot;lab_name&quot;:&quot;Stream data with pipelines - Esports Use case&quot;,&quot;classroom_name&quot;:null,&quot;deployment&quot;:&quot;google-run&quot;}" data-credits="20.0" data-focus-id="883636858" data-lab-duration="5400" data-learning-plan-id="16" data-parent="course_session" data-payment-required="" data-recaptcha-enabled="" data-recaptcha-error-message="reCAPTCHA verification error. Please refresh and try again." data-recaptcha-load-error-message="reCAPTCHA could not load. Please disable any ad blockers or privacy extensions and try again." id="lab-container">
+<script src="01_esports_use_case_files/api_002_UAqZ.js"></script>
+        <script>
+          // Define function so that we can call it again later if we need to reset it
+          // This executes reCAPTCHA and then calls our callback.
+          function executeRecaptchaForStartLab() {
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}).then(function(token) {
+                setInputWithRecaptchaResponseTokenForStartLab('g-recaptcha-response-data-start-lab', token)
+              });
+            });
+          };
+          // Invoke immediately
+          executeRecaptchaForStartLab()
+
+          // Async variant so you can await this function from another async function (no need for
+          // an explicit callback function then!)
+          // Returns a Promise that resolves with the response token.
+          async function executeRecaptchaForStartLabAsync() {
+            return new Promise((resolve, reject) => {
+             grecaptcha.ready(async function() {
+                resolve(await grecaptcha.execute('6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr', {action: 'start_lab'}))
+              });
+            })
+          };
+
+                  var setInputWithRecaptchaResponseTokenForStartLab = function(id, token) {
+          var element = document.getElementById(id);
+          if (element !== null) element.value = token;
+        }
+
+        </script>
+<input type="hidden" name="g-recaptcha-response-data[start_lab]" id="g-recaptcha-response-data-start-lab" data-sitekey="6LeVI8IUAAAAAJNdox5eTkYrw9SbvhZ1TFyv3iHr" class="g-recaptcha g-recaptcha-response " style="" value="0cAFcWeA6ranF5zlisLlbYqcpOwAYeNg6lnBxhAMMJf_wXegTmgWLVhCiIdGZY52kQXBwjfCZJHarPHsPJXxVVDiSMpu6P0xnv10XQUKSz6yryUhC9CC5JIp7mYaXQr6QFHgVf_OOrmWbsq23Zk57KwZkrS9UzhGjwdmXtjGwL8v3w1XyxteLFU3arRkW0pYWiKB0yQRunrEFV3sG69_dYgCC7LAtZUpG4TClqmsiRlioYJyidTneu72MhHzDKk-7RuiHfyP85Ki_ukFwWe9ZyueXoLrEIGPcJ5u98RJn_EEhJ0a8y_aM3D_RzpwqEpfmgWjre5W5e_8jF5AR4fQGiu2WxgKN4Amo9QLQCrsS0UysgMcl-iVXv7vf7WRuFYT3p6q3TafvIUjods510rdSZrLX6U303OsMiJqCywLOARBtq-XtJceA0CzYfPwNYrq0l675PcNFUJg4vTqNRpIFsOvalmZ8oCHQTo8nFTiGLPJ3AYCBwGyeEJDmPU_sy8wwo608v41A_ETmltiiFR0Q9NPyA1JDxXynkVsut5I4mzzmV9VKVFbTO95gz_v5YgTk5VxapBIsQ4fl7QLGALAyZYywpryDFC8swkM3-QDfZVyZWCWEN9qwQm5vn-te8lSsymQK1B1j-Nly3Yed85UgZxTPTiKKEy3H2o5FAh7hDgu_9DBaFSMZlPneVKpGfmklJKs-KoJbvbYXv6zU9-vOZeW8VHdoiYA6S1h0bdgzW0vXMZ-CXKvOU78RWUtZ1g3v2jUH8t60wDC_LbC7NnM5FIjAvm1L6sTl5_AG22DivlHccet8qbEFjt8ejVVLGuUSiLf3z5O0xpvK4WEw-OrxVR6_GTs5lXVoA64a2EB9wo8L37nn4Vjn_faRkK9XVP_LFtnyAm3wCdJk4oadnw38d-046picl9hLloMGb9wY02O3sza8Jz4zbphxndwM14Zowi8bhl03-i0nzsR1Id0CVG4RwOgJHe96t00wBTzjhZmMs6UbSNuX__ut_eoH9U0pigLJLqUPfjlz3rbxHpCt9tb8r-Vet5TfECGvwxDN8eH2gUXhSQsj2txo08m4A4nXGxKsNwweVsFHzLOgg8rWlhdHapaFuzoNfqdm4WgY9ELvs9gIK20EZGggl4YpcIq7i-Q-PxA_UMb0HnoAkJen96gemrIoBwnoMq36guVbKU9UcteOJvbW6jMsXPdiHru2eYuYaiWq4a044wN-CM4PrIgrBFe3mqj6mDo4gsIpgtAFrpfuSsYevfCQ5hSEyU89E6FE8zKcmFF5Mzd-9otcgPOwWOduDKOS7PeVt66k7hJR1xGq7qkGi3yxkbQDdYnpw626CvCa205SUlmmxTOJWT5B-5GCIUBbvSSZ9HUrz4R8jyX91aMLMhxX22-i6hoz_W3S7SniTuzTBiyjBo-i3uhMCeLGxpN5RPoeQjHrhYh6c-5W3Stl1RgW0bGST2HIGx9DLUBnX6K-g-Klbrg7s_wzCHRp22hJ5rt5uZqU8JV92pr9M2ZJtkOyUuOcRdD2wTepvzsAf-3ZUEqa7A90hx5fiaevnNe98Hudh6UWzrV-AV18b54tAlXNCvYNe65VRlMFb7uFWYE6D6kZXOe6Wn4efr8lwubC7y6Zn3Hc1TybjU5em-Sp7sPeIM40o6B7oz5Y2BkK9yfR9oLCf__EOkQcdgP9CZCeqbTIM5BD663tGuf4ZIEQknvXcTbs_c326JWxISB3rjVV3EAX9Ju-LkSCF7eXLr2SNpvMVbMTRend3HJNtYWJ0KB66z3YQLwjJwSuUufWoZP4feiCFhBb9V6o_70zAIKTOas5mGsP9gKi_RL-wvZSgxGfrc8T29llp-9oD3wQ-hxJO_yd64_TggK998drEYv4fyhSI21SKJHv261k406P1C-f5weUHizRuAf92ABFCiLUGeKtW2S7sClQu9Xk9zlZgC9eEwcMBEaFlpdtn3E-OAqpdxNeroJpkZtt5Vw_lJea09QfdonoPNDu925-SuKI9cXpPNHquzHn93C82u6DdbN0kBCRRA9u21tuVs9k3HgFOh4Rsx5NA264c6f-GHVS2OQhB135b9xyUryKXaqC1Hm6ZXAs-GiNk26QB_3Z2R2VLiWUej6UvLhpAGeK6-mqBJBixtskOYDOSVELDq4r66Fu39mhqQFtmgtsJeBY3Etyl83uojMl9TFIT_aHwqZkEIFv5NU_wsx11oeII6UDr3DpkltFgCzjlhW0_ZZip5ii1LaeoDmhbG-OXhWAvppo_Jyal1VMYtmdUCG4Z5kxr6WKMA7eiT9RAoH2bJcALHSXG"><div style="width: 304px; height: 78px;"><div><iframe title="reCAPTCHA" width="304" height="78" role="presentation" name="a-rdy2s3uyww2s" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="01_esports_use_case_files/anchor_UAqZ.html"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div>
+
+<ql-drawer id="terminal-drawer" slot="drawer" style="visibility: hidden;" tabindex="-1" aria-hidden="true" role="region" mode="side">
+<iframe allow="clipboard-read" class="terminal" id="embedded-resource"></iframe>
+</ql-drawer>
+<ql-drawer-content class="js-lab-wrapper" id="lab-content" slot="drawer-content">
+<ql-drawer-container id="lab-content-container">
+<ql-drawer-content id="lab-instructions" slot="drawer-content">
+<div class="lab-content-container">
+<div class="alert alert--fake js-alert">
+<p class="alert__message js-alert-message" role="alert"></p>
+<ql-icon-button class="alert__close js-alert-close" icon="clear" translate="no" type="button"></ql-icon-button>
+<iframe class="l-ie-iframe-fix" tabindex="-1"></iframe>
+</div>
+<div class="lab-content__renderable-instructions js-lab-content">
+<ql-lab-header chips="[&quot;1 Credit&quot;,&quot;55 minutes&quot;,&quot;Introductory&quot;,&quot;Updated 18 days ago&quot;,&quot;ID: GSP1298&quot;]" class="js-lab-control-panel" connectionfiles="[]" currentpoints="0" labcontentitems="[{&quot;id&quot;:&quot;step1&quot;,&quot;title&quot;:&quot;GSP1298&quot;},{&quot;id&quot;:&quot;step2&quot;,&quot;title&quot;:&quot;Overview&quot;},{&quot;id&quot;:&quot;step3&quot;,&quot;title&quot;:&quot;Objectives&quot;},{&quot;id&quot;:&quot;step4&quot;,&quot;title&quot;:&quot;Setup and requirements&quot;},{&quot;id&quot;:&quot;step5&quot;,&quot;title&quot;:&quot;Task 1. Configure environment variables in Cloud Shell&quot;},{&quot;id&quot;:&quot;step6&quot;,&quot;title&quot;:&quot;Task 2. Create the cloud resources&quot;},{&quot;id&quot;:&quot;step7&quot;,&quot;title&quot;:&quot;Task 3. Retrieve the Python files and configure them.&quot;},{&quot;id&quot;:&quot;step8&quot;,&quot;title&quot;:&quot;Task 4. Generate synthetic data and run the pipeline&quot;},{&quot;id&quot;:&quot;step9&quot;,&quot;title&quot;:&quot;Task 5. Verify the results in BigQuery&quot;},{&quot;id&quot;:&quot;step10&quot;,&quot;title&quot;:&quot;Congratulations!&quot;}]" labcontrolbutton="{&quot;disabled&quot;:false,&quot;pending&quot;:false,&quot;running&quot;:false}" labdetails="[]" labtimer="{&quot;ticking&quot;:false,&quot;secondsRemaining&quot;:5400,&quot;totalDurationSeconds&quot;:5400}" labtitle="Stream data with pipelines - Esports Use case" provisioning="false" provisioningsecondsremaining="null" studentresources="[]" totalpoints="100" style="--ql-lab-header-sticky-top: -244px;">
+<div aria-live="polite" class="hidden" id="recaptcha-v2-start-lab" slot="recaptcha">
+<script src="01_esports_use_case_files/api_UAqZ.js" async="" defer="defer"></script>
+<div data-sitekey="6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV" data-callback="recaptchaComplete" data-expired-callback="expireV2Token" class="g-recaptcha "><div style="width: 304px; height: 78px;"><div><iframe title="reCAPTCHA" width="304" height="78" role="presentation" name="a-twydh7jyy7in" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="01_esports_use_case_files/anchor_002_UAqZ.html"></iframe></div><textarea id="g-recaptcha-response-1" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div>
+          <noscript>
+            <div>
+              <div style="width: 302px; height: 422px; position: relative;">
+                <div style="width: 302px; height: 422px; position: absolute;">
+                  <iframe
+                    src="https://www.recaptcha.net/recaptcha/api/fallback?k=6LeOI8IUAAAAAPkHlMAE9NReCD_1WD81iYlBlCnV"
+                    name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
+                  </iframe>
+                </div>
+              </div>
+              <div style="width: 300px; height: 60px; border-style: none;
+                bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+                background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+                <textarea id="g-recaptcha-response" name="g-recaptcha-response"
+                  class="g-recaptcha-response"
+                  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+                  margin: 10px 25px; padding: 0px; resize: none;">
+                </textarea>
+              </div>
+            </div>
+          </noscript>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Create the cloud resources
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Create the cloud resources" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Create the cloud resources" step_no="1" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-1">
+</span>
+/ 30
+</p>
+</div>
+</div>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Retrieve the Python files and configure them
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Retrieve the Python files and configure them" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Retrieve the Python files and configure them" step_no="2" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-2">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Generate synthetic data and run the pipeline
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Generate synthetic data and run the pipeline" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Generate synthetic data and run the pipeline" step_no="3" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-3">
+</span>
+/ 30
+</p>
+</div>
+</div>
+
+</div>
+<div slot="checkpoints">
+<div class="lab-assessment__step">
+<p class="lab-assessment__step__title ql-title-small" id="lab-assessment-step-title">
+Verify the results in BigQuery
+</p>
+<div class="lab-assessment__step__action">
+<ql-button aria-label="Check my progress for Verify the results in BigQuery" class="js-show-run-step-button" data-analytics-action="check_progress_results" data-analytics-position="lab_assessment_panel" description="Verify the results in BigQuery" step_no="4" type="button" data-analytics-init="true">
+Check my progress
+</ql-button>
+<p class="lab-assessment__step__score ql-title-small">
+<span class="js-assessment-step-score-4">
+</span>
+/ 20
+</p>
+</div>
+</div>
+
+</div>
+</ql-lab-header>
+
+<div class="lab-preamble__ai_notice">
+<ql-callout icon="spark" id="ai-notice-32535" severity="info">
+<div slot="content">
+This lab may incorporate AI tools to support your learning.
+</div>
+</ql-callout>
+</div>
+<div class="markdown-lab-instructions js-markdown-instructions" id="markdown-lab-instructions">
+
+<h2 id="step1">GSP1298</h2>
+<button class="js-img-container" aria-haspopup="true"><img alt="Google Cloud self-paced labs" src="01_esports_use_case_files/dW94pPHsWo4RxbyHDUVE7oyXDZS3QNm40RnYsQ9Mf2o=_UAqZ.png" width="600"></button>
+
+<h2 id="step2">Overview</h2>
+<p>Imagine you are a data engineer for Cymbal Gaming. You and the 
+development team are building a new e-sports game, "Galactic Grand 
+Prix." The game produces real-time data based on heads-up games between 
+two players from different teams. For example, two players will compete 
+in one event. A winner is determined, and then points are awarded to the
+ winning player and team. You are tasked with building a solution to 
+handle this streamed data, leveraging a Dataflow pipeline to ingest data
+ from Pub/Sub, transform it using Python code, and store the results in 
+BigQuery tables. These tables will then be used to visualize the results
+ as player and team dashboards.</p>
+<p>You have read that Pub/Sub, Dataflow and BigQuery could be used for 
+this type of use case. You have also learned that Gemini can help you 
+along the way, for example, if you get stuck with writing a new query 
+you could use Code Assist to help review and debug your code. It could 
+even help you with suggestions to resolve issues. Using these features 
+will help you to be more independent in your work and, perhaps, even 
+more efficient. However, you are not sure how to get started.</p>
+<p>When you start the lab, the environment will contain the resources shown in the following diagram.</p>
+<p><button class="js-img-container" aria-haspopup="true"><img alt="Architecture provided to you at lab launch." src="01_esports_use_case_files/yT5g3N5c8dxuJTgvH1_Oa_p0XtTWNhcH8Br8BFwuIes=_UAqZ.png"></button></p>
+<p>By the end of the lab, you will have used the architecture to perform several tasks.</p>
+<p><button class="js-img-container" aria-haspopup="true"><img alt="Architecture you build upon completion of lab." src="01_esports_use_case_files/YOuAzCXs6kCJv6bme2zO5LQfYnXFrsvoaF_6DnT9V5o=_UAqZ.png"></button></p>
+<p>The following table provides a detailed explanation of each task in relation to the lab architecture.</p>
+<table>
+
+<tbody><tr>
+<th>Numbered Task</th>
+<th>Detail</th>
+</tr>
+
+
+<tr>
+<td>1.</td>
+<td>Configure environment variables in Cloud Shell.</td>
+</tr>
+<tr>
+<td>2.</td>
+<td>
+<strong>Create the cloud resources:</strong> <br> You will use Cloud Shell commands to create the Pub/Sub topic and subscription, and the BigQuery dataset.</td>
+</tr>
+<tr>
+<td>3.</td>
+<td>
+<strong>Retrieve the Python files from the repo:</strong> <br> In this task, you retrieve the Python files from the repo and configure them for your project.</td>
+</tr>
+<tr>
+<td>4.</td>
+<td>
+<strong>Generate synthetic data and run the pipeline:</strong> <br> With
+ the Python files configured for your project, you will then run the 
+files to generate synthetic data and initiate the pipeline. The 
+esports-simulation.py file uses Python to generate continuous Pub/Sub 
+messages for game events. You can then run the esports-pipeline.py file.
+ Running this file launches a Dataflow pipeline that ingests the 
+messages, transform them, and record the results to the raw_events, 
+player score updates and team score updates tables in BigQuery.</td>
+</tr>
+<tr>
+<td>5.</td>
+<td>
+<strong>Verify the results in BigQuery:</strong> <br> Now that you have 
+consumed and transformed the data, and written the records to the tables
+ in BigQuery, it is time to verify the results. You will run queries on 
+each table to analyze and view the results.</td>
+</tr>
+
+</tbody></table>
+<h2 id="step3">Objectives</h2>
+<p>In this lab, you learn how to:</p>
+<ul>
+<li>Configure environment variables.</li>
+<li>Create the cloud resources.</li>
+<li>Retrieve Python files from the repo and modify them for your project.</li>
+<li>Generate synthetic data and run the pipeline.</li>
+<li>Verify the results in BigQuery.</li>
+</ul>
+<p>Finally, you will have time to reflect on what you have learned in 
+this lab and consider how you could address your own use cases with 
+streaming data, and answer questions in your <a href="https://storage.mtls.cloud.google.com/spls/gsp1298/gsp1298_lab_journal.pdf" target="_blank">Lab Journal</a>.</p>
+
+<h2 id="step4">Setup and requirements</h2>
+<h3>Before you click the Start Lab button</h3>
+<p>Read these instructions. Labs are timed and you cannot pause them. The timer, which starts when you click <strong>Start Lab</strong>, shows how long Google Cloud resources are made available to you.</p>
+<p>This hands-on lab lets you do the lab activities in a real cloud 
+environment, not in a simulation or demo environment. It does so by 
+giving you new, temporary credentials you use to sign in and access 
+Google Cloud for the duration of the lab.</p>
+<p>To complete this lab, you need:</p>
+<ul>
+<li>Access to a standard internet browser (Chrome browser recommended).</li>
+</ul>
+<ql-warningbox>
+<strong>Note:</strong> Use an Incognito (recommended) or private browser
+ window to run this lab. This prevents conflicts between your personal 
+account and the student account, which may cause extra charges incurred 
+to your personal account.
+</ql-warningbox>
+<ul>
+<li>Time to complete the lab—remember, once you start, you cannot pause a lab.</li>
+</ul>
+<ql-warningbox>
+<strong>Note:</strong> Use only the student account for this lab. If you use a different Google Cloud account, you may incur charges to that account.
+</ql-warningbox>
+
+<h3>How to start your lab and sign in to the Google Cloud console</h3>
+<ol>
+<li>
+<p>Click the <strong>Start Lab</strong> button. If you need to pay for the lab, a dialog opens for you to select your payment method.
+On the right is the <strong>Lab setup and access</strong> panel with the following:</p>
+<ul>
+<li>The <strong>Open Google Cloud console</strong> button</li>
+<li>The temporary credentials (username and password) that you must use for this lab</li>
+<li>Other information, if needed, to step through this lab</li>
+</ul>
+<p>Note that the lab timer is located near the top of the page, showing the remaining time.</p>
+</li>
+<li>
+<p>Click <strong>Open Google Cloud console</strong> (or right-click and select <strong>Open Link in Incognito Window</strong> if you are running the Chrome browser).</p>
+<p>The lab spins up resources, and then opens another tab that shows the Sign in page.</p>
+<p><strong><em>Tip:</em></strong> Arrange the tabs in separate windows, side-by-side.</p>
+<ql-infobox>
+<strong>Note: </strong>If you see the <strong>Choose an account</strong> dialog, click <strong>Use Another Account</strong>.        
+ </ql-infobox>
+</li>
+<li>
+<p>If necessary, copy the <strong>Username</strong> below and paste it into the <strong>Sign in</strong> dialog.</p>
+<ql-code-block nowrap="" templated="" language="cpp">
+ {{{user_0.username | "Username"}}}
+ </ql-code-block>
+<p>You can also find the Username in the <strong>Lab setup and access</strong> panel.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Copy the <strong>Password</strong> below and paste it into the <strong>Welcome</strong> dialog.</p>
+<ql-code-block nowrap="" templated="" language="cpp">
+ {{{user_0.password | "Password"}}}
+ </ql-code-block>
+<p>You can also find the Password in the <strong>Lab setup and access</strong> panel.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+<ql-infobox>
+<strong>Important: </strong>You must use the credentials the lab provides you. Do not use your Google Cloud account credentials. 
+ </ql-infobox>
+<ql-warningbox>
+<strong>Note: </strong>Using your own Google Cloud account for this lab may incur extra charges.
+ </ql-warningbox>
+</li>
+<li>
+<p>Click through the subsequent pages:</p>
+<ul>
+<li>Accept the terms and conditions.</li>
+<li>Do not add recovery options or two-factor authentication (because this is a temporary account).</li>
+<li>Do not sign up for free trials.</li>
+</ul>
+</li>
+</ol>
+<p>After a few moments, the Google Cloud console opens in this tab.</p>
+<ql-infobox>
+<strong>Note:</strong> To access Google Cloud products and services, click the <strong>Navigation menu</strong> or type the service or product name in the <strong>Search</strong> field.
+<button class="js-img-container" aria-haspopup="true"><img alt="Navigation menu icon and Search field" src="01_esports_use_case_files/9Fk8NYFp3quE9mF_ilWF6_lXY9OUBi3UWtb2Ne4uXNU=_UAqZ.png"></button>
+</ql-infobox>
+
+<h2 id="step5">Task 1. Configure environment variables in Cloud Shell</h2>
+<p>In this task, you configure environment variables in Cloud Shell.</p>
+<ol>
+<li>
+<p>Open Cloud Shell.</p>
+</li>
+<li>
+<p>You need to authorize use, as this is the first time you use Cloud Shell in this lab. To do this, click <strong>Authorize</strong> on the pop-up window.</p>
+</li>
+<li>
+<p>Run the following commands.</p>
+<ql-code-block language="bash" templated="">
+export PROJECT_ID="{{{project_0.project_id|set at lab start}}}"
+export REGION="{{{project_0.default_region|set at lab start}}}"
+export BUCKET_NAME="{{{project_0.project_id|set at lab start}}}-bucket"
+</ql-code-block>
+</li>
+<li>
+<p>Run the commands below to confirm the variables are stored.</p>
+<ql-code-block language="bash" templated="">
+echo ${PROJECT_ID}
+echo ${REGION}
+echo ${BUCKET_NAME}
+</ql-code-block>
+</li>
+</ol>
+<h2 id="step6">Task 2. Create the cloud resources</h2>
+<p>In this task, you will create the cloud resources including the 
+Pub/Sub topic and subscription, and the BigQuery dataset using Cloud 
+Shell.</p>
+<h3>Create the cloud resources</h3>
+<p>While remaining in Cloud Shell:</p>
+<ol>
+<li>
+<p>Run the following command to create the Pub/Sub topic.</p>
+<ql-code-block language="bash" templated="">
+gcloud pubsub topics create esports_events_topic
+</ql-code-block>
+</li>
+<li>
+<p>Run the following command to create the Pub/Sub subscription.</p>
+<ql-code-block language="bash" templated="">
+gcloud pubsub subscriptions create esports_events_topic-sub --topic=esports_events_topic
+</ql-code-block>
+</li>
+<li>
+<p>Run the following command to create the BigQuery dataset.</p>
+<ql-code-block language="bash" templated="">
+bq --location=US mk --dataset esports_analytics
+</ql-code-block>
+</li>
+</ol>
+<h3>Confirm creation of resources</h3>
+<ol>
+<li>
+<p>At the top of the console, there is a search function. Enter <strong>Pub/Sub</strong> here, and click <strong>Pub/Sub</strong> from the options listed. You see Pub/Sub topics listed, including the <code>esports_events_topic</code>.</p>
+</li>
+<li>
+<p>Click on <strong>esports_events_topic</strong>, which is the topic ID. You see the Subscriptions tab appear for the topic, and the <code>esports_events_topic-sub</code> subscription is listed. This confirms you successfully created the topic and the subscription.</p>
+</li>
+<li>
+<p>Return to the search function at the top of the console. Enter <strong>BigQuery</strong> here, and click <strong>BigQuery</strong> from the options listed. You see the Welcome to BigQuery Studio page appears with a pop-up for <code>Welcome to BigQuery in the Cloud Console</code>.</p>
+</li>
+<li>
+<p>Click <strong>Done</strong>.</p>
+</li>
+<li>
+<p>Within the Explorer pane, expand your project.</p>
+</li>
+<li>
+<p>Notice at the bottom of the list, you see the <code>esports_analytics</code> dataset. This confirms you successfully created the BigQuery dataset.</p>
+</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify the objective.
+<ql-activity-tracking step="1">
+Create the cloud resources
+</ql-activity-tracking></p>
+<h2 id="step7">Task 3. Retrieve the Python files and configure them.</h2>
+<p>You will now use wget in Cloud Shell to retrieve the Python files 
+from a public Cloud Storage bucket. Once retrieved you will open the 
+files in Cloud Shell Editor and use the Code Assist feature of Gemini to
+ explain how each file works. Finally you will use the Cloud Shell 
+Editor to configure the files with details for your project and Cloud 
+Storage bucket.</p>
+<h3>Retrieve the Python files</h3>
+<ol>
+<li>
+<p>Return to Cloud Shell.</p>
+</li>
+<li>
+<p>Run the following command to return to the home directory.</p>
+<ql-code-block language="bash" templated="">
+cd ~
+</ql-code-block>
+</li>
+<li>
+<p>Create the <code>esports</code> directory and navigate to it.</p>
+<ql-code-block language="bash" templated="">
+mkdir esports
+cd esports
+</ql-code-block>
+</li>
+<li>
+<p>Retrive the Python files using the wget commands below.</p>
+<ql-code-block language="bash" templated="">
+wget https://storage.googleapis.com/spls/gsp1298/esports-simulation.py
+wget https://storage.googleapis.com/spls/gsp1298/esports-pipeline.py
+</ql-code-block>
+</li>
+</ol>
+<p>You see confirmation in the terminal that the files are downloaded.</p>
+<h3>Use code assist to explain what Python file does</h3>
+<ol>
+<li>
+<p>Click on the Open Editor button in Cloud Shell. You see the Cloud Shell Editor open. You also see the Gemini Code Assist pane.</p>
+</li>
+<li>
+<p>Close the Walkthrough tab.</p>
+</li>
+<li>
+<p>In the Explorer pane, expand the <code>esports</code> folder. You see the Python files displayed.</p>
+</li>
+<li>
+<p>Open the <code>esports-simulation.py</code> file.</p>
+</li>
+<li>
+<p>At the top right of the file, click the arrow next to <strong>Gemini</strong> <button class="js-img-container" aria-haspopup="true"><img alt="Gemini AI" src="01_esports_use_case_files/mS_hW9ru3RH4Ih+TXhTfg5gEMrq_SMW5SB7Xs8x9sF0=_UAqZ.png"></button>.</p>
+</li>
+<li>
+<p>Click on <strong>Select Gemini Code Assist Project</strong>, to select the project to use for Gemini. From the list, select <ql-variable key="project_0.project_id" placeholder="Google Cloud"></ql-variable> Project ID.</p>
+</li>
+</ol>
+<p><button class="js-img-container" aria-haspopup="true"><img alt="Google Project" src="01_esports_use_case_files/3vawoevo9HCtVn+KmIEM7uVmW2pUHlWTDKdrpVdRSys=_UAqZ.png"></button></p>
+<p><button class="js-img-container" aria-haspopup="true"><img alt="Select Gemini Project" src="01_esports_use_case_files/NQUc7NC0fh5h5OgqiRgMw37ybU18YlOAMKPJ5Qw6MFc=_UAqZ.png"></button></p>
+<ol start="7">
+<li>
+<p>Within the Gemini Code Assist pane, at the bottom, you see a place to
+ enter a prompt, where you see "Ask Gemini." Enter the following prompt:</p>
+<ql-infobox>
+Review the code in the file esports-simulation.py. Explain what this code does.
+</ql-infobox>
+</li>
+</ol>
+<p>You see that Code Assist explains what the code does in detail. At a 
+high level the code will simulate an esports match of events and 
+publishes these to a Google Cloud Pub/Sub topic.</p>
+<ol start="8">
+<li>
+<p>Now use the same process to explain what the <code>esports-pipeline.py</code> file does with this prompt.</p>
+<ql-infobox>
+Review the code in the file esports-pipeline.py. Explain what this code does.
+</ql-infobox>
+</li>
+</ol>
+<h3>Time to reflect</h3>
+<ol>
+<li>Considering your data and use cases, think of how you would use 
+Python to generate synthetic data or collect data from your 
+applications, and then publish this data as Pub/Sub messages to a topic 
+in your own development workflow. Record your responses in your lab 
+journal.</li>
+</ol>
+<ql-infobox><strong>Note:</strong> Gemini was used to assist the 
+developer who created the esports-simulation.py file. Consider using 
+Gemini to generate synthetic streaming data with Python for your 
+projects, and help explain and troubleshoot your code with Code Assist.
+</ql-infobox>
+<ol start="2">
+<li>
+<p>Using your own words, what does the esports-pipeline.py file do?</p>
+<ql-hint state="hidden" index="2068118758"></ql-hint>
+</li>
+<li>
+<p>Considering your data and use cases, think of how you would use a 
+Dataflow pipeline to consume Pub/Sub messages, to transform the data 
+within them and store the reults in BigQuery.</p>
+</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify the objective.
+<ql-activity-tracking step="2">
+Retrieve the Python files and configure them
+</ql-activity-tracking></p>
+<h3>Configure the files for your project and bucket</h3>
+<p>While still in the <strong>esports-pipeline.py</strong> file:</p>
+<ol>
+<li>
+<p>Around line 11, set the <code>PROJECT_ID</code> variable to your 
+Project_ID. You can find this at the top of the Google Cloud Console or 
+simply replace the line with the code below.</p>
+<ql-code-block language="Python" templated="">
+PROJECT_ID = "{{{project_0.project_id|set at lab start}}}"
+</ql-code-block>
+</li>
+<li>
+<p>Around line 18, set the <code>GCS_TEMP_LOCATION</code> variable to 
+your Cloud Storage bucket name (the bucket name provided to you at 
+launch). The resulting line should look something like:</p>
+<ql-code-block language="Python" templated="">
+GCS_TEMP_LOCATION = "gs://{{{project_0.project_id|set at lab start}}}-bucket/temp"
+</ql-code-block>
+</li>
+<li>
+<p>Around line 19, set the <code>REGION</code> variable to your default lab region. You can find this at the lab panel details or simply replace the line with the code below.</p>
+<ql-code-block language="Python" templated="">
+REGION = "{{{project_0.default_region|set at lab start}}}"
+</ql-code-block>
+</li>
+<li>
+<p>Save the file.</p>
+</li>
+<li>
+<p>Return to the <strong>esports-simulation.py</strong> file.</p>
+</li>
+<li>
+<p>Around line 10, set the <code>PROJECT_ID</code> variable to your Project_ID, as with the other file, simply replace the line with the code below.</p>
+<ql-code-block language="Python" templated="">
+PROJECT_ID = "{{{project_0.project_id|set at lab start}}}"
+</ql-code-block>
+<ql-infobox><strong>Note:</strong> If you do not modify the files for 
+your project, you will encounter errors at run-time in the Cloud Shell 
+when you run these files in the next task.
+</ql-infobox>
+</li>
+<li>
+<p>Save the file.</p>
+</li>
+</ol>
+<h2 id="step8">Task 4. Generate synthetic data and run the pipeline</h2>
+<p>In this task, you will run the Python files to generate the synthetic data and run the pipeline.</p>
+<h3>Install the dependencies and run the simulator</h3>
+<ol>
+<li>
+<p>Return to Cloud Shell terminal.</p>
+</li>
+<li>
+<p>Confirm you are in the home directory.</p>
+<ql-code-block language="bash" templated="">
+cd ~
+</ql-code-block>
+</li>
+<li>
+<p>Navigate to the <code>esports</code> directory.</p>
+<ql-code-block language="bash" templated="">
+cd esports
+</ql-code-block>
+</li>
+<li>
+<p>Use pip to install the dependencies, specifically the Python library for Pub/Sub.</p>
+<ql-code-block language="bash" templated="">
+pip install google-cloud-pubsub
+</ql-code-block>
+</li>
+<li>
+<p>Run the simulator. This script will run continuously, sending events to your Pub/Sub topic.</p>
+<ql-code-block language="bash" templated="">
+python3 esports-simulation.py
+</ql-code-block>
+</li>
+</ol>
+<p>You will see output indicating that events are being published in the terminal. Keep this terminal open and running.</p>
+<h3>Confirm messages are published to the topic in the Pub/Sub console</h3>
+<ol>
+<li>
+<p>Use the search function at the top of the console. This time, search for Pub/Sub, and click <strong>Pub/Sub</strong> in the list.</p>
+</li>
+<li>
+<p>Click on <strong>esports_events_topic</strong>, which is the topic ID. You see the Subscriptions tab appear for the topic, and the <code>esports_events_topic-sub</code> subscription is listed.</p>
+</li>
+<li>
+<p>Click on <strong>esports_events_topic-sub</strong>, which is the Subscription ID.</p>
+</li>
+<li>
+<p>On the <code>esports_events_topic-sub</code> subscription detail page, click on the <strong>MESSAGES</strong> tab. You see a message indicating, "Click Pull to view messages and temporarily delay message delivery to other subscribers."</p>
+</li>
+<li>
+<p>Click <strong>PULL</strong>. If you see messages listed here, this confirms that messages generated by the <code>esports-simulation.py</code> file are being received by Pub/Sub. Feel free to explore one of the messages, using the <strong>view contents</strong> button.</p>
+</li>
+</ol>
+<h3>Attempt to Run the Dataflow pipeline</h3>
+<ol>
+<li>
+<p>Open a new Cloud Shell tab. Click the + icon on the Cloud Shell terminal bar to open a second terminal.</p>
+</li>
+<li>
+<p>Confirm you are in the home directory.</p>
+<ql-code-block language="bash" templated="">
+cd ~
+</ql-code-block>
+</li>
+<li>
+<p>Navigate to the <code>esports</code> directory.</p>
+<ql-code-block language="bash" templated="">
+cd esports
+</ql-code-block>
+</li>
+<li>
+<p>Install the Python Dependencies for Dataflow (apache-beam). In the 
+new terminal, set up a virtual environment and install the required 
+libraries.</p>
+<ql-code-block language="bash" templated="">
+python3 -m venv df-env
+source df-env/bin/activate
+pip install apache-beam[gcp]
+</ql-code-block>
+</li>
+<li>
+<p>Attempt to launch the Dataflow pipeline. Run the pipeline script 
+using the command below. Make sure you've set your PROJECT_ID and 
+BUCKET_NAME environment variables in this new terminal as well.</p>
+<ql-code-block language="bash" templated="">
+export PROJECT_ID="{{{project_0.project_id|set at lab start}}}"
+export BUCKET_NAME="{{{project_0.project_id|set at lab start}}}-bucket"
+
+python3 esports-pipeline.py \
+  --project=$PROJECT_ID \
+  --region={{{project_0.default_region | Region}}} \
+  --runner=DataflowRunner \
+  --streaming \
+  --temp_location=gs://$BUCKET_NAME/temp \
+  --job_name=esports-leaderboard-pipeline \
+  --worker_machine_type=e2-standard-2
+</ql-code-block>
+</li>
+</ol>
+<p>This command submits the job to the Dataflow service. It will take a 
+few minutes for the job to start up and begin processing data.</p>
+<p>However, at this point you will see a warning and an errors like these below:</p>
+<ql-infobox>
+<strong>WARNING:</strong>apache_beam.options.pipeline_options:Bucket 
+specified in staging_location has soft-delete policy enabled. To avoid 
+being billed for unnecessary storage costs, turn off the soft delete 
+feature on buckets that your Dataflow jobs use for temporary and staging
+ storage. For more information, see 
+https://cloud.google.com/storage/docs/use-soft-delete#remove-soft-delete-policy.
+
+   <strong>ERROR:</strong>apache_beam.runners.dataflow.dataflow_runner:2025-07-11T14:50:27.572Z:
+ JOB_MESSAGE_ERROR: The Dataflow service agent cannot access the worker 
+service account. Ensure that the Dataflow API is enabled for your 
+project. In addition, verify that for the worker service account, the 
+Dataflow service agent principal has the 'Cloud Dataflow Service Agent' 
+role. To grant the role, see <a href="https://cloud.google.com/iam/docs/manage-access-service-accounts#view-access" target="_blank">https://cloud.google.com/iam/docs/manage-access-service-accounts#view-access</a>.
+ On the Service Accounts page, select the worker service account, open 
+the Permissions tab, and select 'Include Google-provided role grants' to
+ verify roles. To learn more about service accounts, see <a href="https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#permissions" target="_blank">https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#permissions</a>
+</ql-infobox>
+<p>What do these mean? First, let's start with the WARNING.</p>
+<p>The warning indicates that the bucket used in this lab, <ql-variable key="project_0.project_id" placeholder="set at lab start"></ql-variable>-bucket,
+ must have the Soft Delete protection feature disabled. We recommend you
+ disable it, and we will provide instuctions below to disable it.</p>
+<p>Regarding the ERROR... Now, let's address the ERROR... What does it mean?</p>
+<p>There are two possible causes for this error:</p>
+<ol>
+<li>
+<p>The Dataflow API is not enabled. However, at the launch of your lab, 
+we enabled this for you. You can confirm this by going to APIs &amp; 
+Services.</p>
+</li>
+<li>
+<p>The actual cause of the error is that the Dataflow Service Agent 
+principal needs permission to access the worker service account. 
+Specifically, the Dataflow Service Agent requires the <strong>Cloud Dataflow Service Agent</strong> role on the Compute Engine default service account. Below, we will include instructions to complete this task.</p>
+</li>
+</ol>
+<h3>Disabling Soft Delete feature on the Cloud Storage bucket</h3>
+<ol>
+<li>
+<p>Use the search function at the top of the console. Search for Cloud Storage, and click the <strong>Cloud Storage</strong> option in the list. You see the <code>Overview</code> page appears.</p>
+</li>
+<li>
+<p>Click <strong>Buckets</strong>. You see the Buckets page appears and your bucket, <ql-variable key="project_0.project_id" placeholder="set at lab start"></ql-variable>-bucket is displayed in the list.</p>
+</li>
+<li>
+<p>Click on <strong><ql-variable key="project_0.project_id" placeholder="set at lab start"></ql-variable>-bucket</strong>. You see the details page appears for the bucket.</p>
+</li>
+<li>
+<p>Click on <strong>Protection</strong>. You see a list of options appears, with <code>Soft delete policy (for data recovery)</code> included.</p>
+</li>
+<li>
+<p>Click <strong>Disable</strong>. You see a pop-up appears for <code>Disable soft delete policy</code>.</p>
+</li>
+<li>
+<p>Click <strong>Confirm</strong>. Soft delete policy is now disabled.</p>
+</li>
+</ol>
+<h3>Adding the required Dataflow permissions</h3>
+<p>To grant the Dataflow Service Agent and worker service account all necessary permissions to launch and manage the pipeline:</p>
+<ol>
+<li>
+<p>In Cloud Shell (or in your terminal tab), run the following commands:</p>
+<ql-code-block language="bash" templated="">
+export PROJECT_ID="{{{project_0.project_id|set at lab start}}}"
+export PROJECT_NUMBER=$(gcloud projects describe {{{project_0.project_id|set at lab start}}} --format="value(projectNumber)")
+
+# 1. Ensure Dataflow Service Agent identity exists and has project-level role
+gcloud beta services identity create --service=dataflow.googleapis.com --project=$PROJECT_ID
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:service-${PROJECT_NUMBER}@dataflow-service-producer-prod.iam.gserviceaccount.com" \
+  --role="roles/dataflow.serviceAgent"
+
+# 2. Allow Dataflow Service Agent to act on the Compute Engine worker service account
+gcloud iam service-accounts add-iam-policy-binding \
+  ${PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
+  --member="serviceAccount:service-${PROJECT_NUMBER}@dataflow-service-producer-prod.iam.gserviceaccount.com" \
+  --role="roles/dataflow.serviceAgent"
+
+# 3. Ensure Compute Engine worker service account has Dataflow Worker role
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role="roles/dataflow.worker"
+</ql-code-block>
+</li>
+</ol>
+<h3>Run the Dataflow pipeline</h3>
+<ol>
+<li>
+<p>Return to Cloud Shell.</p>
+</li>
+<li>
+<p>Confirm you are on the second terminal tab, the one for running the Dataflow pipeline (esports-pipeline.py).</p>
+</li>
+<li>
+<p>Run the following command, once again.</p>
+<ql-code-block language="bash" templated="">
+export PROJECT_ID="{{{project_0.project_id|set at lab start}}}"
+export BUCKET_NAME="{{{project_0.project_id|set at lab start}}}-bucket"
+
+python3 esports-pipeline.py \
+  --project=$PROJECT_ID \
+  --region={{{project_0.default_region | Region}}} \
+  --runner=DataflowRunner \
+  --streaming \
+  --temp_location=gs://$BUCKET_NAME/temp \
+  --job_name=esports-leaderboard-pipeline \
+  --worker_machine_type=e2-standard-2
+</ql-code-block>
+</li>
+</ol>
+<p>This time you should see a message indicating, "Autoscaling is 
+enabled for Dataflow Streaming Engine. Workers will scale between 1 and 
+100 unless maxNumWorkers is specified."</p>
+<p>This means that you have overcome the soft delete warning, and the Cloud Dataflow Service Agent error.</p>
+<h3>Access the Dataflow Service and observe the Pipeline</h3>
+<ol>
+<li>
+<p>Use the search function at the top of the console to search for and 
+select the Dataflow service. You see the Jobs page appears, with two 
+Jobs of the same name. One is running and the other failed.</p>
+</li>
+<li>
+<p>Click on the running job. You see the job graph appears. At the bottom of the page, you see the Logs pane.</p>
+</li>
+<li>
+<p>Expand the Logs pane. You see tabs for JOB LOGS and WORKER LOGS.</p>
+</li>
+<li>
+<p>Click <strong>WORKER LOGS</strong>.</p>
+</li>
+<li>
+<p>Review the logs provided here. If you see logs for indicating the 
+raw_events, player_score_updates and/or team_score_updates tables 
+created, you can move on to the next task.</p>
+<ql-infobox>
+<b>Note:</b> It may take 5 to 7 minutes to see these logs for the tables being created.
+</ql-infobox>
+</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify the objective.
+<ql-activity-tracking step="3">
+Generate synthetic data and run the pipeline
+</ql-activity-tracking></p>
+<h2 id="step9">Task 5. Verify the results in BigQuery</h2>
+<p>In this task, you will run SQL queries to verify the results of the 
+processed messages. To accomplish this, you will create two views, and 
+then query the views to display the player and team leaderboards. You 
+will also take time to reflect on how Looker could be used to enhance 
+the leaderboard visualizations.</p>
+<h3>Create the views in BigQuery</h3>
+<ol>
+<li>
+<p>Return to BigQuery.</p>
+</li>
+<li>
+<p>In the explorer, expand your project and select the <code>esports_analytics</code> dataset.</p>
+</li>
+<li>
+<p>Click the <strong>+</strong> (plus) to create a new query.</p>
+</li>
+<li>
+<p>In the query tab provided, enter the following query.</p>
+<ql-code-block language="SQL" templated="">
+-- Query 1: Create the Player Leaderboard View
+-- This view finds the most recent score for each player and ranks them.
+
+CREATE OR REPLACE VIEW `esports_analytics.player_leaderboard_live` AS
+SELECT
+-- Use the RANK() window function to calculate the rank in real-time
+RANK() OVER (ORDER BY total_score DESC) as rank,
+player_id,
+total_score,
+last_updated
+FROM (
+-- This subquery gets only the single most recent score for each player
+SELECT
+   player_id,
+   total_score,
+   last_updated,
+   ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY last_updated DESC) as rn
+FROM
+   `esports_analytics.player_score_updates`
+)
+WHERE rn = 1;
+
+
+-- Query 2: Create the Team Leaderboard View
+-- This view finds the most recent score for each team and ranks them.
+
+CREATE OR REPLACE VIEW `esports_analytics.team_leaderboard_live` AS
+SELECT
+-- Use the RANK() window function to calculate the rank in real-time
+RANK() OVER (ORDER BY total_wins DESC) as rank,
+team_id,
+total_wins,
+last_updated
+FROM (
+-- This subquery gets only the single most recent score for each team
+SELECT
+   team_id,
+   total_wins,
+   last_updated,
+   ROW_NUMBER() OVER (PARTITION BY team_id ORDER BY last_updated DESC) as rn
+FROM
+   `esports_analytics.team_score_updates`
+)
+WHERE rn = 1;
+</ql-code-block>
+</li>
+</ol>
+<p>This query creates two views: one for the player leaderboard and the 
+other for the team leaderboard. It will find the most recent scores for 
+the player and the team, and rank them accordingly.</p>
+<h3>Run a query to display the player leaderboard</h3>
+<ol>
+<li>
+<p>Click the plus to create a new query.</p>
+</li>
+<li>
+<p>In the query tab provided, enter the following query.</p>
+<ql-code-block language="SQL" templated="">
+SELECT * FROM `esports_analytics.player_leaderboard_live` ORDER BY rank;
+</ql-code-block>
+</li>
+</ol>
+<h3>Run a query to display the team leadeboard</h3>
+<ol>
+<li>
+<p>Click the plus to create a new query.</p>
+</li>
+<li>
+<p>In the query tab provided, enter the following query.</p>
+<ql-code-block language="SQL" templated="">
+SELECT * FROM `esports_analytics.team_leaderboard_live` ORDER BY rank;
+</ql-code-block>
+</li>
+</ol>
+<h3>Time to reflect</h3>
+<p>Using your journal, answer the following questions:</p>
+<ol>
+<li>Which player is currently in the lead?</li>
+<li>Which team is currently in the lead?</li>
+</ol>
+<p>Click <strong>Check my progress</strong> to verify the objective.
+<ql-activity-tracking step="4">
+Verify the results in BigQuery
+</ql-activity-tracking></p>
+<h2 id="step10">Congratulations!</h2>
+<p>You have generated Google Cloud resources to support your esports 
+Dataflow pipeline, including a Pub/Sub topic and subscription, a 
+BigQuery Dataset, tables and views, and the pipeline itself using 
+simulated data generated from Python scripts. You also used Code Assist 
+to help you explain the code in these scripts. You are becoming more 
+confident with Google Cloud each day and can use Gemini to supplement 
+your knowledge and skills with Data Engineering workflows.</p>
+<h3>Next steps / learn more</h3>
+<ul>
+<li><a href="https://cloud.google.com/bigquery/docs/write-sql-gemini#generate_a_sql_query" target="_blank">Generate a SQL query</a></li>
+<li><a href="https://cloud.google.com/bigquery/docs/write-sql-gemini#explain_sql_queries" target="_blank">Explain SQL queries</a></li>
+<li><a href="https://deepmind.google/technologies/gemini/#introduction" target="_blank">Gemini Models</a></li>
+<li><a href="https://cloud.google.com/bigquery/docs/generative-ai-overview#generative_ai" target="_blank">Generative AI</a></li>
+<li><a href="https://cloud.google.com/gemini/docs/discover/write-prompts" target="_blank">Write better prompts for Gemini for Google Cloud</a></li>
+</ul>
+<h3>Google Cloud training and certification</h3>
+<p>...helps you make the most of Google Cloud technologies. <a href="https://cloud.google.com/training" target="_blank">Our classes</a>
+ include technical skills and best practices to help you get up to speed
+ quickly and continue your learning journey. We offer fundamental to 
+advanced level training, with on-demand, live, and virtual options to 
+suit your busy schedule. <a href="https://cloud.google.com/certification/" target="_blank">Certifications</a> help you validate and prove your skill and expertise in Google Cloud technologies.</p>
+
+<p><strong>Manual last updated on August 19, 2026</strong></p>
+<p><strong>Lab last tested on August 19, 2026</strong></p>
+<p>Copyright 2026 Google LLC. All rights reserved. Google and the Google
+ logo are trademarks of Google LLC. All other company and product names 
+may be trademarks of the respective companies with which they are 
+associated.</p>
+
+
+
+
+
+</div>
+<dialog class="lab-content__image-overlay js-zoomed-image">
+    <form method="dialog">
+      <button>
+        <img class="lab-content__image" src="">
+      </button>
+    </form>
+  </dialog></div>
+
+
+<div class="lab-content__end-lab-button js-end-lab-button-container hidden">
+<ql-lab-control-button class="js-end-lab-button" running=""></ql-lab-control-button>
+</div>
+<div class="lab-content__renderable-instructions">
+<turbo-cable-stream-source channel="Turbo::StreamsChannel" signed-stream-name="ImxhYl9yZWNvbW1lbmRhdGlvbnNfMzI1MzVfdXNlcl8xNDUxMDY5MyI=--f69c87b7329c9434d1ae174c0c11449259d4eab3a38ff488922cd9e0aaaf858e" connected=""></turbo-cable-stream-source>
+<div id="lab_recommendations_32535_user_14510693">
+</div>
+
+</div>
+</div>
+</ql-drawer-content>
+</ql-drawer-container>
+</ql-drawer-content>
+</ql-drawer-container>
+
+
+
+</div>
+<div class="course-navigation-buttons">
+<ql-button aria-label="Previous" class="hide-mobile prev-button" href="/paths/16/course_sessions/44960185/html_bundles/592749" icon="navigate_before" type="button">Previous</ql-button>
+<div class="next-navigation-buttons">
+
+<ql-button class="next-button" href="/paths/16/course_sessions/44960185/quizzes/592751" icon="navigate_next" trailingicon="" type="button">Next</ql-button>
+</div>
+</div>
+</ql-drawer-content>
+</ql-drawer-container>
+
+</main>
+
+<footer slot="drawer-content">
+<nav arialabel="Footer navigation" class="application-footer relaunch-extra">
+
+<div class="footer-container">
+<div class="footer-logo">
+<a class="custom-logo" aria-label="Google Skills" href="https://www.skills.google/"><div class="custom-logo"><img alt="Google Skills" height="24" aria-label="Google Skills" src="01_esports_use_case_files/lqJbxogu4tSLez1OvjDcIO8rwow6cPLwvrfIdmQLf6U=_UAqZ.png"></div></a>
+</div>
+<div class="footer-row">
+<a href="https://www.skills.google/">Dashboard</a>
+<a href="https://www.skills.google/catalog">Catalog</a>
+<a href="https://www.skills.google/paths">Paths</a>
+<a href="https://www.skills.google/subscriptions">Subscriptions</a>
+<a href="https://www.skills.google/profile/stay_on_track">Activities</a>
+<a href="https://www.skills.google/profile/badges">Achievements</a>
+<a href="https://www.skills.google/my_account/profile">Settings</a>
+<a rel="nofollow" data-method="delete" href="https://www.skills.google/users/sign_out">Sign out</a>
+</div>
+<div class="footer-row">
+<a class="g-cloud-youtube" target="_blank" rel="noopener" href="https://www.youtube.com/@googlecloud"><ql-icon icon="video_youtube" translate="no"></ql-icon>
+Youtube
+</a><a rel="noopener" onclick='hallofmirrors.helpService.startHelp({"productData":{"userId":14510693},"context":"lab"}); return false;' href="https://www.skills.google/help">Help Center</a>
+<a href="https://www.skills.google/terms_of_service">Terms</a>
+<a target="_blank" href="https://www.skills.google/privacy_policy">Privacy</a>
+<a aria-hidden="true" class="glue-cookie-notification-bar-control">
+Manage cookies
+</a>
+</div>
+</div>
+
+</nav>
+</footer>
+</div>
+</div>
+</div>
+
+
+<span class="hidden" id="flash-sibling-before"></span>
+<ql-snackbar aria-live="polite" role="alert"></ql-snackbar>
+
+<script data-glue-cookie-notification-bar-category="2A" src="01_esports_use_case_files/cookienotificationbar.min_UAqZ.js"></script>
+
+
+
+<ql-dialog id="connect-certmetrics-modal" nocloseicon="" nodefaultaction="" nodefaultdismiss="" inert="">
+<div class="certmetrics-modal" id="sso-modal-body">
+<div id="sso-header-image">
+<img alt="Authorize Header" src="01_esports_use_case_files/certmetrics_modal_connect-41dccb0f7c320144dca93f8f89ac1_UAqZ.svg">
+</div>
+<h2 class="ql-headline-4" id="sso-modal-title">
+Recertify in 3 simple steps:
+</h2>
+<ql-card class="info-card" elevation="0" padded="">
+<div class="recertify-step">
+<ql-icon icon="counter_1" size="24" translate="no"></ql-icon>
+<span>Link your Google Skills and certification account profiles using the same email to get started.</span>
+</div>
+<div class="recertify-step">
+<ql-icon icon="counter_2" size="24" translate="no"></ql-icon>
+<span>Instantly see which certifications are eligible for renewal.</span>
+</div>
+<div class="recertify-step">
+<ql-icon icon="counter_3" size="24" translate="no"></ql-icon>
+<span>Complete courses and skill badges to renew your certifications automatically.</span>
+</div>
+<p class="ql-body-medium">
+By clicking "Accept", I consent to share my name, email, and course 
+completion data with Google Skills' certification partner, CM Connect, 
+to receive continuing education credit for certification renewal.
+</p>
+</ql-card>
+</div>
+<ql-button id="sso-cancel-btn" label="Close" onclick='document.querySelector("#connect-certmetrics-modal").close();' slot="action" text="" type="button"></ql-button>
+<ql-button id="sso-approve-btn" label="Accept" onclick="this.loading = true; document.querySelector('#sso-cancel-btn').disabled = true; document.querySelector('#sso-consent-form').requestSubmit();" raised="" slot="action" type="button"></ql-button>
+<form id="sso-consent-form" data-turbo="true" action="/oidc/connect_certmetrics_account" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="AMAc9O2rVmqN0v800aimTNj4CVyA8fyBMBz3liqgUhe1zEuX5KTpEOVSWyvt9SDIKli-DAxWPgmWuCKpZbUrXg" autocomplete="off"></form>
+</ql-dialog>
+
+<ql-dialog carousel="" id="private-mode-modal" nodefaultdismiss="" showpaginationprogress="" inert="">
+<div class="page" slot="page" style="display: block;">
+<div class="page-content">
+<img src="01_esports_use_case_files/start_lab-f45aca49782d4033c3ff688160387ac98c66941d_UAqZ.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Before you begin
+</h1>
+<div class="ql-body-large">
+<ol>
+  <li>Labs create a Google Cloud project and resources for a fixed time</li>
+  <li>Labs have a time limit and no pause feature. If you end the lab, you'll have to restart from the beginning.</li>
+  <li>On the top left of your screen, click <strong>Start lab</strong> to begin</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="page" slot="page" style="display: none;">
+<div class="page-content">
+<img src="01_esports_use_case_files/open_incognito_window-3ab2004605e88542dd7732361c3fc0e01_UAqZ.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Use private browsing
+</h1>
+<div class="ql-body-large">
+<ol>
+  <li>Copy the provided <strong>Username</strong> and <strong>Password</strong> for the lab</li>
+  <li>Click <strong>Open console</strong> in private mode</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="page" slot="page" style="display: none;">
+<div class="page-content">
+<img src="01_esports_use_case_files/google_sign_in-f9eb84339d08f7db8c5fdfa7ce7726d3531dae80_UAqZ.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Sign in to the Console
+</h1>
+<div class="ql-body-large">
+<ol>
+  <li><strong>Sign in</strong> using your lab credentials. Using other credentials might cause errors or incur charges.</li>
+  <li><strong>Accept</strong> the terms, and skip the recovery resource page</li>
+  <li>Don't click <strong>End lab</strong> unless you've finished the lab or want to restart it, as it will clear your work and remove the project</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</ql-dialog>
+
+<ql-dialog headline="Score Details" icon="task_alt" id="jupyter-feedback-modal" inert="">
+<iframe id="jupyter-feedback-frame" srcdoc="" title="Jupyter Feedback"></iframe>
+</ql-dialog>
+
+<ql-dialog id="lab-notification-dialog" nodefaultaction="" nodefaultdismiss="" inert="">
+<img src="01_esports_use_case_files/disable_lab-47cff1f6bc3610f58767251ff93c2f99cf4f9040_UAqZ.png">
+<p class="title ql-headline-4">This content is not currently available</p>
+<p class="description ql-body-1">We will notify you via email when it becomes available</p>
+<ql-button href="/focuses/883636858/set_up_lab_forward_url?course_template=52&amp;parent=course_session" id="lab-notification-close-button" label="No, thanks" slot="action" text="" type="button"></ql-button>
+<ql-button fill="" id="lab-notification-submit" label="Yes, notify me" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+<ql-dialog id="lab-notification-subscribed-dialog" nodefaultaction="" nodefaultdismiss="" inert="">
+<img src="01_esports_use_case_files/notifcation_subscribed-2b4f9e51439e1a107488ab58a6e13c3c_UAqZ.png">
+<p class="title ql-headline-4">Great!</p>
+<p class="description ql-body-1">We will contact you via email if it becomes available</p>
+<ql-button href="/focuses/883636858/set_up_lab_forward_url?course_template=52&amp;parent=course_session" id="lab-notification-subscribed-close-button" label="Back to screen" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+
+<ql-dialog forinnovator="" id="lab-quota-modal" nodefaultaction="" inert="">
+<img id="quota-image" class="lab-image-small" src="01_esports_use_case_files/quota_empty-2ba3ec879dea3091828ec9cfa060947292e2c554_UAqZ.png">
+<p class="title quota-header">
+</p><p class="description quota-body"></p>
+<ql-button filled="" id="close_button" label="Got it" slot="action" text="" type="button"></ql-button>
+<p></p>
+</ql-dialog>
+<ql-dialog forinnovator="" id="lab-quota-one-lab-modal" nodefaultaction="" inert="">
+<img id="quota-image" class="lab-image-medium" src="01_esports_use_case_files/one_lab_quota-77010e9a83e0a6c7543477868b8b808d70222adb_UAqZ.png">
+<p class="title quota-header">One lab at a time</p>
+<p class="description quota-body">Confirm to end all existing labs and start this one</p>
+<ql-button filled="" id="cancel_button" label="Cancel" onclick="ql.quotaManagementAlert.closeOneLabModal();" slot="action" text="" type="button"></ql-button>
+<ql-button filled="" id="confirm_button" label="Confirm" slot="action" text="" type="button"></ql-button>
+<script>
+  var quotaEmptyPath = "https://cdn.qwiklabs.com/assets/quota_management/quota_empty-2ba3ec879dea3091828ec9cfa060947292e2c554.png";
+  var quotaWarningOneLeftPath = "https://cdn.qwiklabs.com/assets/quota_management/quota_1_warning-d4669345281d01d38c7a13eed888f72469860ed8.png";
+  var quotaWarningFiveLeftPath = "https://cdn.qwiklabs.com/assets/quota_management/quota_5_warning-4f647be02bcbb65e2bbf18ea19d5493032524116.png";
+</script>
+</ql-dialog>
+
+<ql-dialog id="incorrect-start-lab-modal" nodefaultaction="" nodefaultdismiss="" inert="">
+<div class="body">
+<img src="01_esports_use_case_files/open_incognito_window-3ab2004605e88542dd7732361c3fc0e01_UAqZ.png">
+<div class="page-text">
+<h1 class="ql-headline-small">
+Use private browsing to run the lab
+</h1>
+<div class="ql-body-large">
+Using an Incognito or private browser window is the best way to run
+this lab. This prevents any conflicts between your personal account
+and the Student account, which may cause extra charges incurred to
+your personal account.
+</div>
+</div>
+</div>
+<div class="actions">
+<ql-button id="incorrect-start-lab-modal-cancel" label="Cancel" onclick="document.getElementById('incorrect-start-lab-modal').close()" slot="action" type="button"></ql-button>
+</div>
+</ql-dialog>
+
+<div class="modal fade" id="lab-details-modal">
+<div class="modal-container">
+<div class="modal-content mdl-shadow--24dp">
+<div class="modal-body">
+<p class="l-mbm">
+In this lab you learn ingest, transform and store Esports data using pipelines.
+</p>
+<p class="small-label l-mbs">
+<strong>
+Duration:
+</strong>
+2m setup
+·
+90m access
+·
+55m completion
+</p>
+<p class="small-label l-mbs">
+<strong>AWS Region:</strong>
+[] <strong></strong>
+</p>
+<p class="small-label l-mbs">
+<span><strong>Levels: </strong>introductory</span>
+</p>
+<p class="small-label">
+<strong>
+Permalink:
+</strong>
+<a href="https://www.skills.google/catalog_lab/32535">https://www.skills.google/catalog_lab/32535</a>
+</p>
+</div>
+<div class="modal-actions">
+<a class="button button--text" data-dismiss="modal">
+Got It
+</a>
+</div>
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" tabindex="-1" title="modal"></iframe>
+</div>
+<ql-dialog headline="How satisfied are you with this lab?&lt;span aria-hidden=&quot;true&quot;&gt;*&lt;/span&gt;" id="lab-review-dialog" inert="">
+<form class="simple_form js-lab-review-form" id="new_lab_review" action="/lab_reviews" accept-charset="UTF-8" data-remote="true" method="post"><div aria-labelledby="lab-review-dialog" aria-required="true" aria-valuemax="5" aria-valuemin="0" aria-valuenow="0" class="rateit js-rateit" data-rateit-max="5" data-rateit-min="0" data-rateit-resetable="false" data-rateit-step="1" data-rateit-value="0" id="lab-review-rateit" role="slider" tabindex="0"><div class="rateit-reset" style="display: none;"></div><div class="rateit-range" style="width: 80px; height: 16px;"><div class="rateit-selected" style="height: 16px; width: 0px;"></div><div class="rateit-hover" style="height:16px"></div></div></div>
+<div class="l-mtm">
+
+<div class="control-group hidden lab_review_user_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" value="14510693" name="lab_review[user_id]" id="lab_review_user_id"></div></div>
+<div class="control-group hidden lab_review_classroom_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" name="lab_review[classroom_id]" id="lab_review_classroom_id"></div></div>
+<div class="control-group hidden lab_review_lab_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" value="32535" name="lab_review[lab_id]" id="lab_review_lab_id"></div></div>
+<div class="control-group hidden lab_review_focus_id"><div class="controls"><input class="hidden" autocomplete="off" type="hidden" name="lab_review[focus_id]" id="lab_review_focus_id"></div></div>
+<div class="control-group hidden lab_review_rating"><div class="controls"><input class="hidden js-rating-input" autocomplete="off" type="hidden" name="lab_review[rating]" id="lab_review_rating"></div></div>
+<div class="control-group text optional lab_review_comment lab-review-comment"><label class="text optional control-label" for="lab_review_comment">Additional Comments</label><div class="controls"><textarea no_monkey_patch="true" class="text optional" label="Additional Comments" name="lab_review[comment]" id="lab_review_comment"></textarea></div></div>
+</div>
+</form><ql-button disabled="" id="submit" label="Submit" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+
+<div class="modal fade" id="lab-access-modal">
+<div class="modal-container">
+<div class="modal-content mdl-shadow--24dp">
+<a class="lab-access-modal-close" data-analytics-action="dismissed_lab_payment_modal" data-analytics-actions="[&quot;close_dialog&quot;, &quot;dismissed_lab_payment_modal&quot;]" data-analytics-legacy-event-name="dismissed_lab_payment_modal" data-analytics-name="lab-access-modal" data-analytics-type="eventParams" data-dismiss="modal" data-analytics-init="true">
+<i class="material-icons">close</i>
+</a>
+<form class="js-lab-access-form" action="/focuses/process_lab_access_request?parent=course_session" accept-charset="UTF-8" data-remote="true" method="post"><input type="hidden" name="authenticity_token" value="AMAc9O2rVmqN0v800aimTNj4CVyA8fyBMBz3liqgUhe1zEuX5KTpEOVSWyvt9SDIKli-DAxWPgmWuCKpZbUrXg" autocomplete="off">
+<div class="modal-body">
+<div class="lab-access-modal">
+<input type="hidden" name="id" id="id" value="883636858" autocomplete="off">
+<input type="hidden" name="user_id" id="user_id" value="14510693" autocomplete="off">
+<input type="hidden" name="launch_with_credits" id="launch_with_credits" value="0" class="js-launch-with-credits-input" autocomplete="off">
+<input type="hidden" name="launch_with_subs" id="launch_with_subs" value="0" class="js-launch-with-subscription-input" autocomplete="off">
+<input type="hidden" name="launch_with_access_code" id="launch_with_access_code" value="0" class="js-launch-with-access-code" autocomplete="off">
+<div class="lab-access-modal__method">
+<p>
+This lab costs
+1 Credit.
+</p>
+<p>
+20 Credits
+available
+</p>
+<a class="button js-launch-with-credits-button js-lab-access-modal-button" data-analytics-action="clicked_launch_with_credits_button" data-analytics-actions="[&quot;clicked_launch_with_credits_button&quot;, &quot;click_button&quot;]" data-analytics-button-text="Launch with" data-analytics-label="Launch with" data-analytics-legacy-event-name="clicked_launch_with_credits_button" data-analytics-type="eventParams" data-analytics-init="true">
+Launch with
+1 Credit
+</a>
+</div>
+<div class="lab-access-modal__method">
+<p>
+Enter Lab Token:
+</p>
+<div class="lab-access-modal__code js-access-code">
+<input type="text" name="uuid_1" id="uuid_1" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+<input type="text" name="uuid_2" id="uuid_2" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+<input type="text" name="uuid_3" id="uuid_3" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+<input type="text" name="uuid_4" id="uuid_4" maxlength="4" placeholder="1234" class="js-access-code-input" no_monkey_patch="true">
+</div>
+<a class="button js-launch-with-access-code-button js-lab-access-modal-button" data-analytics-action="clicked_launch_with_access_code_button" data-analytics-actions="[&quot;clicked_launch_with_access_code_button&quot;, &quot;click_button&quot;]" data-analytics-button-text="Launch with Token" data-analytics-label="Launch with Token" data-analytics-legacy-event-name="clicked_launch_with_access_code_button" data-analytics-type="eventParams" data-analytics-init="true">
+Launch with Token
+</a>
+</div>
+</div>
+<p class="ql-label-medium l-mtl">
+I hereby consent to the immediate performance of the contract and 
+acknowledge that I will lose my right of withdrawal from the contract 
+once the lab has begun.
+</p>
+</div>
+</form>
+
+
+
+</div>
+</div>
+<iframe class="l-ie-iframe-fix" tabindex="-1" title="modal"></iframe>
+</div>
+<ql-dialog headline="Are you sure? You may not be able to restart the lab, and you'll need to start from the beginning if you do." icon="error_outline" id="js-lab-are-you-sure-dialog" inert="">
+<ql-button id="js-are-you-sure-button" label="End Lab" slot="action" text="" type="button"></ql-button>
+</ql-dialog>
+<ql-dialog dismissallabel="Not right now" headline="Update to the new version" icon="error" id="course-session-upgrade-modal" inert="">
+<p>Your progress will carry over, but the completion percentage might change.</p>
+<ql-button href="/paths/16/course_templates/52/preview" label="Update now" slot="action" type="button">
+Preview
+</ql-button>
+</ql-dialog>
+
+
+
+<script>
+  document.addEventListener("turbo:load", function () {
+    ql.initMaterialInputs();
+    ql.tomSelect.init();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    Turbo.session.drive = false;
+    ql.labControlPanel.addRecaptchaErrorHandler();
+  initLabContent();
+  ql.labRedesign.setupRedesignStickyHeader();
+  ql.labRedesign.initRedesignToc();
+  ql.incorrectStartLabModal.init();
+  initLabReviewModal();
+  initLabReviewTranslations( {"star_amount_1":"1 of 5 stars","star_amount_2":"2 of 5 stars","star_amount_3":"3 of 5 stars","star_amount_4":"4 of 5 stars","star_amount_5":"5 of 5 stars"} )
+  initLabAccessModal();
+  ql.labAssessment.init({ openPanelAutomatically: true });
+  ql.labData.init();
+  initLabTranslations( {"are_you_sure":"Are you sure? You may not be able to restart the lab, and you'll need to start from the beginning if you do.","in_progress":"*In Progress*","ending":"*Ending*","starting":"*Starting, please wait*","end_concurrent_labs":"Sorry, you can only run one lab at a time. To start this lab, please confirm that you want all of your existing labs to end.","copied":"Copied","no_resource":"Error retrieving resource.","no_support":"No Support","mac_press":"Press ⌘-C to copy","thanks_review":"Thanks for reviewing this lab.","windows_press":"Press Ctrl-C to copy","days":"days"} );
+  ql.labRun.init();
+  ql.course_resize_layout.init("Professional Data Engineer Certification", "Path", "Build Streaming Data Pipelines on Google Cloud", "Course", "Product deep dives");
+  ql.course_navigation.init("44983113");
+  ql.searchHeader.init({isRelaunch: true});
+  (new ql.searchAutocomplete()).init({forHeaderNew: true, topSuggestions: [{"label":"mars, incorporated"},{"label":"cloud architecture"},{"label":"generative ai"},{"label":"data analyst"},{"label":"security fundamentals"}]});
+  ql.messages.init();
+  ql.jumpContent.init();
+  
+  }, {once: true});
+</script>
+<script>
+  document.addEventListener("turbo:load", () => ql.analyticsV2.init(), {once: true});
+  document.addEventListener("turbo:frame-load", () => ql.analyticsV2.init(), {once: true});
+</script>
+<script>
+  document.addEventListener("turbo:load", function () {
+    ql.celebrations.init({"course_complete":"COURSE COMPLETED","document_complete":"DOCUMENT COMPLETED","experience_label":"Experience points","lab_complete":"LAB COMPLETED","learning_plan_complete":"PATH COMPLETED","lesson_complete":"LESSON COMPLETED","quiz_complete":"QUIZ COMPLETED","video_complete":"VIDEO COMPLETED"});
+    ql.achievements.init();
+  }, {once: true});
+</script>
+
+
+
+
+
+
+<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-2mwu0qgrt7i" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="01_esports_use_case_files/anchor_003_UAqZ.html"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;">0cAFcWeA6ranF5zlisLlbYqcpOwAYeNg6lnBxhAMMJf_wXegTmgWLVhCiIdGZY52kQXBwjfCZJHarPHsPJXxVVDiSMpu6P0xnv10XQUKSz6yryUhC9CC5JIp7mYaXQr6QFHgVf_OOrmWbsq23Zk57KwZkrS9UzhGjwdmXtjGwL8v3w1XyxteLFU3arRkW0pYWiKB0yQRunrEFV3sG69_dYgCC7LAtZUpG4TClqmsiRlioYJyidTneu72MhHzDKk-7RuiHfyP85Ki_ukFwWe9ZyueXoLrEIGPcJ5u98RJn_EEhJ0a8y_aM3D_RzpwqEpfmgWjre5W5e_8jF5AR4fQGiu2WxgKN4Amo9QLQCrsS0UysgMcl-iVXv7vf7WRuFYT3p6q3TafvIUjods510rdSZrLX6U303OsMiJqCywLOARBtq-XtJceA0CzYfPwNYrq0l675PcNFUJg4vTqNRpIFsOvalmZ8oCHQTo8nFTiGLPJ3AYCBwGyeEJDmPU_sy8wwo608v41A_ETmltiiFR0Q9NPyA1JDxXynkVsut5I4mzzmV9VKVFbTO95gz_v5YgTk5VxapBIsQ4fl7QLGALAyZYywpryDFC8swkM3-QDfZVyZWCWEN9qwQm5vn-te8lSsymQK1B1j-Nly3Yed85UgZxTPTiKKEy3H2o5FAh7hDgu_9DBaFSMZlPneVKpGfmklJKs-KoJbvbYXv6zU9-vOZeW8VHdoiYA6S1h0bdgzW0vXMZ-CXKvOU78RWUtZ1g3v2jUH8t60wDC_LbC7NnM5FIjAvm1L6sTl5_AG22DivlHccet8qbEFjt8ejVVLGuUSiLf3z5O0xpvK4WEw-OrxVR6_GTs5lXVoA64a2EB9wo8L37nn4Vjn_faRkK9XVP_LFtnyAm3wCdJk4oadnw38d-046picl9hLloMGb9wY02O3sza8Jz4zbphxndwM14Zowi8bhl03-i0nzsR1Id0CVG4RwOgJHe96t00wBTzjhZmMs6UbSNuX__ut_eoH9U0pigLJLqUPfjlz3rbxHpCt9tb8r-Vet5TfECGvwxDN8eH2gUXhSQsj2txo08m4A4nXGxKsNwweVsFHzLOgg8rWlhdHapaFuzoNfqdm4WgY9ELvs9gIK20EZGggl4YpcIq7i-Q-PxA_UMb0HnoAkJen96gemrIoBwnoMq36guVbKU9UcteOJvbW6jMsXPdiHru2eYuYaiWq4a044wN-CM4PrIgrBFe3mqj6mDo4gsIpgtAFrpfuSsYevfCQ5hSEyU89E6FE8zKcmFF5Mzd-9otcgPOwWOduDKOS7PeVt66k7hJR1xGq7qkGi3yxkbQDdYnpw626CvCa205SUlmmxTOJWT5B-5GCIUBbvSSZ9HUrz4R8jyX91aMLMhxX22-i6hoz_W3S7SniTuzTBiyjBo-i3uhMCeLGxpN5RPoeQjHrhYh6c-5W3Stl1RgW0bGST2HIGx9DLUBnX6K-g-Klbrg7s_wzCHRp22hJ5rt5uZqU8JV92pr9M2ZJtkOyUuOcRdD2wTepvzsAf-3ZUEqa7A90hx5fiaevnNe98Hudh6UWzrV-AV18b54tAlXNCvYNe65VRlMFb7uFWYE6D6kZXOe6Wn4efr8lwubC7y6Zn3Hc1TybjU5em-Sp7sPeIM40o6B7oz5Y2BkK9yfR9oLCf__EOkQcdgP9CZCeqbTIM5BD663tGuf4ZIEQknvXcTbs_c326JWxISB3rjVV3EAX9Ju-LkSCF7eXLr2SNpvMVbMTRend3HJNtYWJ0KB66z3YQLwjJwSuUufWoZP4feiCFhBb9V6o_70zAIKTOas5mGsP9gKi_RL-wvZSgxGfrc8T29llp-9oD3wQ-hxJO_yd64_TggK998drEYv4fyhSI21SKJHv261k406P1C-f5weUHizRuAf92ABFCiLUGeKtW2S7sClQu9Xk9zlZgC9eEwcMBEaFlpdtn3E-OAqpdxNeroJpkZtt5Vw_lJea09QfdonoPNDu925-SuKI9cXpPNHquzHn93C82u6DdbN0kBCRRA9u21tuVs9k3HgFOh4Rsx5NA264c6f-GHVS2OQhB135b9xyUryKXaqC1Hm6ZXAs-GiNk26QB_3Z2R2VLiWUej6UvLhpAGeK6-mqBJBixtskOYDOSVELDq4r66Fu39mhqQFtmgtsJeBY3Etyl83uojMl9TFIT_aHwqZkEIFv5NU_wsx11oeII6UDr3DpkltFgCzjlhW0_ZZip5ii1LaeoDmhbG-OXhWAvppo_Jyal1VMYtmdUCG4Z5kxr6WKMA7eiT9RAoH2bJcALHSXG</textarea></div></div><div style="background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 3px; position: absolute; transition: visibility 0s linear 0.3s, opacity 0.3s linear; opacity: 0; visibility: hidden; z-index: 2000000000; left: 0px; top: -10000px;"><div style="width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; z-index: 2000000000; background-color: rgb(255, 255, 255); opacity: 0.05;"></div><div style="border: 11px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -11px; z-index: 2000000000;" class="g-recaptcha-bubble-arrow"></div><div style="border: 10px solid transparent; width: 0px; height: 0px; position: absolute; pointer-events: none; margin-top: -10px; z-index: 2000000000;" class="g-recaptcha-bubble-arrow"></div><div style="z-index: 2000000000; position: relative;"><iframe title="recaptcha challenge expires in two minutes" style="width: 100%; height: 100%;" name="c-twydh7jyy7in" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="01_esports_use_case_files/bframe_UAqZ.html"></iframe></div></div></body></html>

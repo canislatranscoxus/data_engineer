@@ -1,0 +1,5 @@
+# PyCharm / JetBrains IDE settings
+.idea/
+*.iml
+*.iws
+.ipynb_checkpoints

@@ -28,7 +28,7 @@ with beam.Pipeline(options=options) as pipeline:
 
              # # 3. Format the output cleanly as "word: count"
              | 'format output' >> beam.Map( lambda kv: f"{ kv[0] }: { kv[1] }" )
-             | 'print output'  >> beam.Map( lambda line: print( line ) )
+             | 'print output'  >> beam.Map( lambda line: print( line ) or line )
              | 'save as txt'   >> beam.io.WriteToText( output_file, shard_name_template = '' )
 
              )

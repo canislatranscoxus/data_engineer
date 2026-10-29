@@ -1,0 +1,78 @@
+you are an expert gcp data engineer and teacher.  
+I am working on google skills lab 
+"""Stream data with pipelines - Esports Use case""" ,
+
+------------------------------------------------------------------------------------
+
+you are an expert gcp data engineer and teacher.  
+I am working on google skills lab 
+"""Stream data with pipelines - Esports Use case""" ,
+
+
+when running dataflow python script esports-pipeline.py  
+I get this error,
+"""WARNING:apache_beam.utils.retry:Retry with exponential backoff: waiting for 19.760426142685123 seconds before retrying stage_file_with_retry because we caught exception: OSError: Could not upload to GCS path gs://qwiklabs-gcp-01-a34a881d7434-bucket/temp/esports-leaderboard-pipeline-views-v1.1790206080.749611: 404 GET https://storage.googleapis.com/storage/v1/b/qwiklabs-gcp-01-a34a881d7434-bucket?projection=noAcl&prettyPrint=false: The specified bucket does not exist.. Please verify that credentials are valid, that the specified path exists, and that you have write access to it."""
+
+explain why and how to fix it
+
+------------------------------------------------------------------------------------
+
+you are an expert gcp data engineer and teacher.  
+I am working on google skills lab 
+"""Stream data with pipelines - Esports Use case""" ,
+I get this error
+
+WARNING:apache_beam.utils.retry:Retry with exponential backoff: waiting for 7.805699318781358 seconds before retrying stage_file_with_retry because we caught exception: OSError: Could not upload to GCS path gs://qwiklabs-gcp-01-a34a881d7434-bucket/temp/esports-leaderboard-pipeline-views-v1.1790206762.516799: 404 GET https://storage.googleapis.com/storage/v1/b/qwiklabs-gcp-01-a34a881d7434-bucket?projection=noAcl&prettyPrint=false: The specified bucket does not exist.. Please verify that credentials are valid, that the specified path exists, and that you have write access to it.
+ 
+
+------------------------------------------------------------------------------------
+
+you are an expert gcp data engineer and teacher.  
+I am working on google skills lab 
+"""Stream data with pipelines - Esports Use case""" ,
+when I try to run my dataflow python script I get this error
+
+"""
+ OSError: Could not upload to GCS path gs://qwiklabs-gcp-01-a34a881d7434-bucket/temp/esports-leaderboard-pipeline-views-v1.1790300324.207947: 404 GET https://storage.googleapis.com/storage/v1/b/qwiklabs-gcp-01-a34a881d7434-bucket?projection=noAcl&prettyPrint=false: The specified bucket does not exist.. Please verify that credentials are valid, that the specified path exists, and that you have write access to it.
+""",
+
+explain why and how to fix it
+
+
+
+
+
+------------------------------------------------------------------------------------
+
+you are an expert gcp data engineer and teacher.  
+I am working on google skills lab 
+"""Stream data with pipelines - Esports Use case""" ,
+
+I finished the lab,
+but 
+"""Task 3. Retrieve the Python files and configure them.""",
+
+does not show the green circle for Assesment Completed,
+
+I downloaded the python code
+did the changes,
+but Gemmini Code Assist project can not accept my prompts,
+and show error
+"""
+You do not have a valid license of this product. Please contact your administrator to request a license. If you are not an enterprise user and believe you are receiving this message as an error, please try using the latest version and logging in again.
+"""
+
+explain why and how to fix it,
+this is a gcp lab issue,
+I am following the instructions
+
+
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+
+

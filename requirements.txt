@@ -17,5 +17,6 @@ pyspark[connect]
 findspark
 
 apache-beam
-apache-beam[gcp,test.docs]
+apache-beam[gcp,test.docs,psycopg2-binary]
+
 

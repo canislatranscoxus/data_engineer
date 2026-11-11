@@ -3,12 +3,13 @@ import logging
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.io.kafka import ReadFromKafka
+from apache_beam import window
 
 output_file = '/home/art/data/out/4_02.txt'
 
 consumer_config = {
-    'bootstrap.servers': 'localhost:9092',  # Fixed: Java Kafka client requires a dot!
-    'group.id': 'ninja-beam-group',
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'ninja-beam-group-fresh-v2',
     'auto.offset.reset': 'earliest'
 }
 
@@ -29,6 +30,7 @@ with beam.Pipeline(options=options) as pipeline:
         )
         | 'Extract Value & Decode' >> beam.Map(lambda record: record[1].decode('utf-8'))
         | 'Parse JSON' >> beam.Map(json.loads)
+        | 'Apply Window' >> beam.WindowInto(window.FixedWindows(5))  # Flushes elements every 5 seconds
         | 'Print & Verify' >> beam.Map(lambda dic: print(f"⚡ Parsed Dict: {dic}") or dic)
     )
 
